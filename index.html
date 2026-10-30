@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Discover Türkiye</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single scrolling atlas. Iznik-tile palette (cobalt, turquoise, Iznik red) on glaze white; a schematic tile map of the 7 regions is the centrepiece. */
+:root {
+  --ground: #FFFFFF;
+  --surface: #FFFFFF;
+  --tint: #FCEDEC;
+  --flag: #E30A17;
+  --on-flag: #FFFFFF;
+  --ink: #2A1416;
+  --muted: #6E5659;
+  --line: #F0D3D1;
+  --cobalt: #B3121C;
+  --turq: #0E8282;
+  --iznik: #E30A17;
+  --cobalt-soft: #FBE2E0;
+  --turq-soft: #DDF1EF;
+  --iznik-soft: #FBE2E0;
+  --r-mar: #D7263D; --r-bla: #2E8B57; --r-aeg: #2C7DA0; --r-med: #F08C3A;
+  --r-cen: #E9C46A; --r-eas: #7B5EA7; --r-sea: #9C6644;
+  --water: #E4F0F6; --water-ink: #4A7591; --prov-line: #FFFFFF;
+  --map-label: #1A0E10; --map-halo: #FFFFFF;
+  --shade-deep: rgba(12, 14, 24, 0.72); --shade-mid: rgba(12, 14, 24, 0.32); --shade-none: rgba(0, 0, 0, 0);
+  --display: "Gloock", "Georgia", "Times New Roman", serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #140A0C; --surface: #1F1013; --tint: #1A0D10; --flag: #C0101B; --on-flag: #FFFFFF;
+    --ink: #F6ECEC; --muted: #B49C9E; --line: #3A2226;
+    --cobalt: #FF7A80; --turq: #3EC4BB; --iznik: #FF6B72;
+    --cobalt-soft: #3A1519; --turq-soft: #0F2E33; --iznik-soft: #3A1519;
+    --water: #0E1E2B; --water-ink: #7FA7C4;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #140A0C; --surface: #1F1013; --tint: #1A0D10; --flag: #C0101B; --on-flag: #FFFFFF;
+  --ink: #F6ECEC; --muted: #B49C9E; --line: #3A2226;
+  --cobalt: #FF7A80; --turq: #3EC4BB; --iznik: #FF6B72;
+  --cobalt-soft: #3A1519; --turq-soft: #0F2E33; --iznik-soft: #3A1519;
+    --water: #0E1E2B; --water-ink: #7FA7C4;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body {
+  background: var(--ground); color: var(--ink);
+  font-family: var(--body); font-size: 17px; line-height: 1.6;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--display); font-weight: 400; text-wrap: balance; margin: 0; line-height: 1.1; }
+h2 { font-size: clamp(2rem, 4.5vw, 2.9rem); }
+h3 { font-size: 1.35rem; }
+p { margin: 0; }
+a { color: var(--cobalt); }
+:focus-visible { outline: 3px solid var(--turq); outline-offset: 2px; }
+.eyebrow {
+  font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--iznik);
+}
+.lede { color: var(--muted); max-width: 62ch; }
+
+/* nav */
+nav.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+}
+nav.top .wrap { display: flex; align-items: center; gap: 20px; padding-block: 10px; overflow-x: auto; scrollbar-width: none; }
+nav.top .brand { font-family: var(--display); font-size: 1.3rem; color: var(--ink); text-decoration: none; white-space: nowrap; }
+nav.top .links { display: flex; gap: 4px; margin-left: auto; }
+nav.top .links a {
+  font-size: 0.92rem; font-weight: 600; color: var(--muted); text-decoration: none;
+  padding: 6px 10px; border-radius: 6px; white-space: nowrap;
+}
+nav.top .links a:hover { color: var(--cobalt); background: var(--cobalt-soft); }
+
+/* hero */
+.hero { position: relative; overflow: hidden; background: var(--flag); color: var(--on-flag); }
+.hero .eyebrow { color: var(--on-flag); opacity: .85; }
+.facts-band { background: var(--flag); padding-block: 12px; }
+.facts-band .facts { margin-top: 0; }
+section.block:nth-child(even) { background: var(--tint); }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 62% 62%; }
+.hero .shade { position: absolute; inset: 0; background:
+  linear-gradient(90deg, var(--shade-deep) 0%, var(--shade-mid) 38%, var(--shade-none) 62%); }
+.hero h1, .hero .tag, .hero .eyebrow { text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35); }
+.hero .credit { position: absolute; top: 12px; right: max(16px, env(safe-area-inset-right, 0px)); font-size: 0.75rem; color: var(--on-flag); opacity: .85; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5); }
+@media (max-width: 700px) { .hero .shade { background: linear-gradient(0deg, var(--shade-deep) 0%, var(--shade-mid) 55%, var(--shade-none) 100%); } }
+.hero .wrap { position: relative; padding-block: clamp(110px, 16vw, 220px) clamp(120px, 14vw, 200px); display: grid; gap: 22px; }
+.hero h1 { font-size: clamp(4rem, 15vw, 10rem); line-height: 0.9; color: var(--on-flag); letter-spacing: -0.01em; }
+.hero .tag { font-size: clamp(1.15rem, 2.4vw, 1.45rem); max-width: 34ch; }
+.hero .tag em { font-style: italic; }
+.badge {
+  justify-self: start; display: inline-flex; align-items: center; gap: 10px;
+  background: var(--on-flag); color: var(--flag); font-weight: 600; font-size: 0.95rem;
+  padding: 8px 14px; border-radius: 999px;
+}
+.badge::before { content: ""; width: 14px; height: 14px; background: currentColor;
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+
+/* facts strip */
+.facts { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0; border-radius: 6px; overflow: hidden; background: var(--surface); }
+.fact { padding: 7px 12px; border-right: 1px solid var(--line); min-width: 0; }
+.fact:last-child { border-right: 0; }
+@media (max-width: 760px) { .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } .fact:nth-child(3) { border-right: 0; } .fact:nth-child(-n+3) { border-bottom: 1px solid var(--line); } }
+.fact dt { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.fact dd { margin: 1px 0 0; font-family: var(--display); font-size: 1.05rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.fact dd small { display: block; font-family: var(--body); font-size: 0.7rem; line-height: 1.3; color: var(--muted); }
+
+section.block { padding-block: clamp(56px, 8vw, 96px); }
+section.block + section.block { border-top: 1px solid var(--line); }
+.head { display: grid; gap: 10px; margin-bottom: 32px; }
+
+/* regions */
+.regions { display: grid; gap: 20px; }
+.mapwrap { background: var(--water); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.mapwrap svg { display: block; width: 100%; height: auto; }
+.rg { cursor: pointer; transition: opacity .2s; outline: none; }
+.rg path { stroke: var(--prov-line); stroke-opacity: .45; stroke-width: .5; transition: filter .15s; }
+.rg:hover path, .rg:focus-visible path { filter: brightness(1.12); }
+.rg:focus-visible path { stroke: var(--map-label); stroke-opacity: 1; stroke-width: 1.2; }
+svg.has-pick .rg { opacity: .7; }
+svg.has-pick .rg.on, svg.has-pick .rg:hover { opacity: 1; }
+svg.has-pick .rg.on path { filter: brightness(1.1) saturate(1.15); }
+.rlabel { font-family: var(--body); font-weight: 700; font-size: 11px; fill: var(--map-label); stroke: var(--map-halo); stroke-width: 3px; paint-order: stroke; stroke-linejoin: round; pointer-events: none; text-anchor: middle; }
+.slabel { font-family: var(--display); font-style: italic; font-size: 11px; fill: var(--water-ink); pointer-events: none; text-anchor: middle; letter-spacing: .04em; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.legend button { font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.legend button i { width: 14px; height: 14px; border-radius: 50%; }
+.legend button[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.region-card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 24px; display: grid; gap: 16px; }
+.region-card h3 { font-size: 1.8rem; color: var(--cobalt); }
+.region-card .tr { font-family: var(--mono); font-size: 0.8rem; color: var(--iznik); }
+.region-card dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; margin: 0; }
+.region-card dt { font-family: var(--mono); font-size: 0.72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+.region-card dd { margin: 0; min-width: 0; }
+
+/* timeline */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; position: relative; }
+.timeline::before { content: ""; position: absolute; left: 132px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+.timeline li { display: grid; grid-template-columns: 116px 1fr; gap: 32px; padding-block: 14px; position: relative; }
+.timeline li::after { content: ""; position: absolute; left: 127px; top: 22px; width: 12px; height: 12px; background: var(--ground); border: 2px solid var(--turq); transform: rotate(45deg); }
+.timeline li.key::after { background: var(--iznik); border-color: var(--iznik); }
+.timeline time { font-family: var(--mono); font-size: 0.88rem; text-align: right; color: var(--cobalt); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.timeline h3 { font-family: var(--body); font-weight: 700; font-size: 1.05rem; }
+.timeline p { color: var(--muted); max-width: 62ch; }
+
+/* places */
+.places { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+.place { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }
+.place .tile { height: 86px; }
+.place .photo { display: block; width: 100%; max-width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: var(--tint); }
+.credits { margin-top: 10px; font-size: 0.78rem; line-height: 1.5; }
+.credits a { color: inherit; }
+.place .body { padding: 16px 18px 20px; display: grid; gap: 8px; }
+.place .meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.chip { font-family: var(--mono); font-size: 0.68rem; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--cobalt-soft); color: var(--cobalt); }
+.chip.red { background: var(--iznik-soft); color: var(--iznik); }
+.chip.turq { background: var(--turq-soft); color: var(--turq); }
+.place .where { font-size: 0.85rem; color: var(--muted); }
+.place p { font-size: 0.97rem; }
+.filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.filter button, .btn {
+  font: inherit; font-size: 0.92rem; font-weight: 600; cursor: pointer;
+  padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+}
+.filter button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+/* food */
+.food { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+.dish { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }
+.dish img { display: block; width: 100%; max-width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--tint); }
+.dish .txt { padding: 14px 16px 18px; display: grid; gap: 4px; }
+.dish .n { font-family: var(--display); font-size: 1.45rem; }
+.dish .n i { font-family: var(--body); font-style: normal; font-size: 0.85rem; color: var(--muted); margin-left: 6px; }
+.dish p { color: var(--muted); font-size: 0.97rem; }
+
+/* phrases */
+.phrases { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.phrase { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; }
+.phrase .tr { font-family: var(--display); font-size: 1.4rem; color: var(--cobalt); min-width: 0; }
+.phrase .say { font-family: var(--mono); font-size: 0.8rem; color: var(--iznik); grid-column: 1; }
+.phrase .en { grid-column: 1; font-size: 0.95rem; color: var(--muted); }
+.phrase button { grid-column: 2; grid-row: 1 / span 3; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--turq-soft); color: var(--turq); cursor: pointer; display: grid; place-items: center; }
+.phrase button svg { width: 18px; height: 18px; fill: currentColor; }
+.note { color: var(--muted); font-size: 0.9rem; margin-top: 12px; }
+
+/* quiz */
+.quiz { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: clamp(20px, 4vw, 36px); display: grid; gap: 20px; max-width: 760px; }
+.quiz .progress { display: flex; gap: 4px; }
+.quiz .progress i { flex: 1; height: 5px; border-radius: 3px; background: var(--line); }
+.quiz .progress i.ok { background: var(--turq); }
+.quiz .progress i.no { background: var(--iznik); }
+.quiz .progress i.now { background: var(--cobalt); }
+.quiz .q { font-family: var(--display); font-size: clamp(1.4rem, 3vw, 1.8rem); line-height: 1.2; }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.opts button { font: inherit; text-align: left; padding: 14px 16px; border-radius: 6px; border: 1px solid var(--line); background: var(--ground); color: var(--ink); cursor: pointer; }
+.opts button:hover:not(:disabled) { border-color: var(--cobalt); }
+.opts button.right { background: var(--turq-soft); border-color: var(--turq); color: var(--ink); font-weight: 600; }
+.opts button.wrong { background: var(--iznik-soft); border-color: var(--iznik); }
+.opts button:disabled { cursor: default; }
+.quiz .why { color: var(--muted); }
+.quiz .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.quiz .score { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
+.btn.primary { background: var(--cobalt); color: var(--surface); border-color: var(--cobalt); }
+
+/* fun facts */
+.funfacts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px 24px; }
+.ff { border-top: 3px solid var(--flag); padding-top: 14px; display: grid; gap: 6px; align-content: start; }
+.ff .big { font-family: var(--display); font-size: 2.3rem; line-height: 1; color: var(--flag); font-variant-numeric: tabular-nums; }
+.ff h3 { font-family: var(--body); font-weight: 700; font-size: 1.05rem; }
+.ff p { color: var(--muted); font-size: 0.97rem; }
+
+/* people */
+.people-bar, .scroll-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.people-bar .filter, .scroll-bar .filter { margin-bottom: 0; }
+.scroll-bar .scroll-btns { margin-left: auto; }
+.scroll-btns { display: flex; gap: 8px; }
+.scroll-btns button { font: inherit; font-size: 1.2rem; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--flag); cursor: pointer; }
+.scroll-btns button:hover:not(:disabled) { border-color: var(--flag); }
+.scroll-btns button:disabled { opacity: .35; cursor: default; }
+.people { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 300px); gap: 16px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  padding-bottom: 12px; scrollbar-width: thin; scrollbar-color: var(--flag) transparent; }
+.people .person { scroll-snap-align: start; }
+.people-count, .scroll-count { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+/* sideways scrollers (doubled class beats each list's own grid rules) */
+.hscroll.hscroll { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(var(--cw, 250px), var(--cmax, 290px));
+  gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  padding-bottom: 12px; border-top: 0; scrollbar-width: thin; scrollbar-color: var(--flag) transparent; }
+.hscroll.hscroll > * { scroll-snap-align: start; min-width: 0; }
+#placeList { --cw: 270px; --cmax: 310px; }
+#phraseList { --cw: 250px; --cmax: 280px; }
+#clubList { --cw: 240px; --cmax: 270px; }
+/* history as a sideways timeline */
+.timeline.hscroll { gap: 0; padding-top: 8px; }
+.timeline.hscroll::before { display: none; }
+.timeline.hscroll li { display: grid; grid-template-columns: none; align-content: start; gap: 6px; padding: 22px 22px 4px 0; border-top: 2px solid var(--line); }
+.timeline.hscroll li::after { left: 0; top: -8px; }
+.timeline.hscroll time { text-align: left; }
+.person { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: grid; grid-template-columns: auto 1fr; gap: 12px 14px; align-content: start; }
+.person .mono { width: 52px; height: 52px; border-radius: 50%; background: var(--flag); color: var(--on-flag); display: grid; place-items: center; font-family: var(--display); font-size: 1.3rem; }
+.person h3 { font-size: 1.3rem; }
+.person .yrs { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.person .chip { justify-self: start; grid-column: 1 / -1; }
+.person p { grid-column: 1 / -1; font-size: 0.97rem; }
+
+/* football */
+.league-stats { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-bottom: 24px; }
+.league-stats div { display: grid; }
+.league-stats b { font-family: var(--display); font-weight: 400; font-size: 2rem; line-height: 1.1; color: var(--flag); font-variant-numeric: tabular-nums; }
+.league-stats span { font-family: var(--mono); font-size: 0.72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.clubs { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.club { font: inherit; color: inherit; text-align: left; cursor: pointer; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: center; }
+.club .ball { grid-row: 1 / span 2; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-size: 1rem; background: var(--cobalt-soft); color: var(--flag); }
+.club.big .ball { background: var(--flag); color: var(--on-flag); }
+.club .logo { grid-row: 1 / span 2; width: 48px; height: 48px; max-width: 100%; object-fit: contain; padding: 5px; border-radius: 50%; background: var(--on-flag); border: 1px solid var(--line); }
+.squad-head .logo { width: 56px; height: 56px; padding: 6px; border-radius: 50%; background: var(--on-flag); object-fit: contain; flex: none; }
+.club h3 { font-family: var(--body); font-weight: 700; font-size: 1rem; min-width: 0; }
+.club .city { font-size: 0.88rem; color: var(--muted); }
+.club .chip { grid-column: 1 / -1; justify-self: start; margin-top: 8px; }
+.club:hover { border-color: var(--flag); }
+.club .pts { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.club .pts b { font-family: var(--display); font-weight: 400; font-size: 1.5rem; line-height: 1; color: var(--flag); }
+.club .pts .rank { font-family: var(--mono); font-size: 0.75rem; font-weight: 500; color: var(--on-flag); background: var(--flag); border-radius: 4px; padding: 1px 6px; margin-right: 4px; }
+.club .pts small { margin-left: auto; font-family: var(--mono); font-size: 0.72rem; }
+.club .more { grid-column: 1 / -1; font-size: 0.8rem; font-weight: 600; color: var(--flag); margin-top: 6px; }
+dialog.squad { width: min(720px, calc(100vw - 32px)); max-height: min(86vh, 900px); padding: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); }
+dialog.squad::backdrop { background: rgba(10, 6, 8, 0.55); }
+.squad-head { position: sticky; top: 0; background: var(--flag); color: var(--on-flag); padding: 18px 20px; display: flex; align-items: center; gap: 14px; }
+.squad-head h3 { font-size: 1.6rem; flex: 1; min-width: 0; }
+.squad-head p { font-size: 0.85rem; opacity: .9; }
+.squad-head button { font: inherit; font-weight: 700; font-size: 1.3rem; width: 40px; height: 40px; border-radius: 50%; border: 0; cursor: pointer; background: var(--on-flag); color: var(--flag); flex: none; }
+.squad-body { padding: 16px 20px 22px; display: grid; gap: 18px; }
+.squad-body h4 { margin: 0 0 6px; font-family: var(--mono); font-size: 0.75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--flag); }
+.squad-body ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 4px 16px; }
+.squad-body li { display: grid; grid-template-columns: 2.2em 1fr auto; gap: 8px; align-items: baseline; padding: 5px 0; border-bottom: 1px solid var(--line); }
+.squad-body .no { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.squad-body .nat { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+.squad-foot { font-size: 0.8rem; color: var(--muted); }
+.table-note { margin: -8px 0 16px; font-size: 0.9rem; color: var(--muted); }
+.sources { margin-top: 16px; font-size: 0.85rem; color: var(--muted); }
+
+/* share */
+.share { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 28px; align-items: center; }
+.share img { width: 200px; height: 200px; max-width: 100%; border-radius: 8px; background: #FFFFFF; padding: 8px; border: 1px solid var(--line); }
+.share .link { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 14px; }
+.share code { font-family: var(--mono); font-size: 0.85rem; background: var(--tint); padding: 8px 12px; border-radius: 6px; word-break: break-all; user-select: all; }
+@media (max-width: 560px) { .share { grid-template-columns: 1fr; justify-items: start; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--muted); font-size: 0.88rem; }
+
+@media (max-width: 820px) {
+  .rlabel { font-size: 14px; }
+  .slabel { font-size: 13px; }
+}
+@media (max-width: 560px) {
+  .timeline::before { left: 6px; }
+  .timeline li { grid-template-columns: 1fr; gap: 2px; padding-left: 28px; }
+  .timeline li::after { left: 1px; top: 18px; }
+  .timeline time { text-align: left; }
+  nav.top .links a { padding: 6px 7px; }
+}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Sections">
+  <div class="wrap">
+    <a class="brand" href="#top">Türkiye</a>
+    <div class="links">
+      <a href="#food">Food</a>
+      <a href="#places">Places</a>
+      <a href="#regions">Regions</a>
+      <a href="#history">History</a>
+      <a href="#facts">Fun facts</a>
+      <a href="#football">Football</a>
+      <a href="#language">Language</a>
+      <a href="#people">People</a>
+      <a href="#quiz">Quiz</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="tiles" aria-hidden="true" hidden></canvas>
+  <img class="bg" src="photos/hero-bosphorus.jpg" alt="Ortaköy Mosque on the blue Bosphorus, with the Bosphorus Bridge and green hills of Istanbul behind">
+  <div class="shade" aria-hidden="true"></div>
+  <p class="credit">Ortaköy and the Bosphorus, Istanbul</p>
+  <div class="wrap">
+    <span class="badge" id="republic" hidden></span>
+    <p class="eyebrow">Republic of Türkiye · Türkiye Cumhuriyeti</p>
+    <h1>Türk<span>i</span>ye</h1>
+    <p class="tag">One country on two continents, where Europe meets Asia across the Bosphorus and <em>turquoise</em> takes its name.</p>
+  </div>
+</header>
+<div class="facts-band"><div class="wrap">
+    <dl class="facts">
+      <div class="fact"><dt>Capital</dt><dd>Ankara<small>Largest city: Istanbul</small></dd></div>
+      <div class="fact"><dt>Population</dt><dd>85.7 million<small>TÜİK, end of 2024</small></dd></div>
+      <div class="fact"><dt>Area</dt><dd>783,562 km²<small>About 3% lies in Europe</small></dd></div>
+      <div class="fact"><dt>Language</dt><dd>Turkish<small>Latin alphabet since 1928</small></dd></div>
+      <div class="fact"><dt>Currency</dt><dd>Lira (₺)<small>Turkish lira, TRY</small></dd></div>
+      <div class="fact"><dt>Provinces</dt><dd>81<small>In 7 geographic regions</small></dd></div>
+    </dl>
+</div></div>
+
+<main>
+  <section class="block" id="food">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Mutfak · Cuisine</p>
+        <h2>A table for everyone</h2>
+        <p class="lede">Turkish cuisine draws on Central Asian, Middle Eastern, Mediterranean and Balkan traditions. Every region has its own specialities.</p>
+      </div>
+      <div class="food hscroll" tabindex="0" id="foodList"></div>
+    </div>
+  </section>
+
+  <section class="block" id="places">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Places to see</p>
+        <h2>From fairy chimneys to cotton castles</h2>
+      </div>
+      <div class="filter" id="placeFilter" role="group" aria-label="Filter places"></div>
+      <div class="places hscroll" tabindex="0" id="placeList"></div>
+    </div>
+  </section>
+
+  <section class="block" id="regions">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Geography</p>
+        <h2>Seven regions, four seas</h2>
+        <p class="lede">Türkiye is bordered by the Black Sea, the Aegean, the Mediterranean, and surrounds the Sea of Marmara. Geographers divide it into seven regions. Click a region on the map, or a name below it, to explore it. Hover over the map to see each province.</p>
+      </div>
+      <div class="regions">
+        <div class="mapwrap" id="map"></div>
+        <div class="legend" id="legend" role="group" aria-label="Choose a region"></div>
+        <article class="region-card" id="regionCard" aria-live="polite"></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="history">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">History</p>
+        <h2>Twelve thousand years on one peninsula</h2>
+        <p class="lede">Anatolia has been home to some of the world's first settlements and to empires that shaped three continents.</p>
+      </div>
+      <ol class="timeline hscroll" tabindex="0" id="timeline"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="facts">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Did you know?</p>
+        <h2>Fun facts</h2>
+      </div>
+      <div class="funfacts hscroll" tabindex="0" id="factList"></div>
+    </div>
+  </section>
+
+  <section class="block" id="football">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Futbol · Trendyol Süper Lig 2026–27</p>
+        <h2>The Süper Lig clubs</h2>
+        <p class="lede">Football is Türkiye's favourite sport. Eighteen clubs play in the top league this season. Each team plays every other team twice, and the bottom three go down to the 1. Lig.</p>
+      </div>
+      <div class="league-stats">
+        <div><b>18</b><span>Clubs</span></div>
+        <div><b>34</b><span>Matches each</span></div>
+        <div><b>6</b><span>From Istanbul</span></div>
+        <div><b>3</b><span>Newly promoted</span></div>
+        <div><b>14 Aug – 23 May</b><span>Season</span></div>
+      </div>
+      <p class="table-note" id="tableNote"></p>
+      <div class="filter" id="clubFilter" role="group" aria-label="Filter clubs"></div>
+      <div class="clubs hscroll" tabindex="0" id="clubList"></div>
+      <dialog class="squad" id="squadDialog" aria-label="Club squad"></dialog>
+      <p class="sources">Tap a club to see its players. Club logos belong to their clubs and are shown here to identify each team. Promoted for 2026–27: Erzurumspor, Amed SFK and Çorum FK. Relegated: Antalyaspor, Kayserispor and Fatih Karagümrük.</p>
+    </div>
+  </section>
+
+  <section class="block" id="language">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Türkçe · Language</p>
+        <h2>Say it in Turkish</h2>
+        <p class="lede">Turkish is written exactly as it is spoken. Each phrase is split into syllables.</p>
+      </div>
+      <div class="phrases hscroll" tabindex="0" id="phraseList"></div>
+      <p class="note" id="speechNote">Tap the speaker to hear each phrase spoken in Turkish.</p>
+    </div>
+  </section>
+
+  <section class="block" id="people">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Famous people</p>
+        <h2>Leaders, artists, stars and champions</h2>
+        <p class="lede">People from Türkiye's past and present whose work is known around the world. They are listed from oldest to youngest. Pick a group to narrow the list.</p>
+      </div>
+      <div class="people-bar">
+        <div class="filter" id="peopleFilter" role="group" aria-label="Filter people"></div>
+        <div class="scroll-btns"><button id="peoplePrev" aria-label="Scroll left">←</button><button id="peopleNext" aria-label="Scroll right">→</button></div>
+      </div>
+      <div class="people" id="peopleList" tabindex="0" aria-label="Famous people, scroll sideways"></div>
+      <p class="people-count" id="peopleCount"></p>
+    </div>
+  </section>
+
+  <section class="block" id="quiz">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Test yourself</p>
+        <h2>How well do you know Türkiye?</h2>
+      </div>
+      <div class="quiz" id="quizBox"></div>
+    </div>
+  </section>
+  <section class="block" id="share">
+    <div class="wrap share">
+      <img src="share/qr.png" alt="QR code that opens this page">
+      <div>
+        <p class="eyebrow">Paylaş · Share</p>
+        <h2>Scan to visit this page</h2>
+        <p class="lede">Point a phone camera at the code to open Discover Türkiye. You can also copy the link below.</p>
+        <div class="link"><code id="shareLink">https://yadanur.github.io/discover-turkiye/</code><button class="btn primary" id="copyLink">Copy link</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Facts from TÜİK (Turkish Statistical Institute), UNESCO and the Republic of Türkiye. Figures are rounded.
+    <p class="credits" id="photoCredits"></p></div>
+</footer>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+/* Republic Day badge (29 October) */
+(() => {
+  const now = new Date();
+  if (now.getMonth() === 9 && now.getDate() === 29) {
+    const b = $("#republic");
+    b.textContent = `Happy Republic Day! ${now.getFullYear() - 1923} years since 29 October 1923`;
+    b.hidden = false;
+  }
+})();
+
+/* Hero: eight-pointed Seljuk star tiling */
+function drawTiles() {
+  const c = $("#tiles"), r = c.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  c.width = r.width * dpr; c.height = r.height * dpr;
+  const g = c.getContext("2d"); g.scale(dpr, dpr); g.clearRect(0, 0, r.width, r.height);
+  const s = r.width < 600 ? 56 : 76, white = css("--on-flag"), cols = [white, white, white];
+  const startX = r.width < 700 ? r.width * 0.35 : r.width * 0.5;
+  for (let y = -s / 2, row = 0; y < r.height + s; y += s, row++) {
+    for (let x = startX + (row % 2 ? s / 2 : 0), col = 0; x < r.width + s; x += s, col++) {
+      const fade = Math.min(1, (x - startX) / (r.width - startX) * 1.6);
+      g.globalAlpha = 0.07 + 0.2 * fade;
+      g.strokeStyle = cols[(row + col) % 3]; g.lineWidth = 1.4;
+      const k = s * 0.36;
+      for (const rot of [0, Math.PI / 4]) {
+        g.save(); g.translate(x, y); g.rotate(rot); g.strokeRect(-k, -k, k * 2, k * 2); g.restore();
+      }
+      g.beginPath(); g.arc(x, y, k * 0.35, 0, Math.PI * 2); g.stroke();
+    }
+  }
+  g.globalAlpha = 1;
+}
+drawTiles();
+addEventListener("resize", drawTiles);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawTiles);
+new MutationObserver(drawTiles).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+document.fonts && document.fonts.ready.then(drawTiles);
+
+/* Regions */
+const REGIONS = [
+  { id: "mar", name: "Marmara", tr: "Marmara Bölgesi", cities: "Istanbul, Bursa, Edirne, Çanakkale",
+    see: "The Bosphorus, Hagia Sophia, Topkapı Palace, the ruins of Troy, the Gallipoli peninsula",
+    eat: "İskender kebap from Bursa, simit sold on every Istanbul corner",
+    climate: "Mild and rainy winters, warm summers",
+    about: "The most populous region. It straddles Europe and Asia and holds about a third of the country's people." },
+  { id: "bla", name: "Black Sea", tr: "Karadeniz Bölgesi", cities: "Trabzon, Samsun, Rize, Giresun",
+    see: "Sumela Monastery on a cliff face, Uzungöl lake, green highland plateaus (yaylas)",
+    eat: "Hamsi (Black Sea anchovy), kuymak cheese fondue, Rize tea",
+    climate: "The rainiest region, green all year",
+    about: "Steep forested mountains fall straight into the sea. Its slopes grow most of Türkiye's tea and hazelnuts." },
+  { id: "aeg", name: "Aegean", tr: "Ege Bölgesi", cities: "İzmir, Muğla, Denizli, Aydın",
+    see: "Ephesus, the white travertines of Pamukkale, Bodrum's harbour",
+    eat: "Olive-oil vegetable dishes (zeytinyağlılar), boyoz pastry from İzmir",
+    climate: "Mediterranean: hot dry summers, mild wet winters",
+    about: "Olive groves, figs and ancient Greek cities line a deeply indented coast." },
+  { id: "cen", name: "Central Anatolia", tr: "İç Anadolu Bölgesi", cities: "Ankara, Konya, Kayseri, Nevşehir",
+    see: "Cappadocia's fairy chimneys, Anıtkabir, the Mevlâna Museum, Çatalhöyük",
+    eat: "Mantı dumplings from Kayseri, etli ekmek flatbread from Konya",
+    climate: "Steppe: hot dry summers, cold snowy winters",
+    about: "A high plateau and the country's breadbasket. The capital, Ankara, sits at its heart." },
+  { id: "eas", name: "Eastern Anatolia", tr: "Doğu Anadolu Bölgesi", cities: "Erzurum, Van, Kars, Malatya",
+    see: "Mount Ağrı (Ararat), Lake Van, the medieval city of Ani, Akdamar Island",
+    eat: "Cağ kebabı from Erzurum, the famous Van breakfast",
+    climate: "The coldest region, with long snowy winters",
+    about: "The highest and most mountainous region. The Euphrates and Tigris rivers begin here." },
+  { id: "med", name: "Mediterranean", tr: "Akdeniz Bölgesi", cities: "Antalya, Adana, Mersin, Hatay",
+    see: "The Turquoise Coast, Aspendos theatre, the Lycian Way trail",
+    eat: "Adana kebap, künefe from Hatay, citrus fruit",
+    climate: "Hot, dry summers and warm winters",
+    about: "Beaches backed by the Taurus Mountains. Antalya is one of the most visited cities in the world." },
+  { id: "sea", name: "Southeastern Anatolia", tr: "Güneydoğu Anadolu Bölgesi", cities: "Gaziantep, Şanlıurfa, Diyarbakır, Mardin",
+    see: "Göbekli Tepe, the stone heads of Mount Nemrut, Mardin's old town, Zeugma mosaics",
+    eat: "Antep baklava, lahmacun, pistachios, isot pepper",
+    climate: "Very hot, dry summers",
+    about: "Part of upper Mesopotamia, where some of the earliest farming communities began." },
+];
+const MAP = {"vb":[609,288],"provinces":{"mar":[{"n":"Balıkesir","d":"M37.3,131.9L37.4,132.7L36.6,132.9L37.3,131.9ZM37.5,130.3L37.7,130.7L37.2,130.5L37.5,130.3ZM37.8,128.2L39.5,128.4L38.0,129.2L40.1,130.7L38.0,130.9L37.5,129.9L38.0,129.7L37.8,128.8L37.3,128.6L37.8,128.2ZM37.0,128.1L37.4,128.2L36.9,129.3L36.5,128.4L37.0,128.1ZM69.0,83.6L69.1,84.1L70.0,84.3L69.4,85.1L69.9,85.9L67.7,85.5L67.8,84.7L68.6,84.7L68.4,83.6L69.0,83.6ZM73.2,82.9L73.9,83.0L74.1,83.8L74.4,83.2L76.8,83.3L81.8,84.7L81.0,86.4L77.6,88.4L79.4,89.9L82.7,88.7L87.5,88.1L85.2,91.5L84.7,95.6L85.1,100.8L87.4,102.8L90.2,109.2L91.3,109.4L97.0,113.3L101.7,113.8L105.3,119.0L109.1,119.1L110.3,119.8L110.8,120.4L109.9,122.0L110.1,123.2L108.3,129.3L105.5,132.6L101.4,134.7L101.4,137.4L99.6,136.8L95.3,139.0L86.0,142.3L84.3,141.5L82.6,137.1L80.7,135.2L77.6,134.6L77.2,133.2L78.2,130.8L77.6,129.7L77.1,130.2L74.3,129.7L70.9,130.1L68.8,129.6L65.8,127.4L62.4,128.7L55.2,127.1L48.4,133.6L43.1,137.1L41.6,136.0L41.0,133.6L37.6,133.1L38.1,131.5L38.9,131.1L39.1,131.9L38.2,132.1L39.5,132.8L39.3,131.8L40.1,131.5L40.5,130.4L43.7,128.3L43.4,126.7L45.2,126.4L45.3,124.9L47.6,124.6L48.3,121.9L47.3,120.6L46.0,120.6L44.7,121.7L42.7,121.1L39.3,121.7L39.4,118.0L40.1,116.1L41.6,115.3L44.9,115.6L49.1,112.7L52.6,111.6L54.6,111.6L58.0,113.2L62.9,110.8L64.4,108.5L65.1,106.4L64.9,105.4L63.7,104.4L65.5,99.2L64.4,96.0L67.6,93.2L68.0,91.3L69.4,90.9L70.2,91.7L73.4,91.7L77.1,89.0L75.4,88.0L74.5,88.6L74.1,87.6L72.9,86.8L73.1,86.0L71.1,85.1L71.0,83.9L73.2,82.9ZM65.8,82.5L66.9,83.1L66.0,84.0L66.4,84.5L65.0,85.3L64.6,84.2L65.8,82.5ZM69.5,77.3L72.9,78.7L68.7,81.0L66.2,80.1L66.3,78.1L69.5,77.3Z"},{"n":"Bilecik","d":"M147.3,89.3L152.4,87.9L157.5,88.4L162.4,90.6L165.6,97.1L160.8,98.1L159.3,103.7L157.4,106.0L154.1,106.5L150.7,109.8L146.9,109.3L144.8,110.3L143.0,113.1L143.1,114.8L144.4,116.3L141.5,116.7L134.4,114.4L133.3,111.0L133.4,108.8L133.0,107.8L135.9,107.7L136.4,106.8L136.4,105.3L134.4,103.9L133.3,101.5L134.6,96.4L136.8,94.5L137.8,92.6L137.0,90.2L136.9,87.6L138.0,85.1L139.6,83.4L141.2,82.7L142.4,85.4L147.3,89.3Z"},{"n":"Bursa","d":"M97.6,81.3L98.1,81.4L97.5,82.0L97.8,83.0L97.1,83.6L96.9,81.4L97.6,81.3ZM140.8,81.7L141.2,82.7L138.5,84.4L137.1,87.0L137.0,90.2L137.8,92.4L136.8,94.5L134.6,96.4L133.3,101.5L134.4,103.9L136.4,105.3L136.2,107.2L135.6,107.9L131.0,108.3L128.7,108.3L126.0,107.0L124.7,107.6L122.4,113.0L120.2,116.3L119.6,120.8L118.9,121.8L114.8,122.3L111.8,121.3L109.1,119.1L105.9,119.3L104.8,118.6L101.7,113.8L97.0,113.3L91.3,109.4L90.2,109.2L87.4,102.8L85.1,100.8L84.7,99.4L85.2,91.2L87.5,88.1L96.7,88.2L95.8,89.5L96.9,88.2L101.1,89.6L105.6,88.2L107.9,88.6L109.6,89.8L111.3,89.8L113.6,89.5L114.6,87.3L116.7,87.0L114.8,85.0L112.9,84.9L112.2,84.1L113.3,81.6L120.2,81.8L123.2,80.8L126.0,81.8L129.5,81.8L136.4,79.5L140.7,80.9L140.8,81.7Z"},{"n":"Çanakkale","d":"M20.3,110.1L21.0,110.5L21.3,111.9L20.6,112.5L17.5,110.5L20.3,110.1ZM16.9,94.4L17.9,95.3L17.6,98.0L18.3,98.2L19.1,97.5L18.5,98.7L10.5,100.4L8.2,99.0L8.4,97.8L12.0,95.6L13.8,95.5L16.9,94.4ZM58.6,85.0L60.1,87.5L59.2,88.0L59.3,89.1L65.1,91.7L67.8,91.5L67.6,93.2L64.3,96.2L65.5,99.0L63.7,104.4L64.9,105.4L65.1,106.4L64.4,108.5L62.9,110.8L58.0,113.2L54.6,111.6L52.6,111.6L49.1,112.7L44.9,115.6L41.2,115.4L40.1,116.1L39.5,117.6L39.5,121.7L32.9,123.1L30.3,124.1L30.1,124.8L26.9,124.7L26.2,125.5L25.8,125.0L22.7,125.9L20.6,124.9L21.9,120.6L23.1,119.5L23.7,117.6L23.0,113.7L23.7,111.3L22.9,110.4L24.2,104.4L24.8,103.6L27.0,104.0L29.0,102.9L30.0,100.0L31.4,99.2L31.2,96.1L32.6,96.2L35.0,95.3L36.5,92.8L37.5,92.7L40.2,89.9L40.1,89.4L42.0,87.9L47.0,87.7L48.3,88.6L50.8,88.4L52.5,86.3L54.6,85.9L56.1,86.6L58.6,85.0ZM51.1,74.1L50.7,80.4L49.6,81.8L46.6,82.5L40.4,85.8L40.4,87.2L38.6,87.9L38.3,89.5L37.0,91.1L34.5,92.5L31.9,95.2L29.8,95.9L30.5,98.3L25.6,102.0L23.9,102.2L27.3,95.4L27.3,93.9L25.8,92.5L26.3,92.0L25.4,91.2L28.2,89.4L29.0,89.4L32.8,86.3L38.1,83.7L40.5,83.6L41.9,81.6L41.9,82.2L42.6,82.2L44.6,80.8L44.1,78.1L42.3,76.3L43.0,74.2L45.3,74.2L49.4,71.9L50.5,72.4L51.1,74.1Z"},{"n":"Edirne","d":"M48.9,25.1L49.4,27.3L48.3,34.5L46.9,36.8L47.3,37.7L49.7,39.1L49.7,41.8L47.2,45.2L46.0,48.5L46.5,52.2L47.8,54.5L47.8,56.2L46.4,58.5L42.7,60.0L41.8,61.6L41.8,62.6L43.0,64.0L41.4,67.9L41.3,71.4L43.0,74.2L42.3,76.3L43.3,77.7L37.6,78.5L35.2,80.3L33.0,79.3L31.5,80.1L30.3,79.7L28.1,80.4L22.5,80.4L20.5,78.5L20.6,76.7L19.6,74.6L22.5,73.8L23.6,71.4L25.4,70.5L24.9,69.9L25.7,68.1L26.4,68.3L26.9,67.1L27.7,68.0L28.0,67.6L27.6,66.6L29.6,65.8L28.7,64.7L29.6,64.0L29.8,62.9L28.6,61.5L28.8,59.5L28.3,59.3L28.9,58.1L28.2,57.0L29.0,53.8L31.4,53.6L35.1,50.1L37.1,50.9L38.4,49.8L37.2,39.4L35.3,38.9L34.1,37.2L30.1,35.4L29.2,33.6L30.4,30.7L35.6,30.3L36.7,28.9L36.3,26.9L38.0,24.9L42.0,25.8L42.9,24.9L44.7,25.2L45.5,24.5L48.9,23.8L48.9,25.1Z"},{"n":"İstanbul","d":"M115.9,69.0L116.2,69.2L115.4,70.5L115.2,69.6L115.9,69.0ZM114.9,68.6L115.2,69.1L114.2,69.3L114.9,68.6ZM113.8,68.5L114.2,68.9L113.6,68.9L113.8,68.5ZM119.9,54.6L130.2,57.2L130.9,56.7L132.9,57.5L138.7,58.3L139.4,60.3L138.3,61.2L135.2,61.9L132.0,63.6L127.3,62.6L126.9,64.0L125.3,65.0L125.0,67.2L122.7,68.4L121.9,69.6L120.0,69.8L119.6,69.1L116.4,68.0L114.9,66.0L112.9,65.3L113.1,64.8L112.6,64.9L112.1,63.6L112.2,63.0L113.5,62.1L114.0,59.9L114.9,59.3L114.1,58.3L114.6,56.9L117.1,55.0L119.9,54.6ZM87.0,42.2L89.3,44.2L100.4,50.0L102.1,50.1L105.2,51.9L106.0,51.8L110.9,53.9L114.3,53.8L115.4,54.5L115.3,55.6L113.1,57.8L114.2,59.0L112.9,62.0L111.2,63.1L110.0,62.1L110.2,61.4L109.9,62.2L111.5,63.3L111.4,63.8L109.9,63.9L108.0,65.3L107.3,65.0L106.4,65.8L104.6,64.7L100.1,65.6L99.3,65.1L99.1,63.3L98.4,63.3L97.6,64.6L93.5,62.2L88.9,61.5L88.1,60.9L84.7,61.6L82.6,58.0L83.5,55.6L85.5,54.3L87.0,49.5L88.0,44.0L86.4,42.8L87.0,42.2Z"},{"n":"Kırklareli","d":"M57.6,19.8L60.0,20.6L60.3,21.5L61.5,22.0L62.7,24.4L65.6,26.0L66.9,28.0L67.4,27.7L67.4,26.5L70.5,25.9L71.3,25.1L72.4,25.1L74.7,26.6L75.5,26.2L75.0,24.8L76.2,24.1L77.8,25.3L81.8,24.5L82.6,28.7L81.1,28.2L79.9,29.5L80.7,32.1L82.1,33.9L82.1,34.7L84.1,37.2L83.6,37.5L83.7,38.5L85.5,40.8L80.1,42.3L76.7,44.0L73.7,43.6L70.7,45.7L70.7,47.6L69.7,50.0L66.9,54.5L65.9,55.2L64.4,54.9L61.5,51.6L57.9,50.1L47.1,50.7L46.1,49.4L46.1,47.8L49.8,41.4L49.7,39.1L47.3,37.7L46.9,36.8L48.2,34.7L48.8,31.5L49.4,27.3L48.9,24.9L49.2,22.7L50.3,22.0L50.6,20.8L51.9,20.3L56.3,21.4L56.2,20.6L57.6,19.8Z"},{"n":"Kocaeli","d":"M151.5,55.5L153.9,56.3L154.7,57.5L154.6,58.7L153.0,60.0L152.0,63.2L154.3,66.0L154.7,69.2L154.4,70.0L152.0,71.2L152.3,73.8L150.1,78.9L147.8,79.1L143.6,80.9L139.9,80.8L135.7,79.5L129.8,81.7L125.3,81.6L125.4,76.8L127.9,74.4L128.1,75.2L127.7,75.3L129.4,76.5L137.1,74.8L141.0,75.2L141.1,73.8L136.2,74.4L134.6,73.1L131.0,72.7L129.6,73.4L127.1,72.8L122.9,73.8L122.2,71.4L119.9,71.9L119.8,71.4L121.0,70.7L120.2,70.3L120.6,70.5L122.2,69.5L122.7,68.4L125.0,67.2L125.3,65.0L126.9,64.0L127.3,62.6L132.2,63.6L135.2,61.9L139.1,60.8L139.4,59.8L138.8,58.3L147.7,58.5L149.0,58.1L149.0,57.5L150.0,57.5L150.0,56.6L150.8,56.5L151.5,55.5Z"},{"n":"Sakarya","d":"M154.5,56.8L163.3,58.8L166.5,60.5L173.3,61.1L175.2,63.3L174.3,65.5L171.2,68.1L170.2,70.6L170.7,72.9L173.7,75.2L172.5,77.2L172.4,81.3L171.3,82.5L169.1,83.1L164.0,83.3L161.4,86.4L163.1,88.6L162.4,90.6L154.8,87.9L146.8,89.2L142.2,85.1L140.8,81.7L140.7,80.9L143.8,80.8L150.5,78.6L152.3,73.8L152.0,71.2L154.7,69.5L154.3,66.0L152.0,63.2L153.0,60.0L154.7,58.5L154.5,56.8Z"},{"n":"Tekirdağ","d":"M85.5,40.8L86.5,41.1L87.0,42.1L86.4,42.8L88.0,44.0L85.6,54.1L83.5,55.6L82.6,58.0L84.7,61.6L81.3,62.6L80.4,63.5L80.4,64.3L79.5,64.9L79.7,65.4L77.0,65.4L75.9,64.3L73.5,63.4L65.6,65.0L64.1,68.2L63.9,70.2L60.4,73.3L59.4,75.9L55.3,78.9L50.7,80.4L51.1,74.1L50.4,72.2L48.8,72.0L45.6,74.1L43.0,74.2L41.4,71.9L41.4,67.9L43.0,64.0L41.8,62.6L41.9,61.2L42.7,60.0L46.4,58.5L47.8,56.4L47.8,54.5L46.5,52.2L46.6,50.3L48.3,51.0L53.5,50.1L57.9,50.1L61.5,51.6L64.4,54.9L65.9,55.2L66.9,54.5L69.7,50.0L70.7,47.6L70.7,45.7L72.5,44.2L73.7,43.6L76.7,44.0L80.1,42.3L85.5,40.8Z"},{"n":"Yalova","d":"M124.2,75.9L125.7,76.3L125.3,81.6L123.2,80.8L120.2,81.8L113.3,81.6L112.2,84.1L112.9,84.9L111.1,85.8L108.3,84.9L107.4,83.8L105.1,83.3L105.5,81.9L109.8,80.0L111.6,78.2L120.7,77.6L124.2,75.9Z"}],"aeg":[{"n":"Afyon","d":"M185.4,137.4L186.1,139.3L188.4,140.5L195.7,140.3L196.1,145.9L193.5,151.3L192.4,155.0L193.1,157.0L195.2,158.7L182.2,166.9L180.6,166.4L178.0,163.5L176.8,163.5L167.9,172.4L162.9,174.2L159.1,176.5L154.4,181.1L151.2,183.4L149.9,184.8L148.7,188.0L149.2,190.0L148.2,191.4L145.8,192.9L142.0,192.6L138.2,193.6L137.3,191.2L134.3,189.9L132.5,189.9L132.6,184.5L140.6,179.9L143.6,177.0L144.1,173.9L140.6,167.5L135.4,165.8L135.9,163.8L139.0,158.2L139.7,155.6L145.3,152.5L146.6,151.2L151.4,140.5L155.0,138.9L156.5,137.4L157.1,135.8L158.7,136.4L159.9,138.8L162.0,140.8L162.9,140.9L166.8,138.9L167.8,137.1L170.5,135.5L173.7,137.6L178.5,135.3L181.6,132.6L183.6,133.1L185.4,137.4Z"},{"n":"Aydın","d":"M106.2,182.5L107.9,184.7L105.5,187.7L104.6,190.3L107.2,193.5L108.1,196.3L103.8,200.0L99.9,199.6L98.7,200.3L97.9,201.2L98.1,202.2L99.6,204.9L95.2,204.1L90.0,200.5L87.7,201.5L85.5,205.0L77.2,205.7L71.5,204.1L65.5,201.0L63.6,203.8L62.6,207.4L61.2,208.0L60.9,209.1L60.0,208.9L60.0,210.3L58.6,209.7L57.6,210.6L55.7,209.9L56.2,208.0L56.9,207.8L56.7,204.5L55.4,205.0L56.0,204.4L55.8,202.7L55.3,204.7L55.7,202.2L55.0,202.5L54.7,200.6L55.2,202.1L56.5,200.4L53.6,198.8L49.8,197.6L50.7,196.4L52.8,196.8L56.9,195.2L58.0,192.6L58.1,191.4L57.1,190.4L57.2,189.6L57.9,189.4L58.0,188.3L60.8,188.3L63.5,187.4L65.1,186.2L66.0,184.7L72.1,184.6L73.9,185.1L78.4,184.2L78.9,183.3L79.4,183.7L83.1,182.8L88.6,183.2L98.8,179.6L102.5,179.6L103.2,180.0L102.9,180.9L106.2,182.5Z"},{"n":"Denizli","d":"M138.5,167.0L140.8,167.7L144.3,174.7L143.6,177.0L140.6,179.9L132.6,184.5L132.5,189.9L134.3,189.9L137.3,191.2L138.2,193.6L128.3,200.3L128.4,205.5L129.9,206.6L129.9,207.6L128.2,211.4L124.7,216.4L124.0,221.0L122.3,222.6L122.1,225.7L120.1,228.7L117.8,228.5L114.5,224.3L113.7,221.0L113.9,219.8L112.9,218.2L109.7,215.7L105.3,214.2L104.0,209.8L99.9,208.3L99.8,205.1L97.9,201.2L99.7,199.6L103.8,200.0L108.2,196.1L107.2,193.5L104.6,190.3L105.5,187.7L107.8,184.3L105.7,182.1L102.7,180.5L105.4,178.3L105.7,175.2L109.5,173.4L118.8,176.2L125.1,173.5L128.8,176.2L129.8,176.3L130.4,173.1L132.1,170.2L133.2,166.8L135.4,165.8L138.5,167.0Z"},{"n":"İzmir","d":"M30.6,166.6L30.8,167.1L30.2,166.9L30.6,166.6ZM29.8,165.8L29.8,166.9L29.0,167.1L28.8,166.4L29.8,165.8ZM40.4,162.1L41.3,162.8L41.4,164.1L42.0,164.7L41.7,165.6L40.2,164.8L40.4,162.1ZM64.4,137.1L65.4,139.3L65.4,143.2L63.2,145.3L61.8,145.9L61.2,146.9L55.0,148.3L53.8,151.7L53.6,152.8L56.9,154.4L58.4,161.1L60.3,160.5L64.0,161.5L67.3,164.5L72.8,166.1L75.3,170.0L76.3,170.6L80.9,168.0L84.5,167.9L85.3,168.3L85.8,169.6L87.8,170.6L94.3,172.2L95.6,173.8L97.2,178.6L98.2,179.7L88.6,183.2L83.1,182.8L79.4,183.7L78.9,183.3L78.4,184.2L73.9,185.1L72.1,184.6L66.3,184.7L63.5,187.4L60.8,188.3L58.4,188.3L57.8,187.5L58.3,186.2L57.5,184.7L56.5,184.3L54.2,184.7L52.8,183.4L52.1,183.5L51.2,182.0L49.2,181.0L46.6,181.5L45.5,182.9L44.3,177.7L43.4,177.1L42.7,177.5L42.7,176.1L43.2,176.0L42.2,175.1L41.4,175.7L38.4,175.7L38.1,178.5L37.4,178.3L37.8,179.6L37.0,179.9L36.4,178.3L36.1,179.3L35.1,178.9L34.8,176.5L34.4,177.0L33.9,176.2L32.9,176.3L32.4,175.2L31.7,175.2L32.0,176.1L30.7,175.1L31.1,174.2L30.8,173.6L30.4,173.5L30.7,174.1L30.1,174.9L29.1,175.0L27.5,173.4L25.8,173.3L25.9,172.2L27.1,172.4L27.4,171.1L28.1,171.2L27.5,168.9L28.0,169.8L28.5,168.9L28.6,170.8L29.4,170.6L29.4,171.2L30.4,171.6L30.6,170.0L31.1,171.1L33.6,169.0L32.7,166.9L33.9,168.0L34.7,166.9L32.3,164.9L30.9,166.1L31.5,164.2L30.2,162.8L30.3,162.3L30.5,163.1L30.5,162.2L29.8,161.3L29.6,158.5L29.9,157.6L31.6,156.8L33.4,157.0L34.9,158.0L34.9,158.8L36.1,159.9L36.3,161.6L38.1,162.7L38.6,165.2L36.9,165.2L37.5,165.9L36.8,166.9L37.7,167.1L38.7,169.0L38.7,170.4L39.6,171.5L40.5,171.2L39.6,170.1L39.7,169.6L40.0,169.9L39.6,168.5L40.6,166.6L41.5,166.9L42.5,169.3L43.8,169.8L50.3,167.3L52.4,168.1L53.4,167.6L54.3,166.1L55.0,166.4L54.7,165.3L53.2,166.1L52.2,165.3L50.6,165.3L48.9,165.8L48.1,166.7L46.1,163.7L44.4,162.9L46.3,163.6L46.1,162.6L45.0,162.3L45.0,161.6L44.2,162.0L45.0,161.6L44.8,160.5L44.5,160.9L43.5,159.6L42.2,159.4L42.6,158.6L41.1,157.9L42.1,157.4L41.4,157.0L41.7,154.3L42.9,154.5L44.3,153.5L44.6,154.3L45.3,153.9L46.5,154.7L46.8,153.3L47.5,153.8L47.8,153.4L46.4,151.0L47.1,151.3L48.0,150.5L48.0,151.5L48.8,151.8L49.2,151.1L48.6,150.8L48.8,150.2L50.5,149.1L50.8,149.8L51.8,148.9L51.3,148.1L50.9,148.3L51.5,147.5L51.1,146.4L49.9,147.2L50.3,147.5L48.8,146.9L48.4,146.5L48.8,146.2L47.8,146.5L47.9,147.0L47.2,146.4L45.3,147.5L45.1,146.6L43.6,146.0L43.4,144.1L44.0,143.0L43.5,143.4L43.5,142.7L46.2,141.0L44.6,138.3L42.4,137.1L48.4,133.6L55.2,127.1L62.4,128.7L64.0,132.2L64.4,137.1Z"},{"n":"Kütahya","d":"M129.4,108.4L133.0,107.8L133.4,108.8L133.3,111.0L134.4,114.4L141.5,116.7L146.7,115.8L148.8,116.1L147.3,119.0L152.8,124.7L152.9,129.3L155.9,132.5L157.1,135.8L156.9,136.7L155.0,138.9L151.1,140.8L148.3,147.9L146.2,151.7L140.4,155.3L139.7,155.6L139.6,152.4L138.7,149.8L133.3,148.4L130.4,149.0L127.6,150.6L121.4,152.7L119.2,154.7L114.7,154.4L113.0,154.9L112.9,149.9L110.6,143.7L108.4,141.0L102.5,139.2L101.4,137.4L101.4,134.7L105.5,132.6L108.3,129.3L110.1,123.2L109.9,122.0L110.8,120.4L112.6,121.7L114.8,122.3L119.0,121.7L120.2,116.3L122.4,113.0L124.6,107.7L126.0,107.0L129.4,108.4Z"},{"n":"Manisa","d":"M70.9,130.1L74.3,129.7L77.1,130.2L77.6,129.7L78.2,130.8L77.2,133.2L77.6,134.6L80.1,134.9L81.2,135.6L82.6,137.1L84.3,141.5L85.6,142.2L95.3,139.0L100.1,136.7L101.4,137.4L102.8,139.4L107.4,140.5L109.3,141.8L111.5,145.5L113.0,150.8L113.0,154.9L108.1,158.5L107.2,160.9L107.4,168.2L106.5,169.8L109.5,173.4L105.7,175.2L105.4,178.3L103.2,180.0L102.1,179.4L98.2,179.7L97.2,178.6L95.6,173.8L94.3,172.2L87.8,170.6L85.8,169.6L85.3,168.3L84.5,167.9L80.9,168.0L76.3,170.6L75.3,170.0L72.8,166.1L67.3,164.5L64.0,161.5L60.3,160.5L58.4,161.1L56.9,154.3L53.6,152.8L55.0,148.3L61.2,146.9L61.8,145.9L63.2,145.3L65.4,143.2L65.4,139.3L64.4,137.1L64.0,132.2L62.4,128.7L65.8,127.4L68.8,129.6L70.9,130.1Z"},{"n":"Muğla","d":"M109.3,236.7L110.0,237.0L109.3,237.8L109.3,236.7ZM82.4,234.6L82.9,234.7L82.2,235.0L82.4,234.6ZM110.0,234.5L110.4,235.0L110.0,235.3L110.0,234.5ZM88.9,231.6L88.9,232.1L88.4,231.7L88.9,231.6ZM63.0,224.1L64.8,224.9L65.1,225.3L64.6,225.7L63.6,225.2L63.0,224.1ZM66.3,217.4L66.2,218.3L65.0,218.3L65.1,217.7L66.3,217.4ZM95.7,204.2L99.8,204.9L100.0,208.4L104.0,209.8L105.3,214.2L109.7,215.7L112.9,218.2L113.9,219.8L113.7,221.0L114.5,224.3L117.8,228.5L120.2,228.6L122.2,225.6L122.4,222.4L124.0,221.0L124.6,223.0L124.2,226.0L125.8,225.4L127.8,223.0L128.9,222.9L131.3,224.1L133.0,226.7L132.8,229.0L130.7,232.8L129.8,239.4L122.0,246.5L122.1,247.9L121.0,251.5L120.1,252.0L118.9,250.8L117.0,250.4L116.2,249.6L116.4,248.9L115.1,248.5L115.1,247.8L116.0,247.4L115.6,247.0L116.1,246.9L115.8,245.5L115.0,245.0L115.8,244.1L115.8,242.3L115.4,241.8L114.9,242.2L114.6,241.4L113.4,241.7L113.6,242.5L112.2,242.3L113.4,241.7L112.6,240.6L113.2,239.2L114.3,239.4L114.3,238.1L115.1,238.4L114.7,239.2L115.5,238.9L115.7,238.1L115.1,237.2L113.6,236.7L112.9,235.7L112.3,235.8L112.5,235.4L111.8,235.7L111.0,234.8L110.8,235.1L109.7,233.8L109.7,234.6L108.6,235.5L109.1,235.8L107.7,236.1L107.8,237.2L107.3,237.5L107.8,237.8L107.3,238.3L107.9,238.7L108.2,238.0L109.0,238.4L107.8,239.1L108.0,239.9L107.1,240.5L106.4,239.0L107.3,238.5L106.6,238.5L106.3,237.6L105.5,238.0L105.9,237.2L105.4,236.6L103.5,235.5L101.7,236.3L101.8,235.8L101.0,235.1L100.5,236.0L100.0,235.9L100.2,234.9L99.7,234.7L100.5,233.8L99.9,233.6L100.4,232.7L99.1,231.4L97.9,230.8L97.3,231.7L97.5,232.6L96.0,232.0L96.3,231.3L95.2,231.6L94.8,230.2L95.4,229.5L95.0,228.8L94.3,229.7L93.5,229.8L93.3,229.3L92.6,230.1L92.9,230.6L94.1,230.6L93.2,232.6L90.5,231.3L90.2,231.9L90.6,232.2L89.7,232.4L89.1,231.4L90.6,230.9L89.5,229.9L88.1,231.8L88.8,232.3L88.6,233.1L89.2,233.4L89.2,234.1L89.9,234.0L90.3,234.8L89.8,235.2L89.0,234.7L87.8,236.5L85.9,236.6L83.6,240.7L82.9,240.2L81.6,241.6L81.2,241.0L81.4,241.4L80.2,241.9L79.7,240.8L80.2,240.5L79.5,240.0L82.8,239.8L83.8,238.1L83.1,237.6L82.6,238.6L82.9,237.8L82.5,237.7L83.1,237.0L82.4,237.1L82.1,236.3L81.6,237.3L79.7,236.6L80.9,235.8L82.1,235.8L82.7,235.1L83.9,234.9L83.5,235.3L83.9,235.8L84.3,234.9L84.8,235.0L83.5,234.3L84.3,233.0L85.0,233.7L84.6,231.9L83.4,232.2L83.3,233.0L82.4,233.6L82.3,232.6L81.3,233.7L79.5,233.6L78.7,234.3L78.3,233.8L77.5,233.7L77.4,234.4L77.0,233.7L76.4,234.4L75.1,233.5L72.5,233.5L71.1,235.0L71.4,235.6L70.8,236.0L70.8,237.7L67.6,236.6L67.2,237.1L65.7,236.9L64.6,238.1L64.3,237.5L62.3,237.5L62.2,236.8L61.0,236.6L61.0,235.6L62.1,236.0L62.8,235.5L63.0,234.1L63.7,234.2L64.2,233.5L64.6,234.0L68.7,233.4L69.6,231.6L71.4,232.6L73.7,232.5L75.4,231.5L81.8,232.5L82.7,232.0L82.8,231.2L82.6,230.6L80.9,230.6L81.8,230.4L80.8,229.9L82.7,228.9L82.1,228.6L82.4,228.1L81.3,227.8L82.2,227.6L81.5,227.0L83.9,226.4L85.1,226.6L85.4,227.2L85.8,226.9L86.0,227.7L85.7,226.2L87.2,225.9L87.5,224.9L86.9,224.7L87.5,224.1L88.6,224.4L88.4,223.9L89.2,223.3L91.1,222.7L90.9,221.9L85.9,222.9L84.0,222.6L84.4,223.4L83.9,223.5L83.5,222.8L80.1,222.7L79.1,223.4L78.5,222.8L76.0,223.3L74.6,224.2L74.2,223.8L74.0,224.3L71.0,223.9L69.9,224.1L69.5,224.9L67.6,224.2L67.3,225.0L65.9,224.2L64.7,224.5L62.9,222.6L62.6,223.3L62.0,222.8L61.4,224.1L61.6,222.9L60.0,223.4L60.3,224.1L59.1,225.1L59.2,225.7L57.9,225.4L57.5,222.8L56.7,221.7L57.2,220.7L58.9,219.6L57.7,219.5L57.7,218.8L57.9,219.2L58.2,218.4L59.4,219.4L59.8,217.6L60.5,218.8L61.1,217.7L61.9,218.2L61.4,218.6L61.8,219.2L63.1,218.9L64.4,220.8L66.4,218.9L67.8,218.5L66.8,218.6L67.2,217.8L66.6,217.8L66.7,216.6L66.1,216.2L67.0,216.3L67.5,215.5L68.2,216.3L67.6,216.8L68.4,216.1L68.9,216.5L67.6,215.4L68.8,212.8L67.0,212.9L66.6,213.8L66.9,214.2L66.4,213.9L66.1,214.9L65.6,214.9L65.2,214.5L66.0,214.0L65.9,212.9L63.9,213.8L65.2,211.4L64.6,210.2L64.4,211.2L63.5,211.9L62.5,211.8L61.7,210.9L61.6,209.7L62.6,208.6L63.2,208.8L62.7,207.1L63.6,203.8L64.9,201.3L65.8,201.0L71.5,204.1L77.2,205.7L85.5,205.0L87.7,201.5L90.0,200.5L95.7,204.2Z"},{"n":"Uşak","d":"M139.7,152.9L139.7,155.6L139.0,158.2L135.9,163.8L135.4,165.8L132.8,167.2L132.1,170.2L130.4,173.1L129.8,176.3L128.8,176.2L125.1,173.5L118.8,176.2L109.5,173.4L106.5,169.8L107.4,168.5L107.2,160.8L108.1,158.5L112.6,155.0L114.7,154.4L119.2,154.7L121.4,152.7L132.7,148.4L138.7,149.8L139.7,152.9Z"}],"med":[{"n":"Adana","d":"M339.8,187.2L339.4,190.7L340.8,193.9L338.9,198.0L334.3,198.5L330.5,201.2L325.9,209.7L325.8,214.3L326.5,215.7L324.9,218.9L325.6,219.1L329.5,217.0L330.5,217.6L331.4,219.6L330.8,223.0L327.9,225.7L326.8,227.9L327.5,228.8L323.1,233.4L319.2,233.3L317.9,234.2L317.4,235.4L317.5,234.7L317.2,234.9L317.1,236.0L315.9,235.5L315.7,236.0L316.1,235.7L316.6,236.8L318.0,235.1L317.8,234.7L318.8,234.4L318.5,235.7L318.8,234.8L318.8,235.7L320.4,235.5L320.3,235.1L320.9,235.5L318.5,237.3L317.8,239.8L316.5,240.4L316.0,241.4L311.4,240.4L309.0,242.5L308.4,241.1L309.2,239.9L307.3,238.9L306.8,237.9L306.6,238.4L306.2,237.8L306.9,237.5L306.2,236.9L304.0,236.3L303.5,237.0L306.9,239.7L308.5,241.6L298.4,235.5L295.8,235.0L296.9,233.8L299.5,233.2L300.5,231.3L300.6,229.9L300.1,225.2L298.4,222.3L296.1,220.4L295.3,216.9L291.8,208.8L291.8,205.4L294.1,203.0L294.0,200.8L292.7,197.7L293.0,196.6L294.4,195.6L299.2,196.0L301.0,195.3L305.1,190.7L304.9,187.5L305.9,185.9L312.6,187.2L317.7,185.8L319.6,181.6L329.9,176.6L334.5,167.5L339.0,165.5L341.2,165.3L342.6,166.3L344.8,171.3L342.8,173.9L339.9,184.1L339.8,187.2Z"},{"n":"Antalya","d":"M135.4,258.3L135.7,258.7L134.9,259.1L135.4,258.3ZM127.2,257.6L128.0,257.7L127.0,258.0L127.2,257.6ZM130.3,257.3L130.2,258.0L130.8,258.2L129.3,259.2L130.3,257.3ZM140.3,256.1L139.3,256.9L138.0,257.2L140.3,256.1ZM188.0,210.2L196.7,210.9L200.4,212.5L212.4,224.0L214.2,230.0L218.4,231.2L219.8,234.0L219.4,237.0L220.8,241.6L222.4,243.7L225.6,246.2L224.9,248.7L225.3,252.7L223.2,259.6L221.8,260.3L220.3,259.6L214.3,254.6L213.7,252.4L211.9,250.6L210.3,247.3L206.1,242.5L205.3,242.3L204.7,242.9L204.2,241.8L198.2,239.8L197.3,238.5L195.0,238.2L191.5,235.5L186.1,233.4L186.1,232.8L184.3,231.6L174.3,229.7L166.5,230.2L164.8,228.6L162.3,230.0L160.9,232.2L160.8,237.0L160.2,238.2L160.4,239.5L161.4,240.4L160.3,242.3L160.6,242.7L159.8,243.1L158.8,245.2L158.8,246.4L158.0,246.6L158.3,247.1L157.8,248.0L159.5,250.6L157.5,251.4L157.5,252.0L158.2,252.0L158.2,252.8L155.6,255.6L155.7,253.0L154.5,253.3L151.7,251.4L149.2,251.4L147.6,252.0L147.7,253.1L147.3,252.9L146.6,254.1L144.9,253.6L142.4,255.4L140.6,254.6L139.5,256.3L137.7,256.4L138.3,256.3L136.8,257.4L137.7,257.2L136.5,258.3L135.5,258.4L136.3,257.7L134.4,257.5L133.1,258.8L133.0,257.9L132.3,258.1L131.5,257.2L131.9,256.6L132.1,257.1L132.0,256.1L130.1,256.6L131.5,255.8L126.2,255.2L125.6,255.6L126.1,255.0L124.7,255.0L124.9,253.6L124.1,253.4L123.4,253.5L123.6,254.1L122.9,254.8L119.9,252.0L121.2,251.2L122.1,246.3L129.8,239.4L130.7,232.8L132.8,229.0L133.2,227.2L135.3,226.6L137.1,224.4L138.3,219.1L140.5,216.5L144.5,214.5L152.8,211.7L154.2,212.0L155.2,214.3L156.8,215.1L166.3,214.5L168.0,215.0L170.4,209.5L172.1,209.0L174.0,210.3L179.7,208.4L181.5,207.1L184.1,207.0L185.7,209.2L188.0,210.2Z"},{"n":"Burdur","d":"M159.8,195.9L163.2,196.0L164.8,196.9L166.8,203.0L171.2,208.1L171.5,209.1L170.0,209.9L168.0,215.0L166.3,214.5L156.8,215.1L155.2,214.3L154.1,211.9L152.0,211.8L144.5,214.5L139.2,217.5L138.2,219.3L137.5,223.4L134.8,226.9L133.2,227.2L131.3,224.1L128.9,222.9L127.8,223.0L125.8,225.4L124.2,225.9L124.6,223.6L124.0,221.0L124.2,217.9L125.6,214.5L128.2,211.4L129.9,207.6L129.9,206.6L128.4,205.5L128.3,200.3L138.8,193.2L142.8,192.7L144.0,195.2L145.5,195.9L153.2,190.4L154.5,190.8L156.6,193.8L159.8,195.9Z"},{"n":"Hatay","d":"M331.4,223.1L337.4,223.7L340.3,225.8L343.3,225.9L349.0,230.4L350.3,230.5L350.6,231.3L349.0,233.7L349.3,235.8L347.8,238.6L348.2,241.5L346.7,244.1L347.8,248.1L348.9,248.4L349.0,249.8L348.4,250.8L350.2,250.8L350.4,251.9L351.3,252.3L351.4,254.0L348.7,255.3L347.7,254.7L344.9,254.6L344.2,255.9L341.9,255.1L342.0,256.3L341.2,257.2L341.9,260.6L341.3,264.0L340.2,264.3L339.4,263.8L338.8,264.3L338.9,265.7L336.1,265.9L335.1,267.9L334.8,271.4L333.1,269.4L330.1,268.8L330.2,267.0L329.8,266.4L327.5,267.3L327.0,266.7L328.9,263.2L326.3,257.7L322.7,252.0L322.7,251.1L323.8,249.6L325.0,249.2L326.7,246.2L329.0,245.0L330.7,242.7L334.1,240.4L335.6,240.2L336.2,237.6L335.5,235.8L335.8,234.9L335.3,234.8L335.9,232.7L334.1,229.8L333.5,229.9L333.9,229.5L332.2,227.8L330.0,226.8L327.6,228.5L327.8,229.4L326.8,228.2L328.1,225.5L330.8,223.0L331.4,223.1Z"},{"n":"Isparta","d":"M188.1,189.9L188.1,192.9L184.5,206.5L184.1,207.0L181.3,207.2L179.7,208.4L174.0,210.3L171.5,209.1L170.7,207.0L166.8,203.0L164.8,196.9L163.2,196.0L158.7,195.3L155.9,193.0L154.5,190.8L153.0,190.5L145.5,195.9L144.5,195.6L143.1,193.8L143.3,193.1L145.6,193.0L148.4,191.2L149.3,189.7L148.7,188.0L149.9,184.8L151.2,183.4L154.4,181.1L159.1,176.5L162.9,174.2L167.9,172.4L170.3,169.5L177.3,163.3L178.2,163.6L180.6,166.4L181.9,166.9L181.6,168.6L182.3,169.6L193.2,179.2L192.7,181.4L188.8,183.2L187.3,185.2L187.2,187.7L188.1,189.9Z"},{"n":"Kahramanmaraş","d":"M361.8,160.2L362.5,160.9L369.6,160.2L369.1,161.8L366.7,164.3L366.7,165.6L371.8,165.4L374.8,165.9L382.3,169.7L384.7,171.6L384.6,175.1L380.3,187.3L376.9,193.1L373.5,196.6L373.9,199.8L378.4,202.0L380.0,203.5L379.8,207.0L377.9,208.7L366.4,210.7L363.4,212.7L362.1,214.6L360.9,215.3L359.5,214.7L358.4,210.2L357.7,209.3L352.2,213.0L349.7,210.8L347.6,207.8L344.7,209.2L341.3,210.0L337.4,209.5L336.1,203.3L337.9,200.7L340.7,194.2L340.7,193.0L339.4,190.7L339.3,188.6L339.9,184.1L342.8,173.7L347.7,168.2L350.6,163.8L351.7,160.6L358.1,158.9L361.8,160.2Z"},{"n":"Mersin","d":"M260.5,256.0L260.4,256.6L259.8,256.7L260.5,256.0ZM295.8,218.8L296.4,220.9L298.4,222.3L300.1,225.2L300.6,230.7L299.5,233.2L296.9,233.8L295.6,235.0L293.9,232.8L291.1,231.6L287.7,231.7L284.8,233.3L284.3,234.3L282.0,235.7L280.7,237.5L276.0,240.6L272.6,245.3L271.1,246.0L270.8,247.0L269.8,247.6L269.6,251.3L268.7,252.2L267.2,251.8L266.2,254.7L265.4,252.4L263.3,251.4L262.1,252.6L262.4,253.0L261.6,253.0L261.4,254.4L258.0,257.0L257.7,258.6L256.4,256.3L254.7,256.9L253.7,259.0L251.0,257.6L248.5,259.0L247.2,257.8L245.2,258.8L240.8,258.5L238.8,261.2L237.9,260.2L234.7,259.9L232.2,261.2L230.1,263.4L226.3,262.5L222.8,260.0L223.8,258.4L224.8,255.0L225.3,252.6L224.9,248.7L225.6,246.2L231.3,246.7L238.0,245.2L242.9,243.1L243.4,241.6L243.0,240.7L239.3,238.6L237.5,236.9L235.1,231.6L239.9,229.9L246.5,225.0L248.6,224.0L252.7,223.9L255.6,222.2L257.4,222.1L259.3,222.9L262.3,222.0L266.8,219.0L271.6,218.3L282.6,211.6L283.3,210.7L283.2,210.0L286.0,209.9L289.3,208.2L291.7,208.2L295.8,218.8Z"},{"n":"Osmaniye","d":"M339.7,210.1L344.7,209.2L347.6,207.8L349.7,210.8L352.2,213.0L346.1,219.7L343.3,225.9L340.3,225.8L337.4,223.7L330.8,223.0L331.4,219.0L329.5,217.0L325.6,219.1L324.9,218.9L326.5,215.7L325.8,214.3L325.9,209.6L330.2,201.5L334.2,198.6L338.9,198.0L336.1,204.0L337.2,209.2L339.7,210.1Z"}],"cen":[{"n":"Aksaray","d":"M273.7,150.4L275.5,152.3L273.7,156.9L275.8,159.2L278.2,165.1L279.6,166.4L278.6,172.4L279.6,174.3L279.4,177.5L277.6,178.6L275.7,181.8L273.1,181.2L271.9,181.9L271.2,183.4L260.4,185.8L251.6,186.7L249.1,186.0L247.5,183.9L243.7,175.4L243.8,173.8L245.6,170.1L246.1,166.8L248.1,161.5L250.7,158.5L257.4,155.6L261.9,155.4L265.0,152.8L265.7,150.8L263.9,145.8L265.1,143.7L269.8,147.9L272.8,148.7L273.7,150.4Z"},{"n":"Ankara","d":"M242.1,87.5L243.1,90.0L244.6,90.8L246.5,90.6L247.6,88.6L249.0,88.4L258.9,92.9L256.5,95.9L254.2,102.1L255.4,105.3L255.4,107.5L254.8,108.6L249.7,111.4L247.3,114.0L245.1,125.5L243.5,128.9L245.2,130.8L247.7,131.3L248.4,132.9L247.6,135.0L249.2,137.6L252.7,133.8L254.8,137.1L265.6,142.6L263.9,145.8L265.7,151.5L265.0,152.8L262.0,155.4L257.4,155.6L250.7,158.5L247.5,152.3L247.9,142.5L242.1,132.9L239.8,135.2L238.0,135.2L236.9,137.6L235.1,138.9L232.9,137.8L231.1,137.9L228.2,140.7L227.0,142.7L222.4,142.0L219.7,144.2L214.3,141.3L209.2,142.8L207.8,142.3L201.5,137.0L204.9,134.9L205.5,128.7L205.0,123.8L202.3,119.5L200.5,114.8L200.4,113.3L201.6,111.7L200.7,109.0L198.9,108.7L195.7,104.5L193.3,103.3L179.6,102.2L174.8,103.2L172.3,103.1L171.6,102.6L171.4,100.0L170.2,98.4L172.7,95.1L175.6,93.1L175.2,88.9L176.0,87.4L178.6,88.0L182.3,90.1L191.7,91.7L196.0,90.2L198.8,90.7L202.2,90.2L209.7,87.0L216.8,87.4L220.0,82.8L218.5,77.9L220.8,75.8L225.5,75.9L234.9,80.1L242.1,87.5Z"},{"n":"Çankırı","d":"M260.7,65.5L262.0,67.4L268.5,70.0L269.1,72.0L268.7,76.8L270.6,83.2L272.3,86.7L272.2,88.0L270.7,91.0L266.3,93.6L258.6,92.8L249.0,88.4L247.6,88.6L246.5,90.6L244.6,90.8L243.1,90.0L241.6,86.6L235.1,80.2L225.5,75.9L220.8,75.8L222.0,72.1L221.3,70.4L226.7,65.7L237.1,63.3L238.7,60.4L242.0,61.0L245.5,63.0L247.1,65.0L248.9,65.6L262.2,60.2L262.9,60.9L263.0,61.9L260.8,64.2L260.7,65.5Z"},{"n":"Eskişehir","d":"M173.2,103.3L179.6,102.2L193.3,103.3L195.7,104.5L198.9,108.7L200.7,109.0L201.6,111.7L200.4,113.3L200.5,114.8L201.9,118.7L205.0,124.2L205.5,131.5L204.9,135.0L200.8,137.3L200.2,139.7L198.1,140.9L194.8,140.1L188.7,140.5L186.1,139.3L183.6,133.1L181.6,132.6L178.5,135.3L173.7,137.6L170.5,135.5L167.8,137.1L166.8,138.9L162.2,140.9L159.6,138.4L158.7,136.4L157.1,135.8L155.9,132.5L153.0,129.6L152.8,124.7L147.3,119.1L148.8,116.1L144.4,116.3L143.0,114.6L143.1,112.6L145.3,109.9L147.2,109.3L150.7,109.8L154.1,106.5L156.3,106.5L158.0,105.6L159.3,103.7L160.8,98.1L165.6,97.1L169.7,98.2L171.4,100.0L171.6,102.7L173.2,103.3Z"},{"n":"Karaman","d":"M262.0,208.7L264.4,211.1L265.3,213.1L270.4,214.4L273.5,216.9L270.2,218.7L267.0,218.9L263.2,221.6L259.6,222.9L255.9,222.1L252.7,223.9L248.3,224.0L239.9,229.9L235.1,231.6L237.5,236.9L239.3,238.6L243.0,240.7L243.4,241.6L242.9,243.1L238.0,245.2L229.9,246.8L225.6,246.2L222.4,243.7L220.8,241.6L219.4,237.0L219.8,234.0L224.1,232.6L228.4,230.0L230.3,227.6L224.3,226.0L222.8,224.5L222.7,223.5L225.3,220.3L226.5,217.7L226.7,215.5L229.1,214.6L231.3,215.5L233.1,215.4L232.0,212.8L233.7,209.2L238.0,208.5L239.7,206.0L240.8,205.7L242.5,205.9L245.5,208.9L247.3,209.0L248.3,208.1L249.4,204.9L251.4,202.3L256.3,199.8L258.8,199.7L262.0,208.7Z"},{"n":"Kayseri","d":"M327.9,136.0L329.9,138.1L331.6,138.8L339.1,138.8L341.1,137.9L343.8,138.8L348.3,137.0L353.7,137.0L357.1,138.7L358.9,141.7L352.3,160.4L351.2,161.1L350.5,164.0L344.8,171.3L342.2,165.8L339.0,165.5L334.1,167.9L329.8,176.7L319.6,181.6L317.7,185.8L312.0,187.2L306.7,185.6L308.1,182.4L308.1,177.2L307.1,175.1L305.8,173.8L302.2,173.6L300.4,172.7L298.2,167.1L296.0,166.7L295.6,165.5L296.1,162.5L299.0,161.4L300.6,159.5L300.6,154.1L297.0,152.1L298.5,143.5L299.6,142.5L300.9,142.5L305.9,143.8L313.4,140.0L312.8,137.7L313.1,136.5L319.5,135.9L323.7,132.0L325.9,132.9L327.9,136.0Z"},{"n":"Kırıkkale","d":"M264.8,93.5L269.8,95.0L270.6,98.8L273.5,102.5L269.2,106.1L269.5,111.7L264.6,115.8L262.9,121.5L261.2,123.4L259.9,126.2L257.4,126.2L254.4,128.8L252.7,133.8L249.2,137.6L247.6,135.0L248.4,132.9L247.7,131.3L245.2,130.8L243.5,128.9L245.1,125.5L246.8,115.4L247.5,113.6L249.6,111.6L255.0,108.3L255.5,105.7L254.2,102.1L255.6,97.8L258.3,93.6L260.2,92.6L264.8,93.5Z"},{"n":"Kırşehir","d":"M274.4,114.3L278.4,114.1L280.6,114.7L281.9,117.1L284.3,119.1L283.7,121.7L287.7,124.5L286.3,128.8L286.3,130.9L287.9,131.3L289.9,129.6L290.8,129.9L288.7,133.2L288.9,135.2L286.8,137.1L287.1,140.1L285.0,140.8L285.3,142.8L283.5,144.4L282.1,147.3L282.0,148.5L280.6,149.0L277.9,148.6L277.0,149.5L276.8,151.4L275.5,152.3L274.2,151.4L272.8,148.7L269.8,147.9L266.8,145.4L265.1,143.7L265.5,142.5L254.8,137.1L252.7,133.8L254.4,128.8L257.4,126.2L259.9,126.2L261.2,123.4L262.9,121.5L264.5,116.0L266.2,114.1L269.5,111.7L274.4,114.3Z"},{"n":"Konya","d":"M243.4,135.1L247.9,142.5L247.5,152.3L250.7,158.5L247.6,162.5L245.6,170.1L243.7,174.1L243.8,175.9L247.5,183.9L249.3,186.1L251.6,186.7L260.7,185.7L269.6,183.5L271.9,183.7L277.5,189.7L281.4,196.0L281.4,198.1L279.7,201.8L279.2,205.1L279.3,205.8L280.4,206.1L282.3,208.2L283.3,210.7L277.7,214.3L277.3,215.1L273.5,216.9L270.4,214.4L265.2,213.0L264.4,211.1L262.0,208.7L258.8,199.7L256.3,199.8L250.9,202.7L248.9,205.8L248.3,208.1L247.4,208.9L245.5,208.9L242.5,205.9L240.1,205.8L238.0,208.5L234.8,208.6L233.1,209.9L232.0,213.0L233.1,215.4L231.3,215.5L229.1,214.6L226.5,215.7L226.3,218.3L224.9,220.9L222.8,223.3L222.7,224.4L224.5,226.2L230.3,227.6L228.4,230.0L224.1,232.6L219.8,234.0L218.1,230.9L214.2,230.0L212.4,224.0L200.4,212.5L196.7,210.9L188.4,210.3L185.7,209.2L184.1,207.0L185.2,204.7L185.5,202.0L188.1,192.9L188.1,189.9L187.3,188.0L187.3,185.4L188.8,183.2L192.7,181.4L193.3,179.8L192.3,178.2L182.0,169.3L181.7,167.5L181.9,166.9L195.2,158.7L193.1,157.0L192.4,155.0L193.5,151.3L196.1,145.9L195.7,140.3L197.7,141.0L199.9,140.0L200.8,137.3L201.5,137.0L204.3,139.8L208.7,142.7L214.3,141.3L219.8,144.2L222.4,142.0L227.0,142.7L228.2,140.7L231.2,137.9L232.9,137.8L235.1,138.9L236.9,137.6L238.0,135.2L239.8,135.2L242.1,132.9L243.4,135.1Z"},{"n":"Nevşehir","d":"M294.0,129.4L296.0,130.6L295.2,134.9L298.3,138.4L299.6,142.5L298.5,143.6L297.0,152.1L300.6,154.1L300.6,159.5L299.0,161.4L296.1,162.6L295.5,164.4L295.9,168.1L294.6,169.4L291.9,169.9L288.2,167.7L284.1,169.0L281.6,168.0L278.2,165.1L275.9,159.4L274.2,157.8L273.8,156.4L275.5,152.3L276.8,151.4L277.1,149.3L277.9,148.6L280.6,149.0L282.0,148.5L282.1,147.3L283.5,144.4L285.3,142.8L285.0,140.8L287.1,140.1L286.8,137.1L288.9,135.2L288.7,133.2L290.8,129.9L289.9,129.6L287.9,131.3L286.3,130.9L286.3,128.8L287.7,124.5L291.9,126.8L292.0,128.4L294.0,129.4Z"},{"n":"Niğde","d":"M283.7,169.0L288.2,167.7L291.7,169.8L292.8,170.0L295.4,168.9L296.0,166.7L297.8,166.8L300.3,172.6L302.2,173.6L306.0,173.9L308.1,177.5L308.1,182.7L306.7,185.6L305.6,186.1L304.9,187.2L305.2,190.3L304.6,191.4L299.8,195.9L294.6,195.6L293.3,196.3L292.7,197.7L294.0,200.8L294.1,203.0L291.8,205.4L291.7,208.2L289.0,208.2L285.7,210.0L283.2,210.0L281.9,207.7L280.2,206.0L279.3,205.8L279.2,203.7L281.4,198.1L281.4,196.2L275.6,187.4L271.2,183.4L271.9,181.9L273.1,181.2L275.7,181.8L277.6,178.6L279.6,177.4L279.6,174.3L278.6,172.4L279.6,166.4L283.7,169.0Z"},{"n":"Sivas","d":"M398.5,90.5L399.4,95.9L401.5,97.7L405.8,100.1L409.4,99.4L415.7,102.0L415.1,105.1L414.2,105.7L405.6,105.2L404.6,106.2L403.1,109.7L403.6,110.9L407.9,110.1L408.9,110.9L407.9,112.1L405.5,112.7L405.3,113.7L404.5,114.2L403.0,116.9L402.5,122.5L404.0,127.6L403.8,136.5L402.7,138.4L400.2,138.9L397.3,141.1L389.8,141.6L384.9,144.0L378.9,143.6L377.8,145.6L379.1,150.5L378.4,152.9L370.8,159.7L362.5,160.9L360.4,159.4L358.1,158.9L352.3,160.4L358.9,141.7L358.0,139.7L356.8,138.5L353.7,137.0L348.6,136.9L343.8,138.8L341.1,137.9L339.1,138.8L331.3,138.8L328.3,136.5L325.9,132.9L323.7,132.0L324.5,130.5L328.8,127.1L331.6,123.9L331.7,122.5L334.4,116.9L333.3,116.3L333.4,114.2L331.7,112.7L331.0,109.9L328.4,108.0L329.1,106.2L333.2,106.2L336.6,104.9L339.0,105.7L343.3,106.0L348.4,104.3L350.6,102.6L351.6,100.4L351.3,98.3L353.6,95.0L359.6,96.7L363.0,95.1L365.8,96.4L374.1,97.9L375.3,94.5L378.0,92.9L377.9,91.3L378.7,90.1L378.9,87.7L380.7,86.0L382.7,90.1L384.6,90.9L386.4,90.2L388.6,88.2L392.5,87.4L396.5,83.7L398.5,90.5Z"},{"n":"Yozgat","d":"M309.1,95.3L310.3,96.3L314.3,96.4L318.1,100.5L327.5,100.8L328.3,102.3L328.4,104.5L329.1,106.2L328.4,108.0L331.0,109.9L331.7,112.7L333.4,114.2L333.3,116.3L334.4,116.9L331.7,122.5L331.6,123.9L328.8,127.1L324.5,130.5L323.3,132.5L320.9,135.0L319.3,135.9L315.6,135.9L313.1,136.5L312.8,137.7L313.4,140.0L305.9,143.8L299.6,142.5L298.5,140.1L298.3,138.4L295.2,134.9L295.9,130.5L292.1,128.5L291.9,126.8L286.8,124.2L284.0,122.1L283.6,121.2L284.3,119.1L281.9,117.1L280.6,114.7L278.4,114.1L274.6,114.5L269.5,111.7L269.0,107.8L270.0,107.2L276.0,106.5L279.6,104.3L292.2,104.2L295.5,102.0L300.2,102.8L304.0,100.4L303.6,95.5L307.4,95.5L308.8,94.8L309.1,95.3Z"}],"bla":[{"n":"Amasya","d":"M320.3,68.9L324.6,69.4L328.1,69.0L331.4,70.3L335.1,67.8L335.8,64.8L337.6,64.8L341.1,65.9L341.2,67.7L343.4,69.2L342.5,71.1L343.7,73.2L344.2,75.7L343.2,78.7L339.6,83.1L335.8,85.6L332.9,86.2L330.7,85.6L328.2,83.9L324.7,83.9L320.7,90.9L316.3,93.0L314.9,94.6L314.3,96.4L310.0,96.2L308.8,94.8L309.1,89.7L312.4,85.3L312.9,81.1L311.7,79.4L306.4,77.4L303.1,77.2L301.0,75.5L299.2,70.3L299.9,69.9L300.0,65.9L301.3,62.7L301.3,60.4L313.5,63.5L318.4,66.9L319.1,68.2L320.3,68.9Z"},{"n":"Artvin","d":"M503.3,43.5L505.3,44.7L507.0,44.1L507.2,45.0L509.2,45.4L510.5,46.6L514.6,43.0L517.5,44.2L518.7,43.5L521.7,43.4L522.4,44.3L524.8,44.2L526.4,45.2L528.7,45.3L530.7,46.4L532.6,52.0L534.2,54.9L533.4,56.6L531.2,57.8L528.4,60.6L526.3,64.7L524.5,65.4L519.1,65.4L516.4,66.8L513.0,78.4L510.6,79.3L507.1,77.6L505.1,77.5L498.3,81.5L496.2,80.8L495.5,78.0L497.3,74.2L496.9,73.1L491.1,72.8L488.7,71.7L495.4,62.7L497.6,61.4L498.1,60.3L497.7,59.3L496.4,59.2L494.5,57.8L492.9,55.7L492.6,53.8L491.5,51.9L493.4,50.2L497.7,48.5L499.7,45.5L501.2,44.7L502.0,42.9L503.3,43.5Z"},{"n":"Bartın","d":"M226.4,30.6L228.8,34.7L230.9,40.2L233.9,41.8L230.8,43.5L229.7,43.0L228.7,44.4L226.9,45.4L224.8,49.8L218.5,53.8L216.2,54.5L214.7,51.8L206.0,42.0L206.1,41.0L207.1,41.2L206.8,40.7L209.8,39.7L210.6,38.4L212.3,37.2L212.1,36.6L214.0,35.2L215.7,35.1L217.0,33.9L218.1,34.4L220.7,31.9L223.0,31.6L223.2,30.9L226.4,30.6Z"},{"n":"Bayburt","d":"M469.5,83.0L470.2,84.7L471.4,91.9L473.5,94.1L478.3,94.9L478.7,95.9L477.6,97.8L473.9,99.5L468.7,103.0L465.5,103.0L457.3,101.2L450.1,103.7L447.2,106.8L444.7,105.0L444.2,103.4L445.8,100.9L447.7,99.4L448.2,98.0L448.4,94.0L449.3,91.0L450.2,90.1L453.5,89.2L455.3,87.2L456.7,83.5L460.4,84.0L468.9,82.6L469.5,83.0Z"},{"n":"Bolu","d":"M202.4,63.2L214.0,63.7L213.9,66.4L221.0,69.5L222.0,71.6L221.4,74.9L218.5,77.9L220.0,82.8L217.2,87.0L215.2,87.5L209.7,87.0L202.2,90.2L198.8,90.7L196.0,90.2L191.7,91.7L182.3,90.1L178.6,88.0L176.0,87.4L175.2,88.9L175.6,93.1L172.7,95.1L170.2,98.4L165.6,97.1L162.8,91.7L162.4,90.6L163.1,88.6L161.5,86.2L164.0,83.3L168.8,83.2L171.3,82.5L172.4,81.1L172.7,76.7L174.9,77.6L180.0,76.7L182.3,78.1L185.3,77.5L187.4,75.9L187.5,71.8L188.7,69.2L192.9,68.7L195.6,67.4L197.1,66.1L197.6,64.5L197.0,62.3L202.4,63.2Z"},{"n":"Çorum","d":"M292.8,55.9L293.8,56.1L295.1,53.9L296.6,55.9L297.8,60.7L299.0,61.0L301.3,60.4L301.3,62.7L300.0,65.9L299.9,69.9L299.2,70.3L301.4,76.2L303.4,77.3L306.4,77.4L309.2,78.4L311.7,79.4L312.8,80.9L312.4,85.3L309.1,89.7L308.8,94.8L307.4,95.5L303.6,95.5L304.0,100.4L300.2,102.8L295.9,102.0L291.9,104.3L279.6,104.3L277.3,106.1L272.1,106.7L269.0,107.8L269.4,105.8L273.5,102.4L272.0,101.1L270.6,98.8L269.9,95.1L266.3,93.6L270.7,91.0L272.3,87.5L268.7,76.8L269.1,72.0L268.5,70.0L276.0,66.9L276.0,64.9L274.4,63.7L273.9,62.4L276.4,57.3L280.7,51.8L281.8,51.7L283.5,52.9L292.8,55.9Z"},{"n":"Düzce","d":"M184.6,58.6L187.7,61.7L197.0,62.3L197.6,64.5L196.9,66.2L194.9,67.8L192.9,68.7L188.7,69.2L187.5,71.8L187.4,75.9L185.3,77.5L182.3,78.1L180.0,76.7L174.9,77.6L172.7,76.7L173.6,75.1L170.7,72.9L170.1,70.8L171.2,68.1L174.3,65.5L175.2,63.8L173.3,61.1L180.8,60.1L184.6,58.6Z"},{"n":"Giresun","d":"M427.8,60.8L428.3,61.0L427.4,62.5L426.4,66.0L426.5,70.2L427.4,73.0L426.1,73.7L423.6,73.7L421.3,75.5L418.0,81.5L418.3,85.5L422.3,86.9L425.0,89.4L424.3,90.7L421.6,92.1L419.9,93.8L419.9,98.0L421.2,100.1L420.7,101.3L418.5,102.1L415.7,102.0L409.4,99.4L406.0,100.1L399.5,96.1L398.8,91.2L396.5,82.9L395.3,79.5L392.0,74.1L395.5,65.8L397.9,66.5L400.5,66.2L402.8,67.6L403.8,67.0L405.0,67.5L408.1,67.3L411.1,65.1L412.7,66.0L413.9,66.0L417.1,63.5L418.8,63.6L420.7,62.2L424.4,62.5L427.8,60.8Z"},{"n":"Gümüşhane","d":"M428.2,73.6L432.5,77.4L443.0,81.6L445.3,80.9L446.6,77.0L447.8,75.3L448.9,76.3L448.6,79.2L450.5,79.4L451.6,81.0L452.9,81.6L453.7,80.3L453.1,78.5L454.0,77.7L457.2,81.2L455.1,87.4L453.5,89.2L450.2,90.1L449.3,91.0L448.4,94.0L447.8,99.2L445.8,100.9L444.2,103.4L445.0,105.6L447.2,106.8L446.9,107.1L442.0,108.6L436.4,109.1L431.0,106.6L426.4,104.0L426.4,103.5L420.5,101.5L421.2,100.1L419.9,98.0L419.9,93.8L421.6,92.1L424.3,90.7L425.0,89.4L422.3,86.9L418.3,85.5L418.1,81.2L420.6,76.3L423.6,73.7L426.1,73.7L427.4,73.0L428.2,73.6Z"},{"n":"Karabük","d":"M235.4,43.2L237.6,47.3L236.6,49.2L234.7,50.7L233.7,52.6L233.7,55.4L234.0,56.2L236.6,57.8L238.7,60.4L237.1,63.3L226.7,65.7L221.3,70.4L220.2,69.0L213.9,66.4L214.0,63.7L208.0,63.3L208.6,59.0L209.3,57.7L214.6,54.5L218.5,53.8L224.1,50.4L225.6,48.9L226.9,45.4L228.7,44.4L229.8,42.9L230.8,43.5L233.9,41.8L235.4,43.2Z"},{"n":"Kastamonu","d":"M246.8,23.2L257.3,24.8L268.8,24.7L274.4,25.8L274.3,29.0L275.6,31.8L275.7,34.4L282.7,35.0L286.0,37.2L285.0,40.3L281.8,42.4L282.1,51.8L280.8,51.8L279.6,52.9L276.4,57.3L273.9,62.4L274.4,63.7L276.0,64.9L276.0,66.9L268.5,70.0L261.9,67.2L260.8,65.9L260.8,64.2L263.0,61.9L262.9,60.9L262.0,60.1L250.2,65.5L248.2,65.6L242.9,61.5L240.9,60.5L238.7,60.4L236.0,57.2L234.0,56.2L233.6,53.0L234.7,50.7L236.6,49.2L237.6,47.3L234.8,42.1L230.9,40.2L228.8,34.7L226.3,30.6L233.6,29.1L237.1,26.9L241.5,25.8L246.8,23.2Z"},{"n":"Ordu","d":"M365.9,58.1L369.7,58.2L369.7,59.0L372.7,59.7L377.3,63.2L379.5,62.1L381.8,58.5L382.5,59.4L385.0,59.3L384.7,61.5L385.7,63.0L387.5,63.4L387.9,64.5L395.5,65.7L392.0,74.1L395.3,79.5L396.5,83.7L392.5,87.4L388.6,88.2L386.4,90.2L383.9,90.8L382.6,89.9L379.4,81.8L375.1,81.5L371.4,78.9L370.3,78.9L369.7,77.3L366.4,75.8L363.0,76.4L359.8,75.9L358.5,74.4L356.0,74.0L350.9,71.4L351.2,70.1L355.1,68.8L357.6,67.0L360.5,62.1L365.3,59.4L365.3,58.1L365.9,58.1Z"},{"n":"Rize","d":"M491.8,52.2L492.9,55.7L494.5,57.8L496.4,59.2L497.7,59.3L498.1,60.3L497.7,61.2L495.6,62.5L488.7,71.7L479.6,77.9L468.9,82.6L468.7,78.9L469.8,76.4L469.8,74.4L468.3,69.1L467.0,66.3L464.3,64.2L465.9,62.9L469.3,62.4L470.9,62.9L476.3,60.5L478.8,57.5L484.9,56.2L487.0,55.2L489.7,52.7L491.8,52.2Z"},{"n":"Samsun","d":"M349.9,48.9L350.0,49.4L350.0,48.7L356.3,50.4L360.5,52.6L361.3,53.7L361.1,55.5L361.6,56.5L365.3,58.1L365.3,59.4L360.6,62.0L357.6,67.0L355.1,68.8L351.2,70.1L351.3,68.8L350.0,68.0L343.6,69.3L341.2,67.7L341.1,65.9L336.9,64.8L335.8,64.8L335.3,67.5L334.6,68.4L331.0,70.3L328.1,69.0L324.6,69.4L320.0,68.8L318.4,66.9L313.3,63.4L301.3,60.4L298.0,60.9L297.2,59.5L296.6,55.9L295.1,53.9L296.5,51.7L301.9,49.0L305.6,53.5L308.7,54.0L310.3,53.4L311.5,52.2L312.5,49.7L311.4,45.2L313.5,40.5L313.9,38.3L316.0,38.7L318.7,38.4L328.1,34.6L331.3,36.5L333.1,39.0L333.6,45.5L337.0,49.9L340.6,51.6L340.1,51.5L340.0,52.2L341.4,53.1L341.5,53.8L343.2,54.2L345.5,53.6L347.2,52.5L348.8,49.3L349.9,48.9Z"},{"n":"Sinop","d":"M296.7,20.1L298.9,20.3L300.0,21.6L299.8,22.3L300.8,22.9L304.4,22.4L304.8,23.5L302.8,23.1L301.4,25.4L301.2,27.1L302.5,29.7L304.9,31.9L304.4,32.3L304.9,33.3L306.7,34.5L307.0,35.4L311.3,36.6L313.9,38.3L313.5,40.5L311.4,45.2L312.5,49.5L310.9,53.1L308.7,54.0L305.6,53.5L301.9,49.0L296.5,51.7L293.6,56.2L283.5,52.9L282.1,51.8L281.8,42.4L285.0,40.3L286.0,37.2L282.7,35.0L275.7,34.4L275.6,31.8L274.3,29.0L274.4,25.8L277.0,26.4L282.6,24.9L283.1,25.7L286.5,26.3L292.2,25.8L295.6,23.0L296.8,21.1L296.7,20.1Z"},{"n":"Tokat","d":"M351.3,68.8L350.8,70.9L351.2,71.6L356.0,74.0L358.5,74.4L359.7,75.9L363.0,76.4L366.4,75.8L369.7,77.3L370.3,78.9L371.4,78.9L375.1,81.5L379.6,82.0L380.7,86.0L378.9,87.7L378.7,90.1L377.9,91.3L378.0,92.9L375.3,94.5L374.1,97.9L365.8,96.4L363.0,95.1L359.6,96.7L353.6,95.0L351.3,98.3L351.6,100.5L350.2,103.3L343.3,106.0L339.0,105.7L336.6,104.9L333.2,106.2L329.1,106.2L328.4,104.5L328.3,102.3L327.5,100.8L318.1,100.5L314.3,96.4L314.9,94.6L316.3,93.0L320.7,90.9L324.7,83.9L328.2,83.9L330.7,85.6L334.3,86.2L339.6,83.1L343.7,77.8L344.2,75.2L342.5,71.1L343.4,69.2L345.0,69.4L348.7,68.0L351.3,68.8Z"},{"n":"Trabzon","d":"M435.8,59.7L437.9,60.3L440.4,63.0L442.7,64.0L445.1,63.5L447.0,63.9L449.9,65.8L454.9,65.6L457.6,67.5L461.0,66.9L464.3,64.2L466.8,66.1L468.3,68.9L469.8,74.4L469.8,76.4L468.7,78.9L468.9,82.6L460.9,84.0L456.7,83.5L457.2,81.2L455.1,78.5L454.0,77.7L453.3,78.2L453.1,79.1L453.7,80.5L453.2,81.4L452.4,81.5L450.5,79.4L448.5,79.2L448.9,76.3L447.8,75.3L446.6,77.0L445.4,80.7L443.8,81.6L432.3,77.2L427.1,72.4L426.4,69.8L426.5,65.6L428.3,61.0L431.6,62.0L435.8,59.7Z"},{"n":"Zonguldak","d":"M205.8,41.5L206.4,43.1L214.7,51.8L216.2,54.5L214.5,54.5L209.3,57.7L208.1,61.0L208.0,63.3L187.7,61.7L184.6,58.5L186.8,55.5L186.6,53.1L187.1,53.5L187.2,53.0L186.2,52.2L186.5,51.4L193.4,48.7L197.3,46.4L197.5,45.8L198.5,45.8L201.9,43.0L205.8,41.5Z"}],"eas":[{"n":"Ağrı","d":"M559.4,107.0L559.4,112.2L561.3,113.3L562.0,113.3L563.6,111.2L566.5,111.1L570.1,112.0L578.2,116.6L583.2,116.2L585.4,117.1L587.5,117.2L590.0,116.3L593.6,116.2L593.4,118.8L591.8,121.6L592.3,123.9L591.4,127.6L587.6,129.1L585.2,127.6L583.6,127.9L582.9,128.9L582.5,128.8L582.7,128.0L580.4,127.8L579.7,129.6L579.2,129.1L577.0,129.7L569.4,129.2L567.2,131.9L565.5,132.5L562.5,130.9L560.4,128.4L556.2,127.9L553.1,130.9L550.3,131.1L549.6,131.7L549.7,132.6L552.3,134.5L552.3,137.4L551.8,138.4L546.2,140.8L541.8,141.4L539.3,142.5L538.7,137.6L536.9,134.0L535.5,133.1L532.1,129.0L530.5,125.5L530.4,124.6L532.3,121.3L531.8,114.8L530.8,113.4L524.9,111.4L524.0,109.6L524.7,108.7L528.7,109.1L533.6,106.1L535.9,107.3L538.1,107.3L550.3,103.7L558.7,105.6L559.4,107.0Z"},{"n":"Ardahan","d":"M539.7,40.6L542.0,40.7L541.5,42.6L540.7,43.3L541.2,44.3L542.5,45.1L543.0,44.0L543.9,43.9L544.1,44.8L546.2,45.9L547.9,48.9L550.3,49.8L551.1,51.3L553.4,52.0L551.0,53.8L553.1,53.9L554.3,56.3L554.2,57.0L555.9,56.7L555.3,57.8L555.3,60.4L554.1,62.8L552.5,63.9L549.4,64.6L544.5,66.9L543.2,69.7L543.1,73.2L542.0,75.5L537.9,76.7L535.0,78.4L533.1,78.4L531.3,75.1L527.8,70.6L526.4,67.0L526.3,64.7L528.4,60.6L531.2,57.8L533.4,56.6L534.2,54.9L532.6,52.0L530.7,46.4L532.2,46.4L532.1,44.8L533.7,43.6L534.1,41.4L534.7,40.6L538.0,40.1L539.7,40.6Z"},{"n":"Bingöl","d":"M483.1,123.4L485.9,125.4L489.0,125.6L491.7,129.8L490.8,130.7L490.3,132.4L491.3,137.5L492.3,137.8L493.5,139.6L493.5,142.8L489.8,147.8L493.2,155.0L482.1,160.3L470.2,159.5L469.4,160.3L468.6,163.6L467.7,164.9L462.9,165.0L463.1,162.0L461.3,159.7L461.4,158.2L462.8,154.9L464.9,155.0L465.9,151.7L464.8,149.5L463.8,149.2L462.8,146.2L462.7,142.3L466.2,137.8L465.9,136.2L464.9,135.0L454.2,140.4L455.2,138.4L454.8,136.0L456.9,131.4L460.1,132.4L466.0,128.7L464.3,126.9L469.9,123.8L470.7,122.1L475.1,123.5L480.7,121.4L482.1,122.0L483.1,123.4Z"},{"n":"Bitlis","d":"M551.3,146.9L553.3,148.8L552.7,152.1L548.9,155.1L546.0,159.3L545.4,159.4L543.7,163.0L538.7,165.7L537.4,167.1L539.0,172.9L538.4,175.8L539.5,177.0L540.9,177.3L540.2,178.9L542.0,181.4L539.0,183.5L531.5,179.6L527.6,178.5L525.3,176.5L522.5,175.3L519.0,176.0L516.8,178.8L515.4,177.7L513.4,178.1L505.9,176.2L506.0,169.7L504.6,163.8L503.4,162.4L501.2,162.3L502.7,160.6L504.3,160.0L511.8,160.4L514.2,159.3L517.8,156.2L517.7,154.9L516.0,152.5L516.1,151.4L520.3,151.0L520.4,149.2L525.7,146.6L531.2,146.9L533.5,146.3L537.3,146.9L539.9,146.4L539.3,142.5L541.8,141.4L547.8,140.2L547.3,144.6L551.3,146.9Z"},{"n":"Elazığ","d":"M464.7,139.7L462.8,141.8L462.7,146.0L463.8,149.2L465.0,149.7L465.9,151.9L464.9,155.0L462.7,155.1L461.3,158.7L461.3,159.7L463.1,161.8L462.9,165.0L455.6,165.0L449.6,164.1L448.0,167.0L445.6,169.1L440.5,169.2L435.2,170.6L433.3,170.5L431.1,169.3L421.8,171.6L417.2,167.8L413.0,167.5L408.0,165.5L405.0,165.0L403.5,163.5L402.5,161.1L403.5,158.4L406.4,154.6L411.3,154.0L411.3,148.9L409.9,145.1L410.7,143.6L412.9,143.8L415.1,142.6L416.0,144.5L415.6,148.0L416.8,148.9L424.3,148.3L438.0,154.0L442.4,151.9L445.4,151.9L447.8,150.5L450.5,146.3L450.5,144.3L449.7,142.2L451.4,140.5L454.7,140.2L458.1,138.1L465.0,134.9L466.2,137.8L464.7,139.7Z"},{"n":"Erzincan","d":"M462.1,107.7L468.8,107.7L469.7,108.2L470.6,110.2L470.3,112.4L471.4,113.9L475.3,116.4L473.1,120.8L473.1,122.9L470.7,122.1L458.3,121.7L453.4,123.3L450.3,122.0L446.7,123.3L444.5,125.9L443.4,126.3L442.0,126.2L441.6,124.7L441.0,124.5L437.6,124.9L432.6,124.0L427.5,125.0L425.8,125.5L421.7,129.0L417.2,131.3L416.3,132.8L417.6,133.7L420.5,134.0L420.2,134.9L415.7,136.8L414.3,139.5L415.1,142.6L412.9,143.8L412.1,142.0L408.0,139.4L404.6,139.3L402.7,138.4L403.9,135.5L404.0,127.6L402.5,122.5L403.1,116.7L404.5,114.2L405.3,113.7L405.7,112.5L407.9,112.1L408.9,110.9L407.9,110.1L404.2,111.0L403.1,110.5L403.6,108.2L405.6,105.2L414.2,105.7L415.1,105.1L415.7,102.0L420.5,101.5L426.4,103.5L426.4,104.0L434.7,108.5L437.4,109.1L446.1,107.5L450.1,103.7L457.6,101.2L462.8,102.4L461.4,106.1L462.1,107.7Z"},{"n":"Erzurum","d":"M526.3,64.7L526.4,67.0L527.8,70.6L531.3,75.1L533.7,79.4L532.8,86.2L531.9,87.7L524.5,91.3L520.7,92.4L520.3,93.6L522.4,97.3L527.4,98.7L531.5,102.4L533.6,106.1L528.7,109.1L524.7,108.7L524.0,109.6L524.9,111.4L531.3,113.9L532.3,121.3L530.7,124.5L526.2,125.6L522.7,127.6L522.0,128.7L522.9,130.2L522.8,131.1L518.3,135.1L511.0,137.5L507.3,137.1L505.1,135.6L501.0,130.7L496.9,128.7L491.7,129.8L489.0,125.6L485.9,125.4L483.4,123.6L481.8,121.8L480.5,121.4L475.1,123.5L473.3,123.0L473.1,120.8L475.3,116.4L471.4,113.9L470.3,112.4L470.6,110.2L469.7,108.2L468.8,107.7L462.1,107.7L461.5,106.8L462.8,102.4L468.9,102.9L473.9,99.5L477.5,98.0L478.6,96.1L478.2,94.8L473.7,94.2L472.3,93.3L472.1,92.4L471.3,91.7L470.2,84.7L469.3,82.6L479.6,77.9L488.7,71.7L491.1,72.8L496.9,73.1L497.3,74.2L495.5,78.0L496.2,80.8L498.3,81.5L505.4,77.5L507.1,77.6L510.9,79.3L513.2,78.1L515.2,69.7L516.4,66.8L519.1,65.4L524.5,65.4L526.3,64.7Z"},{"n":"Hakkari","d":"M585.6,195.0L585.9,196.3L585.0,198.4L585.9,199.0L588.4,197.8L591.5,198.0L594.1,196.1L596.1,193.3L597.2,193.8L598.0,195.3L596.3,198.1L597.9,199.7L598.1,201.0L597.4,201.9L597.6,204.7L596.9,206.2L598.8,206.9L599.6,208.6L601.0,208.9L603.8,211.7L604.1,213.0L602.4,215.0L603.2,218.1L602.2,217.3L598.0,216.5L594.1,220.3L589.1,222.0L589.5,222.9L588.1,225.3L586.6,224.7L585.9,222.0L584.5,220.1L585.7,217.7L586.5,217.8L587.2,217.0L586.9,214.5L585.6,212.8L582.6,211.4L579.2,211.0L577.3,212.5L576.7,213.8L575.0,214.6L567.8,214.8L562.7,213.3L560.7,210.7L560.7,203.1L562.5,194.9L568.1,195.4L571.5,195.0L574.9,196.0L577.3,194.9L580.2,195.3L584.5,193.2L585.6,195.0Z"},{"n":"Iğdır","d":"M568.7,96.5L569.3,97.3L567.5,98.1L567.5,99.6L569.5,100.8L571.0,100.8L575.3,103.3L587.0,102.1L593.3,105.3L595.5,107.8L596.9,111.0L597.6,110.9L597.5,111.4L599.2,112.5L599.9,112.3L600.0,113.3L600.5,113.3L603.5,116.9L603.7,119.0L600.6,115.7L598.6,114.7L597.6,112.9L593.6,116.2L586.0,117.2L583.2,116.2L578.0,116.5L570.1,112.0L566.5,111.1L563.6,111.2L562.0,113.3L559.4,112.2L559.4,106.6L558.8,105.6L558.0,105.5L557.9,104.0L556.2,101.3L556.3,100.1L556.9,99.5L558.9,99.5L559.3,98.7L559.0,97.3L559.9,96.7L564.6,96.6L567.7,95.3L568.7,96.5Z"},{"n":"Kars","d":"M565.7,64.6L568.1,66.9L568.1,70.2L569.3,71.5L570.4,74.6L570.0,75.7L570.4,76.8L568.1,80.8L567.1,81.6L567.3,82.7L566.8,82.5L566.6,83.2L564.1,84.9L566.3,87.3L565.6,90.5L567.0,92.9L568.3,93.7L568.3,94.8L565.0,96.6L559.9,96.7L559.0,97.3L559.3,98.7L558.9,99.5L556.7,99.6L556.2,101.2L557.9,104.0L558.0,105.5L550.3,103.7L538.1,107.3L535.5,107.2L533.6,106.1L531.5,102.4L527.4,98.7L522.4,97.3L520.3,93.8L520.7,92.4L524.5,91.3L532.0,87.6L532.8,86.2L533.8,80.4L533.1,78.4L535.0,78.4L537.9,76.7L542.0,75.5L543.1,73.2L543.2,69.9L544.3,67.1L546.9,65.5L550.6,64.6L553.9,63.0L555.2,60.6L555.8,56.7L558.5,55.9L560.7,56.8L561.8,58.8L561.1,60.3L561.8,62.9L565.7,64.6Z"},{"n":"Malatya","d":"M405.0,139.3L408.0,139.4L410.9,140.8L412.1,142.0L412.9,143.8L410.7,143.6L410.0,144.9L411.3,148.9L411.3,154.0L407.1,154.2L406.1,154.9L402.5,160.6L403.5,163.5L405.0,165.0L408.0,165.5L413.0,167.5L417.5,167.9L421.8,171.6L426.5,170.5L427.2,172.6L426.6,176.1L425.1,178.2L422.9,179.3L418.4,180.3L412.1,180.3L409.2,179.0L411.1,177.2L411.4,176.0L408.6,174.8L406.3,175.3L395.9,180.4L397.3,187.2L390.9,189.6L386.2,188.7L384.5,189.3L383.5,190.6L381.2,190.6L377.9,191.7L382.3,182.5L384.7,174.9L384.7,171.6L382.3,169.7L375.0,166.0L371.8,165.4L366.9,165.6L366.7,164.3L369.1,161.8L369.7,160.0L375.7,155.8L378.4,152.9L379.1,150.5L377.8,145.6L378.9,143.6L384.9,144.0L389.8,141.6L397.1,141.2L401.2,138.5L405.0,139.3Z"},{"n":"Muş","d":"M538.6,137.5L539.9,146.4L537.3,146.9L533.5,146.3L531.2,146.9L526.2,146.4L520.4,149.2L520.4,151.0L516.8,151.1L516.0,151.6L516.0,152.6L517.7,154.9L517.8,156.2L514.2,159.3L511.8,160.4L504.6,159.9L502.7,160.6L501.2,162.3L497.5,163.0L496.8,162.1L497.2,159.8L496.7,158.5L493.6,155.8L489.8,148.0L490.0,147.2L493.5,142.8L493.5,139.6L492.3,137.8L491.3,137.5L490.3,132.4L491.0,130.3L492.9,129.2L496.9,128.7L498.7,129.3L501.5,131.1L505.5,136.0L507.1,137.0L510.7,137.6L518.3,135.1L522.8,131.1L522.9,130.2L522.0,128.7L523.1,127.2L526.2,125.6L530.4,124.6L532.0,128.8L535.5,133.1L536.8,133.8L538.6,137.5Z"},{"n":"Tunceli","d":"M462.3,122.2L470.7,122.1L469.9,123.8L464.3,126.9L466.0,128.7L460.1,132.4L456.9,131.4L454.8,135.8L455.2,138.0L454.8,139.4L454.2,140.4L451.4,140.5L449.8,142.1L450.5,144.3L450.5,146.3L448.9,149.4L447.0,151.3L442.4,151.9L438.0,154.0L424.3,148.3L421.0,148.2L417.9,149.1L415.6,148.0L416.0,144.3L414.3,139.4L415.7,136.7L419.5,135.5L420.5,134.0L417.6,133.7L416.3,132.8L417.6,130.8L421.7,129.0L425.8,125.5L432.8,124.0L437.6,124.9L441.3,124.5L441.9,126.2L443.4,126.3L444.5,125.9L446.7,123.3L449.4,122.2L450.3,122.0L453.4,123.3L457.9,121.7L462.3,122.2Z"},{"n":"Van","d":"M557.7,128.1L560.4,128.4L562.3,130.8L565.3,132.5L567.2,131.9L569.4,129.2L577.0,129.7L579.2,129.1L580.9,130.8L580.9,132.1L581.7,132.5L581.2,133.8L581.8,134.5L581.7,135.9L585.0,138.5L585.4,140.0L584.0,139.3L582.9,140.3L584.4,141.2L585.0,142.8L583.8,144.2L585.2,148.3L586.2,149.8L587.2,149.8L588.0,150.6L588.1,152.0L586.8,155.4L587.6,157.1L587.1,158.1L588.7,159.1L588.4,162.0L588.8,163.9L588.1,168.6L590.2,169.5L592.4,168.6L593.8,169.9L594.0,170.9L591.5,172.9L590.9,174.0L590.8,178.2L589.5,178.9L590.0,180.1L589.2,180.0L588.2,181.2L587.9,182.8L586.2,185.6L586.5,186.5L585.6,188.5L586.8,189.3L588.7,189.0L591.1,189.8L591.1,191.1L592.0,192.1L592.8,192.1L592.6,193.3L596.1,193.3L593.1,197.0L591.3,198.1L588.4,197.8L585.6,198.9L585.0,198.3L585.8,195.6L585.2,193.8L584.5,193.2L580.2,195.3L577.3,194.9L574.9,196.0L571.5,195.0L568.1,195.4L557.0,194.9L552.0,193.5L548.6,193.4L546.7,191.6L546.8,189.8L548.3,186.5L546.6,182.8L545.7,181.9L542.0,181.4L540.2,178.9L540.9,177.3L539.5,177.0L538.4,175.9L539.0,172.9L537.4,168.2L537.5,166.9L538.7,165.7L543.7,163.0L545.4,159.4L546.0,159.3L548.9,155.1L552.5,152.3L553.2,150.9L553.3,148.8L551.1,146.7L547.2,144.3L547.8,140.2L551.6,138.5L552.3,137.4L552.3,134.4L549.7,132.6L549.6,131.7L550.3,131.1L553.1,130.9L556.1,127.9L557.7,128.1Z"}],"sea":[{"n":"Adıyaman","d":"M412.1,180.3L418.4,180.3L422.9,179.3L425.1,178.2L426.2,176.6L427.7,177.1L429.1,176.3L430.4,177.3L429.3,181.9L425.1,184.3L422.5,187.4L422.0,188.6L422.1,192.2L421.3,194.0L417.5,196.3L417.5,198.3L410.8,200.9L406.6,204.4L402.0,204.6L396.6,207.7L393.6,206.8L391.1,204.2L385.3,202.2L381.7,203.5L380.0,203.5L378.4,202.0L374.9,200.7L373.5,199.3L373.7,195.9L379.1,191.0L383.5,190.6L384.5,189.3L386.6,188.7L391.1,189.6L397.3,187.2L395.9,180.4L404.1,176.0L408.4,174.8L411.4,176.0L411.1,177.2L409.2,179.0L412.1,180.3Z"},{"n":"Batman","d":"M503.1,162.3L504.6,163.7L505.5,166.9L506.1,170.1L506.0,175.7L505.0,179.9L503.8,182.5L499.9,183.2L499.9,184.6L498.4,185.7L497.8,187.4L501.1,189.7L507.7,189.8L507.9,191.0L506.7,192.9L508.4,194.3L511.0,193.4L511.9,193.6L512.1,194.4L506.3,197.0L502.8,200.9L498.8,201.8L490.8,201.7L486.5,195.3L486.5,194.4L488.0,193.2L488.4,191.8L486.5,191.0L486.0,189.6L488.2,187.3L491.5,179.8L492.1,177.0L491.6,170.7L493.1,166.5L495.9,165.1L498.0,164.9L498.4,164.1L497.9,163.1L498.3,162.8L503.1,162.3Z"},{"n":"Diyarbakır","d":"M497.2,160.2L496.8,162.1L498.4,164.3L497.9,165.0L495.9,165.1L492.6,167.0L491.6,170.7L492.1,177.0L491.5,179.8L488.2,187.3L486.0,189.5L486.5,191.0L488.4,191.8L487.9,193.4L486.5,194.4L478.8,195.3L477.2,194.8L476.1,193.5L474.0,193.3L472.6,192.5L470.7,194.7L469.9,198.0L466.9,198.2L462.3,201.3L456.8,200.4L454.4,201.7L450.2,201.7L449.6,199.9L449.5,194.1L446.4,190.7L443.3,190.4L435.6,184.2L430.7,184.0L428.3,182.8L429.8,180.9L430.4,177.1L429.1,176.3L427.7,177.1L426.2,176.6L427.2,173.1L426.5,170.5L431.1,169.3L433.3,170.5L435.2,170.6L440.5,169.2L445.6,169.1L448.0,167.0L449.6,164.1L455.6,165.0L467.5,165.0L468.3,164.3L469.3,160.4L470.2,159.5L482.1,160.3L493.2,155.0L496.5,158.3L497.2,160.2Z"},{"n":"Gaziantep","d":"M389.1,203.5L391.4,204.3L393.3,206.5L391.3,206.4L389.7,207.8L387.0,211.5L386.4,214.2L388.0,221.7L390.9,224.9L392.1,226.9L392.0,231.0L385.2,234.1L381.0,234.7L376.4,237.8L374.1,232.7L368.1,229.4L366.8,225.4L365.1,223.7L361.0,223.6L359.7,224.2L357.8,227.9L354.1,230.3L353.9,231.7L350.5,230.2L349.0,230.4L343.3,225.9L346.3,219.5L352.2,213.0L357.4,209.4L358.4,210.0L359.6,214.8L360.9,215.3L362.1,214.6L363.4,212.7L366.4,210.7L379.1,208.1L379.9,206.7L380.0,203.5L381.7,203.5L384.8,202.2L389.1,203.5Z"},{"n":"Kilis","d":"M374.1,232.7L376.4,237.8L375.7,238.4L365.1,237.5L364.4,237.6L363.4,239.1L361.5,237.6L362.3,235.0L358.9,232.8L354.5,232.1L353.8,231.0L354.6,229.9L357.8,227.9L359.7,224.2L361.0,223.6L364.5,223.6L366.3,224.6L368.1,229.4L374.1,232.7Z"},{"n":"Mardin","d":"M478.8,195.3L486.5,194.4L486.6,195.4L489.1,198.5L490.8,201.7L498.8,201.8L502.8,200.9L506.3,197.0L512.1,194.4L514.7,198.5L514.0,200.6L514.4,203.0L513.0,204.1L508.0,205.3L507.9,210.5L508.5,212.1L509.2,212.5L511.3,211.7L512.5,215.6L512.0,218.4L502.3,220.6L493.4,220.8L491.7,221.5L490.2,220.3L483.4,219.0L481.4,219.0L480.3,219.7L478.2,219.2L470.8,222.9L467.5,223.6L461.8,227.4L459.5,226.1L458.0,223.1L457.4,218.8L452.0,207.4L450.2,201.7L454.4,201.7L456.8,200.4L460.3,201.3L462.6,201.2L466.9,198.2L469.9,198.0L470.7,194.7L472.6,192.5L474.0,193.3L476.1,193.5L477.2,194.8L478.8,195.3Z"},{"n":"Şanlıurfa","d":"M431.0,184.1L436.5,184.6L443.3,190.4L446.4,190.7L449.3,193.7L449.6,199.9L450.2,202.8L457.4,218.8L458.0,223.3L459.5,226.1L461.8,227.4L448.9,233.8L429.8,237.4L423.4,235.9L414.4,235.7L409.2,230.4L404.1,228.1L397.7,227.7L392.0,231.0L392.0,226.6L388.0,221.7L386.5,216.4L387.0,211.5L389.7,207.8L391.8,206.4L396.9,207.7L402.0,204.6L406.6,204.4L410.8,200.9L417.3,198.4L417.8,197.7L417.5,196.3L421.4,193.8L422.1,192.2L422.1,188.4L424.6,184.7L428.3,182.8L431.0,184.1Z"},{"n":"Siirt","d":"M528.3,178.7L531.5,179.6L538.6,183.5L542.0,181.4L545.7,181.9L546.6,182.8L548.3,186.5L546.8,189.8L546.7,191.6L539.8,190.6L537.2,188.9L534.8,188.9L531.4,190.6L528.8,194.1L526.2,196.1L521.0,196.7L515.0,196.2L512.6,194.9L511.6,193.5L508.4,194.3L506.7,192.9L507.9,191.0L507.7,189.8L501.1,189.7L499.0,188.7L497.7,187.3L498.4,185.7L499.9,184.6L499.9,183.2L503.8,182.5L505.9,176.2L513.4,178.1L515.4,177.7L516.8,178.8L519.0,176.0L522.5,175.3L524.4,176.0L528.3,178.7Z"},{"n":"Şırnak","d":"M540.0,190.7L546.7,191.6L548.8,193.5L552.0,193.5L557.0,194.9L562.5,194.9L560.7,203.1L560.6,210.0L562.7,213.3L558.6,210.9L557.2,211.9L552.3,209.0L548.3,209.8L546.3,211.3L542.4,210.1L541.9,209.1L540.9,208.9L538.7,210.2L539.1,211.3L537.8,211.8L537.8,212.6L536.7,213.5L534.4,218.1L532.7,218.0L527.3,219.6L526.4,216.6L527.1,214.9L525.2,212.8L522.9,212.9L523.2,211.3L517.8,216.4L512.0,218.4L512.5,215.6L511.6,211.9L509.2,212.5L508.4,211.9L507.9,210.5L508.0,205.3L513.0,204.1L514.4,203.0L514.0,200.6L514.7,198.5L512.6,194.9L516.7,196.7L525.7,196.3L528.8,194.1L531.4,190.6L534.6,188.9L537.2,188.9L540.0,190.7Z"}]},"labels":{"mar":[62.2,50.0],"aeg":[99.5,162.0],"med":[186.5,218.0],"cen":[254.9,142.0],"bla":[338.8,64.0],"eas":[503.6,130.0],"sea":[450.7,202.0]},"seas":[["Black Sea",286.0,14.0],["Aegean|Sea",19,150],["Mediterranean Sea",192.7,274.0],["Marmara",87.0,75.2]]};
+const SVGNS = "http://www.w3.org/2000/svg";
+(() => {
+  const [w, h] = MAP.vb;
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Map of Türkiye's seven geographic regions">`;
+  svg += MAP.seas.map(([n, x, y]) => `<text class="slabel" x="${x}" y="${y}">${n.split("|").map((t, i) => `<tspan x="${x}" dy="${i ? "1.15em" : 0}">${t}</tspan>`).join("")}</text>`).join("");
+  REGIONS.forEach(r => {
+    svg += `<g class="rg" id="rg-${r.id}" data-r="${r.id}" tabindex="0" role="button" aria-label="${esc(r.name)}" fill="var(--r-${r.id})">`;
+    svg += MAP.provinces[r.id].map(p => `<path d="${p.d}"><title>${esc(p.n)} · ${esc(r.name)}</title></path>`).join("");
+    svg += `</g>`;
+  });
+  svg += REGIONS.map(r => `<text class="rlabel" x="${MAP.labels[r.id][0]}" y="${MAP.labels[r.id][1]}">${esc(r.name)}</text>`).join("");
+  $("#map").innerHTML = svg + "</svg>";
+  $("#map").querySelectorAll(".rg").forEach(g => {
+    g.addEventListener("click", () => showRegion(g.dataset.r));
+    g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showRegion(g.dataset.r); } });
+  });
+  $("#legend").innerHTML = REGIONS.map(r =>
+    `<button id="region-${r.id}" aria-pressed="false"><i style="background: var(--r-${r.id})"></i>${esc(r.name)}</button>`).join("");
+  $("#legend").querySelectorAll("button").forEach(b => b.onclick = () => showRegion(b.id.slice(7)));
+})();
+function showRegion(id) {
+  const r = REGIONS.find(x => x.id === id);
+  $("#legend").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.id === "region-" + id)));
+  $("#map svg").classList.add("has-pick");
+  $("#map").querySelectorAll(".rg").forEach(g => g.classList.toggle("on", g.dataset.r === id));
+  $("#regionCard").innerHTML = `
+    <div><p class="tr">${esc(r.tr)}</p><h3><span style="display:inline-block;width:.6em;height:.6em;border-radius:50%;margin-right:.35em;vertical-align:.1em;background:var(--r-${r.id})"></span>${esc(r.name)}</h3></div>
+    <p>${esc(r.about)}</p>
+    <dl>
+      <dt>Cities</dt><dd>${esc(r.cities)}</dd>
+      <dt>See</dt><dd>${esc(r.see)}</dd>
+      <dt>Taste</dt><dd>${esc(r.eat)}</dd>
+      <dt>Climate</dt><dd>${esc(r.climate)}</dd>
+    </dl>`;
+}
+showRegion("mar");
+
+/* Timeline */
+const HISTORY = [
+  ["c. 9600 BCE", "Göbekli Tepe", "Hunter-gatherers raise carved stone pillars near Şanlıurfa, thousands of years before Stonehenge."],
+  ["c. 7400 BCE", "Çatalhöyük", "One of the world's earliest towns grows on the Konya plain."],
+  ["c. 1650 BCE", "The Hittite Empire", "The Hittites rule Anatolia from Hattusa and sign one of the first known peace treaties."],
+  ["c. 600 BCE", "First coins", "The kingdom of Lydia mints some of the earliest coins, from electrum."],
+  ["330 CE", "Constantinople", "Emperor Constantine makes the city on the Bosphorus capital of the Roman Empire."],
+  ["1071", "Battle of Manzikert", "The Seljuk Turks defeat the Byzantines and settle across Anatolia."],
+  ["1299", "Ottoman beginnings", "Osman I founds the state that becomes the Ottoman Empire."],
+  ["1453", "Conquest of Istanbul", "Sultan Mehmed II takes Constantinople, which becomes the Ottoman capital.", true],
+  ["1520–1566", "Süleyman the Magnificent", "The empire reaches its height, from Hungary to Yemen."],
+  ["1915", "Gallipoli", "Ottoman forces hold the Dardanelles against an Allied landing."],
+  ["29 Oct 1923", "The Republic is proclaimed", "Mustafa Kemal Atatürk becomes the first president. Ankara is the capital.", true],
+  ["1928", "New alphabet", "Turkish switches from Arabic script to a Latin-based alphabet."],
+  ["1934", "Women's suffrage", "Women gain the right to vote and stand in national elections, earlier than in many European countries."],
+  ["1952", "Joins NATO", "Türkiye becomes a member of the North Atlantic alliance."],
+  ["2022", "“Türkiye” at the UN", "The United Nations adopts Türkiye as the country's official name in English."],
+];
+$("#timeline").innerHTML = HISTORY.map(([d, t, p, key]) =>
+  `<li class="${key ? "key" : ""}"><time>${esc(d)}</time><div><h3>${esc(t)}</h3><p>${esc(p)}</p></div></li>`).join("");
+
+/* Places */
+const PLACES = [
+  { n: "Hagia Sophia", w: "Istanbul", k: "Sacred", p: "Built in 537 as a cathedral, later a mosque and museum. Its dome was the largest in the world for nearly a thousand years." },
+  { n: "Blue Mosque", w: "Istanbul", k: "Sacred", p: "The Sultan Ahmed Mosque, finished in 1616, has six minarets. Its nickname comes from the more than 20,000 blue İznik tiles inside." },
+  { n: "Cappadocia", w: "Nevşehir", k: "Nature", p: "Volcanic rock carved by wind into fairy chimneys, with cave churches and underground cities. Famous for sunrise balloon flights." },
+  { n: "Pamukkale", w: "Denizli", k: "Nature", p: "“Cotton castle”: white terraces of travertine filled with warm mineral water, beside the Roman city of Hierapolis." },
+  { n: "Ephesus", w: "İzmir", k: "Ancient", p: "One of the best-preserved Roman cities, with the two-storey Library of Celsus and a 25,000-seat theatre." },
+  { n: "Göbekli Tepe", w: "Şanlıurfa", k: "Ancient", p: "About 11,600 years old, it is among the oldest known monumental structures on Earth." },
+  { n: "Mount Nemrut", w: "Adıyaman", k: "Ancient", p: "Giant stone heads of kings and gods sit on a 2,134 m summit, built by King Antiochus I of Commagene." },
+  { n: "Sumela Monastery", w: "Trabzon", k: "Sacred", p: "A Greek Orthodox monastery built into a sheer cliff above a forested valley, founded in the 4th century." },
+  { n: "Grand Bazaar", w: "Istanbul", k: "City", p: "One of the oldest and largest covered markets in the world, with about 4,000 shops across 60 streets." },
+  { n: "Lake Van", w: "Van", k: "Nature", p: "Türkiye's largest lake, a vast soda lake at 1,640 m, home to the Van cat with its odd-coloured eyes." },
+  { n: "Ölüdeniz", w: "Fethiye, Muğla", k: "Seaside", p: "A calm blue lagoon beside a long pebble beach. Paragliders launch from Babadağ mountain high above and land on the shore." },
+  { n: "Kaputaş Beach", w: "Kaş, Antalya", k: "Seaside", p: "A small cove of bright turquoise water at the foot of a gorge, reached by a long staircase down from the coast road." },
+  { n: "Patara Beach", w: "Kaş, Antalya", k: "Seaside", p: "About 18 km of sand and dunes next to an ancient Lycian city. Loggerhead sea turtles come here every summer to lay their eggs." },
+  { n: "Butterfly Valley", w: "Fethiye, Muğla", k: "Seaside", p: "A steep canyon that opens onto a hidden beach, reached mostly by boat. It is a protected home for many kinds of butterflies." },
+];
+const PHOTOS = {
+  "Hagia Sophia": { key: "hagia-sophia", alt: "Hagia Sophia with its domes and minarets", by: "Adli Wahid", lic: "CC BY-SA 3.0", file: "Hagia_Sophia_(228968325).jpeg" },
+  "Blue Mosque": { key: "blue-mosque", alt: "The Blue Mosque's domes and six minarets", by: "Pedro Szekely", lic: "CC BY-SA 2.0", file: "Istanbul_(34223582516)_(cropped).jpg" },
+  "Cappadocia": { key: "cappadocia", alt: "Hot-air balloons over Ortahisar Castle in Cappadocia", by: "Arian Zwegers", lic: "CC BY 2.0", file: "Cappadocia_balloon_trip,_Ortahisar_Castle_(11893715185).jpg" },
+  "Pamukkale": { key: "pamukkale", alt: "White travertine terraces of Pamukkale", by: "Biologg", lic: "CC BY-SA 4.0", file: "Pamukkale,_Denizli_2026_68.jpg" },
+  "Ephesus": { key: "ephesus", alt: "Façade of the Library of Celsus at Ephesus", by: "Benh LIEU SONG", lic: "CC BY-SA 3.0", file: "Ephesus_Celsus_Library_Façade.jpg" },
+  "Göbekli Tepe": { key: "gobekli-tepe", alt: "Carved stone pillars at Göbekli Tepe", by: "Teomancimit", lic: "CC BY-SA 3.0", file: "Göbekli_Tepe,_Urfa.jpg" },
+  "Mount Nemrut": { key: "nemrut", alt: "Giant stone heads on the east terrace of Mount Nemrut", by: "Klearchos Kapoutsis", lic: "CC BY 2.0", file: "Mount_Nemrut_-_East_Terrace_(4961323529).jpg" },
+  "Sumela Monastery": { key: "sumela", alt: "Sumela Monastery on a cliff above a forested valley", by: "Bjørn Christian Tørrissen", lic: "CC BY-SA 3.0", file: "Sumela_From_Across_Valley.JPG" },
+  "Grand Bazaar": { key: "grand-bazaar", alt: "Shops under the painted arches of the Grand Bazaar", by: "A.Savin", lic: "FAL", file: "Istanbul_asv2021-11_img41_Grand_Bazaar.jpg" },
+  "Ölüdeniz": { key: "oludeniz", alt: "The Ölüdeniz lagoon seen from a paraglider", by: "Andrzej Szkopiński", lic: "CC BY 3.0", file: "Paragliding_view_oludeniz_-_panoramio_(2).jpg" },
+  "Kaputaş Beach": { key: "kaputas", alt: "Turquoise water at Kaputaş Beach", by: "Tbakky", lic: "CC BY-SA 4.0", file: "Turkiye_Antalya_Kaputaş_Plajı.jpg" },
+  "Patara Beach": { key: "patara", alt: "The long sandy shore of Patara Beach", by: "Abdullah Kıyga", lic: "CC BY 3.0", file: "The_homeland_of_Caretta_caretta._Patara_beach,_Dalyan,_Antalya_©Abdullah_Kiyga_-_panoramio.jpg" },
+  "Butterfly Valley": { key: "butterfly-valley", alt: "Cliffs of Butterfly Valley above a hidden beach", by: "Claus P. Heibel", lic: "CC BY 2.0", file: "Kelebekler_Vadisi_(1).jpg" },
+  "Lake Van": { key: "lake-van", alt: "Church on Akdamar Island in Lake Van", by: "Bjørn Christian Tørrissen", lic: "CC BY-SA 3.0", file: "Akdamar_Island_From_Near_Gevas.JPG" },
+};
+$("#photoCredits").innerHTML = "Photos from Wikimedia Commons: Bosphorus by <a href=\"https://commons.wikimedia.org/wiki/File:Istanbul_Ortak%C3%B6y_(54514468726).jpg\">Jorge Franganillo</a> (CC BY 2.0) · " + Object.entries(PHOTOS).map(([n, p]) =>
+  `${esc(n)} by ${p.file ? `<a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(p.file)}">${esc(p.by)}</a>` : esc(p.by)} (${esc(p.lic)})`).join(" · ") + ".";
+const KIND_STYLE = { Ancient: ["red", "--iznik"], Nature: ["turq", "--turq"], Seaside: ["turq", "--turq"], Sacred: ["", "--cobalt"], City: ["", "--cobalt"] };
+function tileBg(varName, i) {
+  const c = `var(${varName})`, a = 22 + (i % 3) * 6;
+  return `background-color: var(--ground);
+    background-image:
+      radial-gradient(circle at 50% 50%, ${c} 0 5px, transparent 6px),
+      conic-gradient(from 45deg at 50% 50%, ${c} 0 25%, transparent 0 50%, ${c} 0 75%, transparent 0);
+    background-size: ${a}px ${a}px, ${a}px ${a}px; opacity: 1;`;
+}
+let placeKind = "All";
+function renderPlaces() {
+  const kinds = ["All", ...new Set(PLACES.map(p => p.k))];
+  $("#placeFilter").innerHTML = kinds.map(k =>
+    `<button id="filter-${k}" aria-pressed="${k === placeKind}">${k}</button>`).join("");
+  $("#placeFilter").querySelectorAll("button").forEach(b => b.onclick = () => { placeKind = b.textContent; renderPlaces(); });
+  $("#placeList").innerHTML = PLACES.filter(p => placeKind === "All" || p.k === placeKind).map((p, i) => {
+    const [chip, v] = KIND_STYLE[p.k];
+    const photo = PHOTOS[p.n];
+    return `<article class="place">
+      ${photo ? `<img class="photo" src="photos/${photo.key}.jpg" alt="${esc(photo.alt)}" loading="lazy">`
+              : `<div class="tile" style="${tileBg(v, i)}" aria-hidden="true"></div>`}
+      <div class="body">
+        <div class="meta"><span class="chip ${chip}">${p.k}</span><span class="where">${esc(p.w)}</span></div>
+        <h3>${esc(p.n)}</h3><p>${esc(p.p)}</p>
+      </div></article>`;
+  }).join("");
+  $("#placeList").querySelectorAll(".tile").forEach(t => t.style.opacity = ".28");
+}
+renderPlaces();
+
+/* Food */
+const FOOD = [
+  ["Kebap", "grilled meat", "Dozens of styles: spicy Adana, Bursa's İskender with tomato and butter, Erzurum's horizontal cağ kebabı."],
+  ["Baklava", "pastry", "Thin layers of dough with pistachio and syrup. Gaziantep's version has EU geographic protection."],
+  ["Simit", "sesame bread ring", "A crunchy breakfast and street snack, eaten with tea and cheese."],
+  ["Menemen", "breakfast", "Eggs softly scrambled with tomatoes, green peppers and sometimes onion."],
+  ["Mantı", "dumplings", "Tiny meat dumplings topped with garlic yogurt and red pepper butter."],
+  ["Lahmacun", "flatbread", "Thin dough spread with spiced minced meat, rolled up with parsley and lemon."],
+  ["Çay", "tea", "Served in tulip-shaped glasses all day. People in Türkiye drink more tea per person than anywhere else."],
+  ["Türk kahvesi", "Turkish coffee", "Finely ground, boiled in a cezve and served with its grounds. On UNESCO's cultural heritage list since 2013."],
+  ["Lokum", "Turkish delight", "Soft cubes of starch and sugar, flavoured with rose, lemon or pistachio."],
+  ["Ayran", "yogurt drink", "Cold yogurt whisked with water and a pinch of salt, with a foamy top. The classic drink with kebap and lahmacun."],
+];
+const FOOD_PHOTOS = ["kebap", "baklava", "simit", "menemen", "manti", "lahmacun", "cay", "kahve", "lokum", "ayran"];
+const FOOD_CREDITS = [
+  ["Adana_kebab.jpg", "Anatolianpride", "public domain"],
+  ["Baklava(1).png", "Sakaman", "CC BY-SA 4.0"],
+  ["Simit-2x.JPG", "a Wikimedia Commons contributor", "CC BY-SA 3.0"],
+  ["Menemen_in_a_sahan.jpg", "E4024", "CC BY-SA 4.0"],
+  ["Kayseride_bir_restoranda_Kayseri_mantısı_(cropped).jpg", "Kızılkum", "CC BY-SA 4.0"],
+  ["Lahmacun.jpg", "Rainer Zenz", "CC BY-SA 3.0"],
+  ["Turkish_tea2.jpg", "henribergius", "CC BY-SA 2.0"],
+  ["Türk_Kahvesi_-_Bakir_Cezve.jpg", "Eaeeae", "CC BY-SA 3.0"],
+  ["TurkishDelightDisplay.jpg", "Quick fix", "CC BY-SA 2.0"],
+  ["Fresh_ayran.jpg", "Mavigogun", "CC BY-SA 3.0"],
+];
+$("#photoCredits").innerHTML += " Food: " + FOOD.map(([n], i) => {
+  const [file, by, lic] = FOOD_CREDITS[i];
+  return `${esc(n)} by <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file)}">${esc(by)}</a> (${lic})`;
+}).join(" · ") + ".";
+$("#foodList").innerHTML = FOOD.map(([n, e, p], i) =>
+  `<div class="dish"><img src="food/${FOOD_PHOTOS[i]}.jpg" alt="${esc(n)}, ${esc(e)}" loading="lazy">
+   <div class="txt"><div class="n">${esc(n)}<i>${esc(e)}</i></div><p>${esc(p)}</p></div></div>`).join("");
+
+/* Famous people */
+const PEOPLE = [
+  ["Mustafa Kemal Atatürk", "1881–1938", "Leader", "Founder and first president of the Republic. He introduced the new alphabet, surnames and equal rights for women."],
+  ["Recep Tayyip Erdoğan", "born 1954", "Leader", "President of Türkiye since 2014. Before that he was prime minister from 2003 to 2014 and mayor of Istanbul in the 1990s."],
+  ["Türkan Şoray", "born 1945", "Actor", "Called the “Sultana” of Turkish cinema, she has starred in more than 200 films since the golden age of Yeşilçam."],
+  ["Kemal Sunal", "1944–2000", "Actor", "Türkiye's best-loved comedy actor, famous for the school comedy Hababam Sınıfı and its sequels."],
+  ["Halit Ergenç", "born 1970", "Actor", "Played Sultan Süleyman in the TV series Muhteşem Yüzyıl (Magnificent Century), watched in dozens of countries."],
+  ["Arda Güler", "born 2005", "Footballer", "Attacking midfielder who joined Real Madrid in 2023 and plays for the national team."],
+  ["Hidayet Türkoğlu", "born 1979", "Basketball player", "Played 15 seasons in the NBA and won the league's Most Improved Player award in 2008."],
+  ["Mete Gazoz", "born 1999", "Archer", "Won Türkiye's first Olympic gold medal in archery at the Tokyo 2020 Games."],
+  ["Zehra Güneş", "born 1999", "Volleyball player", "Middle blocker for the national team that won the 2023 European Championship and Nations League."],
+  ["Mimar Sinan", "c. 1490–1588", "Architect", "Chief architect of the Ottoman Empire. He designed more than 300 buildings, including the Süleymaniye and Selimiye mosques."],
+  ["Mevlânâ Rumi", "1207–1273", "Poet", "Sufi poet and teacher who lived in Konya. His verses are still among the most read poems in the world."],
+  ["Piri Reis", "c. 1465–1553", "Navigator", "Ottoman admiral whose 1513 world map is one of the oldest surviving maps to show the Americas."],
+  ["Halide Edib Adıvar", "1884–1964", "Writer", "Novelist, teacher and campaigner for women's education who served in the War of Independence."],
+  ["Sabiha Gökçen", "1913–2001", "Aviator", "Türkiye's first woman military pilot and one of the first women combat pilots in the world."],
+  ["Aziz Sancar", "born 1946", "Scientist", "Won the 2015 Nobel Prize in Chemistry for showing how cells repair damaged DNA."],
+  ["Mehmet Oz (Dr. Oz)", "born 1960", "Doctor", "Turkish-American heart surgeon born in Ohio to parents from Türkiye. He became famous as host of The Dr. Oz Show and has led the U.S. Medicare and Medicaid agency since 2025."],
+  ["Orhan Pamuk", "born 1952", "Novelist", "Won the 2006 Nobel Prize in Literature. Many of his novels, like Istanbul and My Name Is Red, are set in his home city."],
+  ["Naim Süleymanoğlu", "1967–2017", "Athlete", "Weightlifter nicknamed “Pocket Hercules” who won Olympic gold three times in a row: 1988, 1992 and 1996."],
+];
+const initials = n => n.split(" ").filter(w => /^[A-ZÇĞİÖŞÜ]/.test(w)).slice(0, 2).map(w => w[0]).join("");
+const GROUP = { Leader: "Leaders", Actor: "Film & TV", Architect: "Arts", Poet: "Arts", Writer: "Arts", Novelist: "Arts",
+  Navigator: "Science", Aviator: "Science", Scientist: "Science", Doctor: "Science" };
+const groupOf = r => GROUP[r] || "Sports";
+let peopleGroup = "All";
+function renderPeople() {
+  const groups = ["All", "Leaders", "Arts", "Science", "Film & TV", "Sports"];
+  $("#peopleFilter").innerHTML = groups.map((g, i) =>
+    `<button id="people-filter-${i}" aria-pressed="${g === peopleGroup}">${esc(g)}</button>`).join("");
+  $("#peopleFilter").querySelectorAll("button").forEach((b, i) => b.onclick = () => { peopleGroup = groups[i]; renderPeople(); });
+  const born = y => +y.match(/\d{4}/)[0];
+  $("#peopleList").innerHTML = PEOPLE.slice().sort((a, b) => born(a[1]) - born(b[1])).filter(([, , r]) => peopleGroup === "All" || groupOf(r) === peopleGroup).map(([n, y, r, p]) => `<article class="person">
+  <div class="mono" aria-hidden="true">${initials(n)}</div>
+  <div><h3>${esc(n)}</h3><p class="yrs">${esc(y)}</p></div>
+  <span class="chip red">${esc(r)}</span>
+  <p>${esc(p)}</p></article>`).join("");
+}
+renderPeople();
+(() => {
+  const list = $("#peopleList"), prev = $("#peoplePrev"), next = $("#peopleNext");
+  const step = () => (list.querySelector(".person")?.offsetWidth || 280) + 16;
+  const sync = () => {
+    prev.disabled = list.scrollLeft < 4;
+    next.disabled = list.scrollLeft + list.clientWidth >= list.scrollWidth - 4;
+    $("#peopleCount").textContent = `${list.children.length} people · swipe or use the arrows to see more`;
+  };
+  prev.onclick = () => list.scrollBy({ left: -step() * 2 });
+  next.onclick = () => list.scrollBy({ left: step() * 2 });
+  list.addEventListener("scroll", sync, { passive: true });
+  addEventListener("resize", sync);
+  new MutationObserver(() => { list.scrollLeft = 0; sync(); }).observe(list, { childList: true });
+  sync();
+})();
+
+/* Fun facts */
+const FACTS = [
+  ["2/3", "Hazelnut capital", "About two-thirds of the world's hazelnuts grow on Türkiye's Black Sea coast."],
+  ["St. Nick", "Home of Santa Claus", "Saint Nicholas, who inspired Santa Claus, was bishop of Myra, today's Demre in Antalya."],
+  ["Tulips", "Tulips came from here", "Ottoman gardeners grew tulips long before the Dutch. The flower reached Europe from Istanbul in the 1500s."],
+  ["1875", "An old underground", "Istanbul's Tünel is the second-oldest underground railway in the world, after London's."],
+  ["3", "Capital of three empires", "Istanbul was the capital of the Roman, Byzantine and Ottoman empires."],
+  ["Turquoise", "A colour named for Türkiye", "“Turquoise” comes from the French for “Turkish stone”, because the gem reached Europe through Anatolia."],
+  ["2", "Two continents", "Istanbul is one of the few cities in the world on two continents. A short ferry ride across the Bosphorus takes you from Europe to Asia."],
+  ["10.8 s", "Fastest World Cup goal", "Hakan Şükür scored just 10.8 seconds into Türkiye's match against South Korea at the 2002 World Cup. It is still the fastest goal in World Cup history."],
+  ["#1", "Apricot country", "Türkiye grows more apricots than any other country, most of them around Malatya."],
+  ["70", "One very long word", "Turkish adds endings to words. “Muvaffakiyetsizleştiricileştiriveremeyebileceklerimizdenmişsinizcesine” is a famous joke example."],
+];
+$("#factList").innerHTML = FACTS.map(([b, h, p]) =>
+  `<div class="ff"><span class="big" lang="tr">${esc(b)}</span><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("");
+
+/* Football */
+const TABLE = {"Galatasaray":{"pos":1,"pts":22,"p":9,"w":7,"d":1,"l":1,"gf":19,"ga":12},"Amed SFK":{"pos":2,"pts":20,"p":9,"w":6,"d":2,"l":1,"gf":20,"ga":10},"Trabzonspor":{"pos":3,"pts":19,"p":9,"w":6,"d":1,"l":2,"gf":22,"ga":8},"Beşiktaş":{"pos":4,"pts":18,"p":9,"w":6,"d":0,"l":3,"gf":18,"ga":10},"Fenerbahçe":{"pos":5,"pts":16,"p":9,"w":5,"d":1,"l":3,"gf":23,"ga":8},"Kasımpaşa":{"pos":6,"pts":16,"p":9,"w":4,"d":4,"l":1,"gf":13,"ga":9},"Kocaelispor":{"pos":7,"pts":15,"p":9,"w":5,"d":0,"l":4,"gf":11,"ga":9},"Erzurumspor":{"pos":8,"pts":14,"p":9,"w":4,"d":2,"l":3,"gf":8,"ga":12},"Çorum FK":{"pos":9,"pts":13,"p":9,"w":4,"d":1,"l":4,"gf":18,"ga":15},"Göztepe":{"pos":10,"pts":12,"p":9,"w":3,"d":3,"l":3,"gf":19,"ga":16},"Corendon Alanyaspor":{"pos":11,"pts":12,"p":9,"w":3,"d":3,"l":3,"gf":9,"ga":11},"İstanbul Başakşehir":{"pos":12,"pts":11,"p":9,"w":3,"d":2,"l":4,"gf":12,"ga":14},"Çaykur Rizespor":{"pos":13,"pts":10,"p":9,"w":3,"d":1,"l":5,"gf":11,"ga":15},"TÜMOSAN Konyaspor":{"pos":14,"pts":8,"p":9,"w":2,"d":2,"l":5,"gf":6,"ga":9},"Gaziantep FK":{"pos":15,"pts":8,"p":9,"w":2,"d":2,"l":5,"gf":9,"ga":15},"Gençlerbirliği":{"pos":16,"pts":8,"p":9,"w":2,"d":2,"l":5,"gf":7,"ga":18},"Samsunspor":{"pos":17,"pts":4,"p":9,"w":1,"d":1,"l":7,"gf":8,"ga":21},"Eyüpspor":{"pos":18,"pts":3,"p":9,"w":1,"d":0,"l":8,"gf":2,"ga":23}};
+const TABLE_DATE = "26 October 2026";
+const LOGOS = {"Galatasaray": "logos/0.png", "Fenerbahçe": "logos/1.png", "Beşiktaş": "logos/2.png", "Trabzonspor": "logos/3.png", "İstanbul Başakşehir": "logos/4.png", "Kasımpaşa": "logos/5.png", "Eyüpspor": "logos/6.png", "Samsunspor": "logos/7.png", "Göztepe": "logos/8.png", "Corendon Alanyaspor": "logos/9.png", "Çaykur Rizespor": "logos/10.png", "TÜMOSAN Konyaspor": "logos/11.png", "Gaziantep FK": "logos/12.png", "Gençlerbirliği": "logos/13.png", "Kocaelispor": "logos/14.png", "Erzurumspor": "logos/15.png", "Amed SFK": "logos/16.png", "Çorum FK": "logos/17.png"};
+const SQUADS = {"Galatasaray":{"updated":"21 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Uğurcan Çakır"},{"no":"3","pos":"DF","nat":"FRA","name":"Chadaille Bitshiabu"},{"no":"4","pos":"DF","nat":"SEN","name":"Ismail Jakobs"},{"no":"5","pos":"MF","nat":"TUR","name":"Eyüp Aydın"},{"no":"6","pos":"DF","nat":"COL","name":"Davinson Sánchez"},{"no":"7","pos":"DF","nat":"HUN","name":"Roland Sallai"},{"no":"8","pos":"MF","nat":"BRA","name":"Gabriel Sara"},{"no":"10","pos":"FW","nat":"GER","name":"Leroy Sané"},{"no":"11","pos":"FW","nat":"TUR","name":"Yunus Akgün"},{"no":"17","pos":"DF","nat":"TUR","name":"Eren Elmalı"},{"no":"18","pos":"MF","nat":"FRA","name":"Lesley Ugochukwu"},{"no":"19","pos":"GK","nat":"TUR","name":"Günay Güvenç"},{"no":"20","pos":"MF","nat":"GER","name":"İlkay Gündoğan"},{"no":"21","pos":"FW","nat":"TUR","name":"Deniz Gül"},{"no":"23","pos":"DF","nat":"TUR","name":"Kaan Ayhan"},{"no":"24","pos":"GK","nat":"TUR","name":"Jankat Yılmaz"},{"no":"27","pos":"FW","nat":"POR","name":"Rafael Leão"},{"no":"29","pos":"MF","nat":"ARG","name":"Armando Güner"},{"no":"34","pos":"MF","nat":"URU","name":"Lucas Torreira"},{"no":"42","pos":"DF","nat":"TUR","name":"Abdülkerim Bardakcı"},{"no":"45","pos":"FW","nat":"NGA","name":"Victor Osimhen"},{"no":"53","pos":"FW","nat":"TUR","name":"Barış Yılmaz"},{"no":"60","pos":"GK","nat":"TUR","name":"Arda Yılmaz"},{"no":"62","pos":"FW","nat":"TUR","name":"Ada Yüzgeç"},{"no":"70","pos":"GK","nat":"TUR","name":"Enes Büyük"},{"no":"73","pos":"MF","nat":"TUR","name":"Berat Luş"},{"no":"74","pos":"MF","nat":"GNB","name":"Renato Nhaga"},{"no":"83","pos":"MF","nat":"RUS","name":"Aleksey Batrakov"},{"no":"88","pos":"DF","nat":"MKD","name":"Kazımcan Karataş"},{"no":"90","pos":"DF","nat":"CIV","name":"Wilfried Singo"},{"no":"91","pos":"DF","nat":"TUR","name":"Arda Ünyay"},{"no":"99","pos":"MF","nat":"GAB","name":"Mario Lemina"}]},"Fenerbahçe":{"updated":"28 October 2026","players":[{"no":"3","pos":"DF","nat":"ENG","name":"Archie Brown"},{"no":"5","pos":"MF","nat":"TUR","name":"İsmail Yüksek"},{"no":"6","pos":"MF","nat":"FRA","name":"Mattéo Guendouzi"},{"no":"7","pos":"FW","nat":"TUR","name":"Kerem Aktürkoğlu"},{"no":"8","pos":"MF","nat":"TUR","name":"Mert Hakan Yandaş"},{"no":"9","pos":"FW","nat":"BEL","name":"Romelu Lukaku"},{"no":"10","pos":"MF","nat":"ESP","name":"Marco Asensio"},{"no":"11","pos":"FW","nat":"ENG","name":"Mason Greenwood"},{"no":"13","pos":"GK","nat":"TUR","name":"Tarık Çetin"},{"no":"14","pos":"DF","nat":"TUR","name":"Yiğit Demir"},{"no":"15","pos":"DF","nat":"NED","name":"Nathan Aké"},{"no":"17","pos":"MF","nat":"TUR","name":"İrfan Kahveci"},{"no":"18","pos":"DF","nat":"TUR","name":"Mert Müldür"},{"no":"19","pos":"FW","nat":"KOS","name":"Vedat Muriqi"},{"no":"21","pos":"DF","nat":"GHA","name":"Kojo Peprah Oppong"},{"no":"22","pos":"DF","nat":"GER","name":"Levent Mercan"},{"no":"24","pos":"DF","nat":"NED","name":"Jayden Oosterwolde"},{"no":"27","pos":"DF","nat":"POR","name":"Nélson Semedo"},{"no":"28","pos":"MF","nat":"TUR","name":"Bartuğ Elmaz"},{"no":"31","pos":"GK","nat":"BRA","name":"Ederson"},{"no":"34","pos":"GK","nat":"TUR","name":"Mert Günok"},{"no":"37","pos":"DF","nat":"SVK","name":"Milan Škriniar"},{"no":"45","pos":"FW","nat":"MLI","name":"Dorgeles Nene"},{"no":"70","pos":"FW","nat":"TUR","name":"Oğuz Aydın"},{"no":"77","pos":"DF","nat":"SRB","name":"Ognjen Mimović"},{"no":"91","pos":"MF","nat":"FRA","name":"N'Golo Kanté"}]},"Beşiktaş":{"updated":"28 October 2026","players":[{"no":"1","pos":"GK","nat":"GER","name":"Alexander Nübel"},{"no":"4","pos":"MF","nat":"NGA","name":"Wilfred Ndidi"},{"no":"6","pos":"MF","nat":"TUR","name":"Salih Özcan"},{"no":"7","pos":"FW","nat":"KOS","name":"Milot Rashica"},{"no":"8","pos":"MF","nat":"TUR","name":"Kartal Yılmaz"},{"no":"9","pos":"FW","nat":"KOR","name":"Oh Hyeon-gyu"},{"no":"10","pos":"MF","nat":"TUR","name":"Orkun Kökçü"},{"no":"11","pos":"DF","nat":"CIV","name":"Kassoum Ouattara"},{"no":"12","pos":"DF","nat":"CIV","name":"Emmanuel Agbadou"},{"no":"15","pos":"MF","nat":"BEN","name":"Junior Olaitan"},{"no":"17","pos":"FW","nat":"NED","name":"Ernest Poku"},{"no":"18","pos":"MF","nat":"CZE","name":"Václav Černý"},{"no":"19","pos":"MF","nat":"BEL","name":"Leandro Trossard"},{"no":"21","pos":"MF","nat":"ITA","name":"Fabio Miretti"},{"no":"22","pos":"DF","nat":"GER","name":"Taylan Bulut"},{"no":"23","pos":"FW","nat":"TUR","name":"Mustafa Hekimoğlu"},{"no":"28","pos":"FW","nat":"SER","name":"Dušan Vlahović"},{"no":"29","pos":"FW","nat":"TUR","name":"İlhan Fakılı"},{"no":"33","pos":"DF","nat":"TUR","name":"Rıdvan Yılmaz"},{"no":"35","pos":"DF","nat":"POR","name":"Tiago Djaló"},{"no":"50","pos":"DF","nat":"ROU","name":"Ümit Akdağ"},{"no":"53","pos":"DF","nat":"TUR","name":"Emirhan Topçu"},{"no":"58","pos":"DF","nat":"TUR","name":"Yasin Özcan"},{"no":"62","pos":"DF","nat":"PAN","name":"Amir Murillo"},{"no":"63","pos":"DF","nat":"TUR","name":"Azem Yortaç"},{"no":"66","pos":"MF","nat":"TUR","name":"Ozan Sevim"},{"no":"70","pos":"FW","nat":"TUR","name":"Sami Bircan"},{"no":"77","pos":"FW","nat":"AUT","name":"Can Keleş"},{"no":"80","pos":"GK","nat":"TUR","name":"Doğan Alemdar"},{"no":"90","pos":"FW","nat":"TUR","name":"Semih Kılıçsoy"},{"no":"96","pos":"GK","nat":"TUR","name":"Emir Yaşar"}]},"Trabzonspor":{"updated":"22 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Ahmet Doğan Yıldırım"},{"no":"3","pos":"MF","nat":"FRA","name":"Batista Mendy"},{"no":"4","pos":"DF","nat":"TUR","name":"Samet Akaydin"},{"no":"5","pos":"MF","nat":"TUR","name":"Okay Yokuşlu"},{"no":"6","pos":"MF","nat":"BRA","name":"Fabinho"},{"no":"7","pos":"MF","nat":"ALB","name":"Ernest Muçi"},{"no":"8","pos":"MF","nat":"MAR","name":"Benjamin Bouchouari"},{"no":"9","pos":"FW","nat":"GNB","name":"Franculino"},{"no":"10","pos":"FW","nat":"EGY","name":"Mohamed Salah"},{"no":"11","pos":"MF","nat":"TUR","name":"Ozan Tufan"},{"no":"14","pos":"FW","nat":"TUR","name":"Umut Nayir"},{"no":"15","pos":"DF","nat":"MNE","name":"Stefan Savić"},{"no":"17","pos":"MF","nat":"UKR","name":"Ruslan Malinovskyi"},{"no":"19","pos":"MF","nat":"TUR","name":"Mustafa Eskihellaç"},{"no":"20","pos":"DF","nat":"CPV","name":"Wagner Pina"},{"no":"24","pos":"GK","nat":"CMR","name":"André Onana"},{"no":"25","pos":"GK","nat":"TUR","name":"Onuralp Çevikkan"},{"no":"26","pos":"MF","nat":"FRA","name":"Tim Jabol-Folcarelli"},{"no":"27","pos":"DF","nat":"NGR","name":"Chibuike Nwaiwu"},{"no":"30","pos":"FW","nat":"NGA","name":"Paul Onuachu"},{"no":"39","pos":"DF","nat":"TUR","name":"Cenk Özkacar"},{"no":"44","pos":"DF","nat":"UKR","name":"Arseniy Batahov"},{"no":"55","pos":"DF","nat":"CPV","name":"Sidny Lopes Cabral"},{"no":"57","pos":"MF","nat":"TUR","name":"Melih Kabasakal"},{"no":"58","pos":"FW","nat":"TUR","name":"Aral Şimşir"},{"no":"61","pos":"MF","nat":"TUR","name":"Cihan Çanak"},{"no":"70","pos":"FW","nat":"POR","name":"Noah Saviolo"},{"no":"77","pos":"MF","nat":"TUR","name":"Metehan Mimaroğlu"},{"no":"96","pos":"GK","nat":"TUR","name":"Erol Can Çolak"},{"no":"99","pos":"MF","nat":"TUR","name":"Ali Habeşoğlu"}]},"İstanbul Başakşehir":{"updated":"16 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Volkan Babacan"},{"no":"3","pos":"DF","nat":"GHA","name":"Jerome Opoku"},{"no":"4","pos":"MF","nat":"TUR","name":"Onur Ergün"},{"no":"6","pos":"DF","nat":"TUR","name":"Onur Bulut"},{"no":"7","pos":"MF","nat":"TUR","name":"Yusuf Sarı"},{"no":"8","pos":"MF","nat":"CMR","name":"Olivier Kemen"},{"no":"9","pos":"FW","nat":"GER","name":"Davie Selke"},{"no":"10","pos":"MF","nat":"BIH","name":"Edin Višća"},{"no":"11","pos":"MF","nat":"UZB","name":"Abbosbek Fayzullaev"},{"no":"14","pos":"FW","nat":"UZB","name":"Eldor Shomurodov"},{"no":"15","pos":"DF","nat":"TUR","name":"Hamza Güreler"},{"no":"16","pos":"GK","nat":"TUR","name":"Muhammed Şengezer"},{"no":"17","pos":"FW","nat":"TUR","name":"Umut Bozok"},{"no":"18","pos":"MF","nat":"POL","name":"Jakub Kałuziński"},{"no":"19","pos":"MF","nat":"TUR","name":"Berkay Özcan"},{"no":"20","pos":"MF","nat":"GER","name":"Umut Güneş"},{"no":"21","pos":"DF","nat":"CIV","name":"Christopher Opéri"},{"no":"23","pos":"DF","nat":"TUR","name":"Emin Bayram"},{"no":"27","pos":"DF","nat":"SEN","name":"Ousseynou Ba"},{"no":"33","pos":"DF","nat":"POL","name":"Michał Karbownik"},{"no":"38","pos":"DF","nat":"GEO","name":"Saba Kharebashvili"},{"no":"42","pos":"DF","nat":"TUR","name":"Ömer Ali Şahiner"},{"no":"70","pos":"FW","nat":"DEN","name":"Andreas Skov Olsen"},{"no":"77","pos":"FW","nat":"CRO","name":"Ivan Brnić"},{"no":"80","pos":"GK","nat":"TUR","name":"Ege Öztürk"},{"no":"91","pos":"FW","nat":"TUR","name":"Bertuğ Yıldırım"},{"no":"98","pos":"GK","nat":"TUR","name":"Deniz Dilmen"},{"no":"","pos":"GK","nat":"TUR","name":"Luca Stančić"},{"no":"","pos":"DF","nat":"TUR","name":"Efe Arda Koyuncu"},{"no":"","pos":"FW","nat":"TUR","name":"Batuhan Çelik"}]},"Kasımpaşa":{"updated":"19 October 2026","players":[{"no":"1","pos":"GK","nat":"GRE","name":"Andreas Gianniotis"},{"no":"2","pos":"DF","nat":"BRA","name":"Cláudio Winck"},{"no":"4","pos":"DF","nat":"TUN","name":"Adem Arous"},{"no":"5","pos":"DF","nat":"DEN","name":"Jakob Jessen"},{"no":"7","pos":"MF","nat":"TUR","name":"Ali Yavuz Kol"},{"no":"8","pos":"MF","nat":"TUR","name":"Atakan Müjde"},{"no":"9","pos":"FW","nat":"POL","name":"Adrian Benedyczak"},{"no":"10","pos":"MF","nat":"BIH","name":"Haris Hajradinović"},{"no":"11","pos":"FW","nat":"MLI","name":"Thiemoko Diarra"},{"no":"12","pos":"MF","nat":"TUN","name":"Mortadha Ben Ouanes"},{"no":"14","pos":"DF","nat":"FRA","name":"Kévin Mouanga"},{"no":"16","pos":"MF","nat":"ISL","name":"Andri Baldursson"},{"no":"17","pos":"FW","nat":"GHA","name":"Jesurun Rak-Sakyi"},{"no":"18","pos":"DF","nat":"TUR","name":"Ömer Bayram"},{"no":"19","pos":"MF","nat":"SWE","name":"Marcus Rafferty"},{"no":"22","pos":"DF","nat":"TUR","name":"Kamil Çörekçi"},{"no":"23","pos":"FW","nat":"TUR","name":"Sinan Alkaş"},{"no":"24","pos":"DF","nat":"TUR","name":"Salih Arıcı"},{"no":"25","pos":"GK","nat":"TUR","name":"Ali Emre Yanar"},{"no":"26","pos":"MF","nat":"GER","name":"Kerem Demirbay"},{"no":"27","pos":"DF","nat":"ROU","name":"Matei Ilie"},{"no":"30","pos":"DF","nat":"TUR","name":"Ahmet Taha Dağbaşı"},{"no":"34","pos":"MF","nat":"MLI","name":"Fousseni Diabaté"},{"no":"35","pos":"DF","nat":"TUR","name":"Sercan Deniz"},{"no":"45","pos":"DF","nat":"TUR","name":"Ayberk Karapo"},{"no":"50","pos":"FW","nat":"TUR","name":"Güven Yalçın"},{"no":"51","pos":"MF","nat":"CUW","name":"Elson Mendes"},{"no":"61","pos":"GK","nat":"TUR","name":"Ege Albayrak"},{"no":"66","pos":"MF","nat":"TUR","name":"Emirhan Boz"},{"no":"99","pos":"FW","nat":"TUR","name":"Muhammed Emin Bektaş"},{"no":"","pos":"DF","nat":"NED","name":"Godfried Frimpong"},{"no":"","pos":"FW","nat":"TUR","name":"Emirhan Yiğit"}]},"Eyüpspor":{"updated":"17 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Emre Bilgin"},{"no":"3","pos":"DF","nat":"TUR","name":"Arda Yavuz"},{"no":"4","pos":"DF","nat":"TUR","name":"Anıl Yaşar"},{"no":"5","pos":"DF","nat":"MAR","name":"Jawad El Yamiq"},{"no":"7","pos":"DF","nat":"TUR","name":"Talha Ülvan"},{"no":"8","pos":"MF","nat":"CPV","name":"David Costa"},{"no":"9","pos":"FW","nat":"TUR","name":"Yusuf Barası"},{"no":"10","pos":"MF","nat":"MAR","name":"Abdelhamid Sabiri"},{"no":"11","pos":"FW","nat":"FRA","name":"Lenny Pintor"},{"no":"15","pos":"MF","nat":"FRA","name":"Charles-André Raux-Yao"},{"no":"18","pos":"MF","nat":"TUR","name":"Hamza Akman"},{"no":"21","pos":"DF","nat":"ITA","name":"Simone Giordano"},{"no":"25","pos":"FW","nat":"SEN","name":"Abdou Khadre Sy"},{"no":"27","pos":"DF","nat":"TUR","name":"Yiğit Demir"},{"no":"28","pos":"MF","nat":"TUR","name":"Taşkın İlter"},{"no":"29","pos":"FW","nat":"NGR","name":"Ahmed Abdullahi"},{"no":"31","pos":"GK","nat":"ROM","name":"Horațiu Moldovan"},{"no":"33","pos":"DF","nat":"SCO","name":"Zak Jules"},{"no":"42","pos":"DF","nat":"TUR","name":"Berhan Şatlı"},{"no":"44","pos":"DF","nat":"TUR","name":"Ömer Ceyhan"},{"no":"53","pos":"FW","nat":"TUR","name":"Musa Eren Karakaş"},{"no":"70","pos":"MF","nat":"TUR","name":"Mete Demir"},{"no":"77","pos":"MF","nat":"POL","name":"Konrad Michalak"},{"no":"84","pos":"FW","nat":"CIV","name":"Christ Sadia"},{"no":"88","pos":"MF","nat":"CGO","name":"Chandrel Massanga"},{"no":"98","pos":"FW","nat":"FRA","name":"Bilal Boutobba"},{"no":"99","pos":"GK","nat":"TUR","name":"Umut Keseci"},{"no":"","pos":"DF","nat":"SEN","name":"Diabel Ndoye"}]},"Samsunspor":{"updated":"20 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Okan Kocuk"},{"no":"2","pos":"DF","nat":"SWE","name":"Joe Mendes"},{"no":"3","pos":"DF","nat":"POL","name":"Igor Drapiński"},{"no":"4","pos":"MF","nat":"SCO","name":"Elliot Watt"},{"no":"5","pos":"MF","nat":"TUR","name":"Celil Yüksel"},{"no":"7","pos":"FW","nat":"TUR","name":"Elayis Tavşan"},{"no":"8","pos":"MF","nat":"TUR","name":"Samed Onur"},{"no":"10","pos":"MF","nat":"FRA","name":"Tanguy Coulibaly"},{"no":"11","pos":"MF","nat":"TUR","name":"Emre Kılınç"},{"no":"13","pos":"GK","nat":"TUR","name":"Efe Yiğit Üstün"},{"no":"14","pos":"FW","nat":"TUR","name":"Fatih Kaya"},{"no":"15","pos":"FW","nat":"CIV","name":"Jaurès Assoumou"},{"no":"16","pos":"DF","nat":"SRB","name":"Strahinja Eraković"},{"no":"17","pos":"DF","nat":"ISL","name":"Logi Tómasson"},{"no":"18","pos":"FW","nat":"GUI","name":"Mohamed Bayo"},{"no":"19","pos":"MF","nat":"DEN","name":"Oskar Øhlenschlæger"},{"no":"20","pos":"MF","nat":"TUR","name":"Yalçın Kayan"},{"no":"22","pos":"DF","nat":"TUR","name":"Yunus Emre Çift"},{"no":"23","pos":"DF","nat":"TUR","name":"Enes Albak"},{"no":"25","pos":"GK","nat":"TUR","name":"Bilal Bayazıt"},{"no":"29","pos":"DF","nat":"TUR","name":"Mustafa Tan"},{"no":"30","pos":"FW","nat":"GAM","name":"Saikuba Jarju"},{"no":"34","pos":"DF","nat":"ITA","name":"Gabriele Guarino"},{"no":"42","pos":"MF","nat":"MLI","name":"Anto Sekongo"},{"no":"48","pos":"DF","nat":"TUR","name":"Efe Berat Töruz"},{"no":"77","pos":"MF","nat":"POR","name":"Afonso Sousa"},{"no":"96","pos":"DF","nat":"TUR","name":"Bedirhan Çetin"}]},"Göztepe":{"updated":"13 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Arda Özçimen"},{"no":"2","pos":"MF","nat":"ALB","name":"Arda Okan Kurtulan"},{"no":"3","pos":"DF","nat":"BRA","name":"Allan Godói"},{"no":"4","pos":"DF","nat":"TUR","name":"Taha Altıkardeş"},{"no":"5","pos":"MF","nat":"BRA","name":"Rhaldney"},{"no":"6","pos":"MF","nat":"ENG","name":"Alex Matos"},{"no":"7","pos":"FW","nat":"BRA","name":"André Henrique"},{"no":"8","pos":"MF","nat":"SUI","name":"Alexis Antunes"},{"no":"9","pos":"FW","nat":"BRA","name":"Juan"},{"no":"10","pos":"MF","nat":"TUR","name":"Efkan Bekiroğlu"},{"no":"12","pos":"DF","nat":"UAE","name":"Richard Akonnor"},{"no":"13","pos":"DF","nat":"TUR","name":"Ege Yıldırım"},{"no":"14","pos":"FW","nat":"TUR","name":"Bekir Turaç Böke"},{"no":"16","pos":"DF","nat":"TUR","name":"Ogün Bayrak"},{"no":"17","pos":"FW","nat":"TUR","name":"Gökdeniz Bayrakdar"},{"no":"18","pos":"MF","nat":"ENG","name":"Tino Anjorin"},{"no":"19","pos":"DF","nat":"GAM","name":"Noah Sonko Sundberg"},{"no":"20","pos":"DF","nat":"TAN","name":"Novatus Miroshi"},{"no":"21","pos":"GK","nat":"TUR","name":"Nevzat Üzel"},{"no":"22","pos":"FW","nat":"IRL","name":"Sinclair Armstrong"},{"no":"23","pos":"DF","nat":"TUR","name":"Furkan Bayır"},{"no":"25","pos":"GK","nat":"GEO","name":"Luka Gugeshashvili"},{"no":"26","pos":"DF","nat":"CMR","name":"Malcom Bokele"},{"no":"27","pos":"FW","nat":"JOR","name":"Ibrahim Sabra"},{"no":"33","pos":"GK","nat":"TUR","name":"Mehmet Şamil Öztürk"},{"no":"39","pos":"FW","nat":"BRA","name":"Janderson"}]},"Corendon Alanyaspor":{"updated":"15 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Mahmut Can Kara"},{"no":"3","pos":"DF","nat":"POR","name":"Nuno Lima"},{"no":"4","pos":"DF","nat":"TUR","name":"Bedirhan Özyurt"},{"no":"5","pos":"DF","nat":"KOS","name":"Fidan Aliti"},{"no":"7","pos":"MF","nat":"TUR","name":"İbrahim Kaya"},{"no":"8","pos":"MF","nat":"TUR","name":"Enes Keskin"},{"no":"9","pos":"FW","nat":"TUN","name":"Omar Ben Ali"},{"no":"10","pos":"MF","nat":"ROU","name":"Ianis Hagi"},{"no":"11","pos":"MF","nat":"BRA","name":"Ruan"},{"no":"12","pos":"FW","nat":"COD","name":"Meschak Elia"},{"no":"14","pos":"MF","nat":"TUR","name":"Emre Demir"},{"no":"16","pos":"FW","nat":"KOR","name":"Hwang Ui-jo"},{"no":"17","pos":"FW","nat":"TUR","name":"Arda Usluoğlu"},{"no":"19","pos":"FW","nat":"CMR","name":"Iván Cédric"},{"no":"20","pos":"DF","nat":"TUR","name":"Fatih Aksoy"},{"no":"22","pos":"FW","nat":"ESP","name":"Paolo Fernandes"},{"no":"23","pos":"GK","nat":"TUR","name":"Mert Bayram"},{"no":"26","pos":"MF","nat":"TUR","name":"İzzet Çelik"},{"no":"28","pos":"FW","nat":"TUR","name":"Şahin Dik"},{"no":"32","pos":"MF","nat":"CIV","name":"Arouna Soro"},{"no":"42","pos":"MF","nat":"CGO","name":"Gaius Makouta"},{"no":"44","pos":"DF","nat":"TUR","name":"Bilal Demirağ"},{"no":"48","pos":"GK","nat":"BRA","name":"Paulo Victor"},{"no":"55","pos":"MF","nat":"TUR","name":"Baran Ali Gezek"},{"no":"58","pos":"MF","nat":"ANG","name":"Maestro"},{"no":"88","pos":"MF","nat":"TUR","name":"Yusuf Özdemir"},{"no":"94","pos":"DF","nat":"KOS","name":"Florent Hadergjonaj"}]},"Çaykur Rizespor":{"updated":"20 October 2026","players":[{"no":"2","pos":"DF","nat":"UZB","name":"Husniddin Aliqulov"},{"no":"4","pos":"DF","nat":"HUN","name":"Attila Mocsi"},{"no":"5","pos":"DF","nat":"TUR","name":"Tayyip Talha Sanuç"},{"no":"6","pos":"MF","nat":"MLI","name":"Moussa Diakité"},{"no":"7","pos":"MF","nat":"ROU","name":"Valentin Mihăilă"},{"no":"8","pos":"MF","nat":"BIH","name":"Dal Varešanović"},{"no":"9","pos":"FW","nat":"GAM","name":"Ali Sowe"},{"no":"10","pos":"MF","nat":"NGA","name":"Ibrahim Olawoyin"},{"no":"11","pos":"FW","nat":"SCO","name":"Adedire Mebude"},{"no":"14","pos":"MF","nat":"TUR","name":"Taylan Antalyalı"},{"no":"17","pos":"DF","nat":"MAR","name":"Zakaria Ariss"},{"no":"19","pos":"DF","nat":"TUR","name":"Umut Erdem"},{"no":"20","pos":"MF","nat":"ALB","name":"Qazim Laçi"},{"no":"21","pos":"DF","nat":"FRA","name":"Siaka Bakayoko"},{"no":"23","pos":"FW","nat":"TUR","name":"Ahmed Kutucu"},{"no":"29","pos":"FW","nat":"ITA","name":"Gennaro Borrelli"},{"no":"30","pos":"GK","nat":"TUR","name":"Zafer Görgen"},{"no":"31","pos":"GK","nat":"TUR","name":"Hasan Döne"},{"no":"37","pos":"DF","nat":"TUR","name":"Taha Şahin"},{"no":"47","pos":"MF","nat":"TUR","name":"Emirhan Yılmaz"},{"no":"53","pos":"FW","nat":"ROU","name":"Iustin Doicaru"},{"no":"54","pos":"DF","nat":"TUR","name":"Mithat Pala"},{"no":"70","pos":"MF","nat":"GER","name":"Can Bozdoğan"},{"no":"75","pos":"GK","nat":"CIV","name":"Yahia Fofana"},{"no":"80","pos":"FW","nat":"TUR","name":"Mustafa Coşkun Tosun"},{"no":"93","pos":"DF","nat":"MLI","name":"Modibo Sagnan"},{"no":"94","pos":"DF","nat":"TUR","name":"Yakup Ayan"},{"no":"97","pos":"GK","nat":"TUR","name":"Efe Doğan"},{"no":"99","pos":"FW","nat":"TUR","name":"Emrecan Bulut"}]},"TÜMOSAN Konyaspor":{"updated":"20 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Deniz Ertaş"},{"no":"2","pos":"DF","nat":"TUR","name":"Ahmet Oğuz"},{"no":"3","pos":"DF","nat":"TUR","name":"Arif Boşluk"},{"no":"4","pos":"DF","nat":"TUR","name":"Adil Demirbağ"},{"no":"5","pos":"DF","nat":"TUR","name":"Uğurcan Yazğılı"},{"no":"7","pos":"MF","nat":"POR","name":"Diogo Gonçalves"},{"no":"8","pos":"MF","nat":"TUR","name":"Marko Jevtović"},{"no":"9","pos":"MF","nat":"TUR","name":"Deniz Türüç"},{"no":"10","pos":"MF","nat":"MKD","name":"Enis Bardhi"},{"no":"11","pos":"FW","nat":"COD","name":"Jackson Muleka"},{"no":"13","pos":"GK","nat":"TUR","name":"Bahadır Han Güngördü"},{"no":"15","pos":"DF","nat":"NGA","name":"Chidozie Awaziem"},{"no":"16","pos":"DF","nat":"TUR","name":"Ata Yanık"},{"no":"17","pos":"DF","nat":"CGO","name":"Yhoan Andzouana"},{"no":"19","pos":"FW","nat":"GAM","name":"Ebrima Colley"},{"no":"22","pos":"DF","nat":"TUR","name":"Rayyan Baniya"},{"no":"24","pos":"MF","nat":"AUT","name":"Mücahit İbrahimoğlu"},{"no":"25","pos":"MF","nat":"TUR","name":"Ömer Çobanoğlu"},{"no":"26","pos":"DF","nat":"COD","name":"Arthur Masuaku"},{"no":"29","pos":"GK","nat":"TUR","name":"Egemen Aydın"},{"no":"41","pos":"DF","nat":"BRA","name":"Da Mata"},{"no":"42","pos":"DF","nat":"EGY","name":"Mostafa Mohamed"},{"no":"45","pos":"MF","nat":"TUR","name":"Emir Bars"},{"no":"65","pos":"GK","nat":"TUR","name":"Emir Gündoğdu"},{"no":"66","pos":"MF","nat":"HUN","name":"Rajmund Tóth"},{"no":"77","pos":"MF","nat":"TUR","name":"Melih İbrahimoğlu"},{"no":"91","pos":"FW","nat":"FRA","name":"Jean-Luc Dompé"},{"no":"94","pos":"FW","nat":"TUR","name":"Enis Destan"}]},"Gaziantep FK":{"updated":"18 October 2026","players":[{"no":"2","pos":"DF","nat":"SPA","name":"Luis Pérez"},{"no":"3","pos":"MF","nat":"CIV","name":"Drissa Camara"},{"no":"4","pos":"DF","nat":"TUR","name":"Arda Kızıldağ"},{"no":"5","pos":"DF","nat":"TUR","name":"Efe Sarıkaya"},{"no":"6","pos":"MF","nat":"CIV","name":"Ulrich Meleke"},{"no":"7","pos":"MF","nat":"CUW","name":"Juninho Bacuna"},{"no":"8","pos":"MF","nat":"NGR","name":"Victor Gidado"},{"no":"9","pos":"FW","nat":"JAM","name":"Trivante Stewart"},{"no":"10","pos":"MF","nat":"POL","name":"Kacper Kozłowski"},{"no":"11","pos":"MF","nat":"TUR","name":"Mirza Cihan"},{"no":"14","pos":"DF","nat":"SUR","name":"Myenty Abena"},{"no":"17","pos":"MF","nat":"GAM","name":"Karamba Gassama"},{"no":"18","pos":"DF","nat":"ROU","name":"Deian Sorescu"},{"no":"19","pos":"FW","nat":"TUR","name":"Serdar Dursun"},{"no":"21","pos":"DF","nat":"CIV","name":"Abakar Sylla"},{"no":"22","pos":"FW","nat":"CUW","name":"Sontje Hansen"},{"no":"23","pos":"DF","nat":"GER","name":"Kerim Çalhanoğlu"},{"no":"25","pos":"GK","nat":"POL","name":"Kacper Tobiasz"},{"no":"27","pos":"FW","nat":"BIH","name":"Enver Kulašin"},{"no":"28","pos":"FW","nat":"TUR","name":"Halil Dervişoğlu"},{"no":"30","pos":"DF","nat":"TUR","name":"Nazım Sangaré"},{"no":"35","pos":"GK","nat":"TUR","name":"Ataberk Dadakdeniz"},{"no":"44","pos":"MF","nat":"ROU","name":"Alexandru Maxim"},{"no":"46","pos":"MF","nat":"TUR","name":"Ali Osman Kalın"},{"no":"61","pos":"MF","nat":"TUR","name":"Ogün Özçiçek"},{"no":"77","pos":"DF","nat":"TUR","name":"Sabahattin Destici"},{"no":"81","pos":"GK","nat":"TUR","name":"Cemilhan Aslan"},{"no":"95","pos":"GK","nat":"TUR","name":"İbrahim Kağan Alkış"},{"no":"97","pos":"FW","nat":"TUR","name":"Fuat Bavuk"}]},"Gençlerbirliği":{"updated":"19 October 2026","players":[{"no":"2","pos":"DF","nat":"BRA","name":"Thalisson"},{"no":"3","pos":"DF","nat":"TUR","name":"Hamza Aydar"},{"no":"5","pos":"MF","nat":"NGA","name":"Peter Etebo"},{"no":"6","pos":"DF","nat":"GRE","name":"Dimitrios Goutas"},{"no":"7","pos":"MF","nat":"POR","name":"Tiago Gouveia"},{"no":"9","pos":"FW","nat":"POR","name":"Pedro Mendes"},{"no":"10","pos":"MF","nat":"ITA","name":"Franco Tongya"},{"no":"11","pos":"DF","nat":"POR","name":"Kévin Rodrigues"},{"no":"12","pos":"FW","nat":"NGR","name":"Victor Orakpo"},{"no":"13","pos":"DF","nat":"POR","name":"Pedro Pereira"},{"no":"14","pos":"MF","nat":"MLI","name":"Adama Traoré"},{"no":"15","pos":"DF","nat":"TUR","name":"Arda Çağan Çelik"},{"no":"17","pos":"FW","nat":"TUR","name":"Erk Aslan"},{"no":"19","pos":"MF","nat":"SEN","name":"Cheikh Niasse"},{"no":"20","pos":"FW","nat":"MLI","name":"Sékou Koïta"},{"no":"23","pos":"GK","nat":"TUR","name":"Gökhan Akkan"},{"no":"35","pos":"MF","nat":"TUR","name":"Oğulcan Ülgün"},{"no":"42","pos":"MF","nat":"GUI","name":"Ousmane Diabaté"},{"no":"45","pos":"FW","nat":"LBR","name":"Prince Martor Jr."},{"no":"48","pos":"MF","nat":"TUR","name":"Salih Uçan"},{"no":"52","pos":"MF","nat":"TUR","name":"Göktuğ Erdem"},{"no":"53","pos":"DF","nat":"TUR","name":"Ensar Çavuşoğlu"},{"no":"61","pos":"GK","nat":"TUR","name":"Berk Deniz Çukurcu"},{"no":"70","pos":"GK","nat":"TUR","name":"İrfan Can Eğribayat"},{"no":"77","pos":"DF","nat":"TUR","name":"Abdurrahim Dursun"},{"no":"83","pos":"MF","nat":"POR","name":"Rafael Luís"},{"no":"88","pos":"DF","nat":"TUR","name":"Fıratcan Üzüm"},{"no":"90","pos":"DF","nat":"TUR","name":"Metehan Baltacı"},{"no":"99","pos":"FW","nat":"TUR","name":"Ayaz Özcan"}]},"Kocaelispor":{"updated":"19 October 2026","players":[{"no":"1","pos":"GK","nat":"SRB","name":"Aleksandar Jovanović"},{"no":"2","pos":"DF","nat":"SUR","name":"Anfernee Dijksteel"},{"no":"3","pos":"DF","nat":"TUR","name":"Muharrem Cinan"},{"no":"4","pos":"DF","nat":"FRA","name":"Tanguy Zoukrou"},{"no":"5","pos":"DF","nat":"TUR","name":"Emir Ortakaya"},{"no":"6","pos":"DF","nat":"CRO","name":"Matej Maglica"},{"no":"7","pos":"FW","nat":"GHA","name":"Dan Agyei"},{"no":"8","pos":"MF","nat":"NOR","name":"Tobias Gulliksen"},{"no":"9","pos":"FW","nat":"CRO","name":"Bruno Petković"},{"no":"10","pos":"MF","nat":"TUR","name":"Berkan Kutlu"},{"no":"11","pos":"FW","nat":"POR","name":"Gonçalo Sousa"},{"no":"14","pos":"MF","nat":"ANG","name":"Show"},{"no":"17","pos":"FW","nat":"TUR","name":"Arda Özyar"},{"no":"18","pos":"MF","nat":"TUR","name":"Hulusi Destici"},{"no":"19","pos":"MF","nat":"TUR","name":"Haydar Karataş"},{"no":"20","pos":"MF","nat":"ESP","name":"Mahamadou Susoho"},{"no":"21","pos":"DF","nat":"MLI","name":"Massadio Haïdara"},{"no":"22","pos":"DF","nat":"TUR","name":"Uğur Kaan Yıldız"},{"no":"23","pos":"GK","nat":"TUR","name":"Onurcan Piri"},{"no":"26","pos":"FW","nat":"TUR","name":"Metehan Altunbaş"},{"no":"27","pos":"MF","nat":"TUR","name":"Ege Bilim"},{"no":"32","pos":"MF","nat":"GER","name":"Makana Baku"},{"no":"41","pos":"DF","nat":"TUR","name":"Onur Öztonga"},{"no":"75","pos":"MF","nat":"TUR","name":"Tayfur Bingöl"},{"no":"83","pos":"GK","nat":"TUR","name":"Serhat Öztaşdelen"},{"no":"89","pos":"MF","nat":"TUR","name":"Bedirhan Yıldız"},{"no":"97","pos":"FW","nat":"FRA","name":"Florian Ayé"},{"no":"98","pos":"GK","nat":"TUR","name":"Talha Polat"},{"no":"99","pos":"FW","nat":"HON","name":"Rigoberto Rivas"}]},"Erzurumspor":{"updated":"17 October 2026","players":[{"no":"1","pos":"GK","nat":"TUR","name":"Ertuğrul Taşkıran"},{"no":"2","pos":"DF","nat":"IRL","name":"Festy Ebosele"},{"no":"3","pos":"DF","nat":"TUR","name":"Yakup Kırtay"},{"no":"4","pos":"DF","nat":"KOS","name":"Amar Gërxhaliu"},{"no":"6","pos":"MF","nat":"BEL","name":"Brandon Baiye"},{"no":"8","pos":"MF","nat":"TUR","name":"Sefa Akgün"},{"no":"9","pos":"FW","nat":"SUR","name":"Gyrano Kerk"},{"no":"10","pos":"FW","nat":"TUR","name":"Eren Tozlu"},{"no":"15","pos":"DF","nat":"GEO","name":"Guram Giorbelidze"},{"no":"17","pos":"GK","nat":"TUR","name":"Erkan Anapa"},{"no":"18","pos":"DF","nat":"BIH","name":"Nihad Mujakić"},{"no":"19","pos":"FW","nat":"CIV","name":"Ibrahim Diabate"},{"no":"20","pos":"FW","nat":"POR","name":"Miguel Cardoso"},{"no":"21","pos":"MF","nat":"TUR","name":"Emirhan Acar"},{"no":"22","pos":"DF","nat":"TUR","name":"Mustafa Yumlu"},{"no":"23","pos":"DF","nat":"TUR","name":"Cengizhan Bayrak"},{"no":"25","pos":"DF","nat":"TUR","name":"Ömer Arda Kara"},{"no":"31","pos":"GK","nat":"CRO","name":"Matija Orbanić"},{"no":"42","pos":"MF","nat":"GHA","name":"Elisha Owusu"},{"no":"53","pos":"DF","nat":"TUR","name":"Orhan Ovacıklı"},{"no":"65","pos":"FW","nat":"CHI","name":"Martín Rodríguez"},{"no":"77","pos":"MF","nat":"GHA","name":"Lawrence Agyekum"},{"no":"90","pos":"FW","nat":"AZE","name":"Nariman Akhundzade"},{"no":"99","pos":"FW","nat":"TUR","name":"Mustafa Fettahoğlu"},{"no":"","pos":"GK","nat":"TUR","name":"Şerefhan Sağlık"},{"no":"","pos":"DF","nat":"TUR","name":"Emre Erdem"},{"no":"","pos":"DF","nat":"TUR","name":"Taha Rençber"}]},"Amed SFK":{"updated":"16 October 2026","players":[{"no":"3","pos":"DF","nat":"TUR","name":"Miraç Acer"},{"no":"4","pos":"DF","nat":"SCO","name":"David Bates"},{"no":"5","pos":"DF","nat":"KOS","name":"Lumbardh Dellova"},{"no":"6","pos":"MF","nat":"AUT","name":"Cem Üstündağ"},{"no":"7","pos":"MF","nat":"KOS","name":"Ermal Krasniqi"},{"no":"8","pos":"MF","nat":"TUR","name":"Furkan Soyalp"},{"no":"10","pos":"FW","nat":"SWI","name":"Samuel Ballet"},{"no":"11","pos":"FW","nat":"NGR","name":"Yira Sor"},{"no":"17","pos":"DF","nat":"TUR","name":"Umut Meraş"},{"no":"18","pos":"MF","nat":"GER","name":"Gökhan Gül"},{"no":"19","pos":"FW","nat":"TUR","name":"Muhammed Yıldırım"},{"no":"21","pos":"DF","nat":"TUR","name":"Mehmet Yeşil"},{"no":"22","pos":"MF","nat":"MAD","name":"Rayan Raveloson"},{"no":"27","pos":"GK","nat":"TUR","name":"Burak Bozan"},{"no":"33","pos":"DF","nat":"GUI","name":"Amadou Cissé"},{"no":"40","pos":"GK","nat":"CIV","name":"Alban Lafont"},{"no":"45","pos":"FW","nat":"SEN","name":"Mbaye Diagne"},{"no":"47","pos":"DF","nat":"TUR","name":"Kahraman Demirtaş"},{"no":"74","pos":"FW","nat":"SYR","name":"Mohamed Khalil"},{"no":"77","pos":"FW","nat":"TUR","name":"Dilhan Demir"},{"no":"81","pos":"DF","nat":"TUR","name":"Ali Turap Bülbül"},{"no":"91","pos":"MF","nat":"ISR","name":"Dia Saba"},{"no":"93","pos":"MF","nat":"COM","name":"Rayan Lutin"},{"no":"97","pos":"MF","nat":"TUR","name":"Berk Kızıldemir"},{"no":"99","pos":"FW","nat":"NGR","name":"Gift Orban"},{"no":"","pos":"GK","nat":"TUR","name":"Veysel Sapan"},{"no":"","pos":"DF","nat":"TUR","name":"Berat Perçin"}]},"Çorum FK":{"updated":"16 October 2026","players":[{"no":"1","pos":"GK","nat":"BRA","name":"Marcos Felipe"},{"no":"2","pos":"DF","nat":"TUR","name":"Çağlar Söyüncü"},{"no":"3","pos":"MF","nat":"TUR","name":"Berat Özdemir"},{"no":"4","pos":"DF","nat":"TUR","name":"Serdar Saatçı"},{"no":"5","pos":"DF","nat":"POR","name":"Alexandre Penetra"},{"no":"6","pos":"DF","nat":"CRO","name":"Hrvoje Smolčić"},{"no":"7","pos":"FW","nat":"TUR","name":"Cengiz Ünder"},{"no":"8","pos":"MF","nat":"NOR","name":"Markus Karlsbakk"},{"no":"9","pos":"FW","nat":"SEN","name":"Mame Thiam"},{"no":"10","pos":"MF","nat":"CIV","name":"Mohamed Diomande"},{"no":"11","pos":"DF","nat":"TUR","name":"Gökhan Sazdağı"},{"no":"14","pos":"FW","nat":"GER","name":"Youssoufa Moukoko"},{"no":"15","pos":"DF","nat":"TUR","name":"Arda Şengül"},{"no":"16","pos":"MF","nat":"ANG","name":"Fredy"},{"no":"17","pos":"MF","nat":"TUR","name":"Emircan Gürlük"},{"no":"18","pos":"GK","nat":"TUR","name":"Erhan Erentürk"},{"no":"19","pos":"FW","nat":"VEN","name":"Jesús Ramírez"},{"no":"20","pos":"MF","nat":"ALB","name":"Ylber Ramadani"},{"no":"21","pos":"MF","nat":"TUR","name":"Göktan Gürpüz"},{"no":"22","pos":"DF","nat":"TUR","name":"Hüseyin Bulut"},{"no":"23","pos":"FW","nat":"TUR","name":"Hasanege Akdoğan"},{"no":"24","pos":"DF","nat":"ROM","name":"Andrei Borza"},{"no":"26","pos":"MF","nat":"BIH","name":"Ermin Mahmić"},{"no":"30","pos":"MF","nat":"TUR","name":"Ahmed Ildız"},{"no":"45","pos":"FW","nat":"TUR","name":"Furkan Çetinkaya"},{"no":"54","pos":"GK","nat":"TUR","name":"Arif Şimşir"},{"no":"88","pos":"DF","nat":"TUR","name":"Cemali Sertel"},{"no":"89","pos":"FW","nat":"GRE","name":"Alexandros Kyziridis"},{"no":"","pos":"MF","nat":"GER","name":"Atakan Akkaynak"}]}};
+const CLUBS = [
+  ["Galatasaray", "Istanbul", "big"], ["Fenerbahçe", "Istanbul", "big"], ["Beşiktaş", "Istanbul", "big"],
+  ["Trabzonspor", "Trabzon", "big"], ["İstanbul Başakşehir", "Istanbul", ""], ["Kasımpaşa", "Istanbul", ""],
+  ["Eyüpspor", "Istanbul", ""], ["Samsunspor", "Samsun", ""], ["Göztepe", "İzmir", ""],
+  ["Corendon Alanyaspor", "Alanya, Antalya", ""], ["Çaykur Rizespor", "Rize", ""], ["TÜMOSAN Konyaspor", "Konya", ""],
+  ["Gaziantep FK", "Gaziantep", ""], ["Gençlerbirliği", "Ankara", ""], ["Kocaelispor", "İzmit, Kocaeli", ""],
+  ["Erzurumspor", "Erzurum", "new"], ["Amed SFK", "Diyarbakır", "new"], ["Çorum FK", "Çorum", "new"],
+];
+const ordinal = n => n + ([, "st", "nd", "rd"][n % 100 > 10 && n % 100 < 14 ? 0 : n % 10] || "th");
+let clubView = "All clubs";
+function renderClubs() {
+  const views = ["All clubs", "Istanbul", "Rest of Türkiye", "Newly promoted"];
+  $("#clubFilter").innerHTML = views.map((v, i) => `<button id="club-filter-${i}" aria-pressed="${v === clubView}">${esc(v)}</button>`).join("");
+  $("#clubFilter").querySelectorAll("button").forEach((b, i) => b.onclick = () => { clubView = views[i]; renderClubs(); });
+  const show = CLUBS.slice().sort((a, b) => (TABLE[a[0]]?.pos ?? 99) - (TABLE[b[0]]?.pos ?? 99)).filter(([, c, t]) => clubView === "All clubs" || (clubView === "Istanbul" ? c === "Istanbul" : clubView === "Newly promoted" ? t === "new" : c !== "Istanbul"));
+  $("#clubList").innerHTML = show.map(([n, c, t]) => `<button class="club ${t}" id="club-${CLUBS.findIndex(x => x[0] === n)}" data-club="${esc(n)}">
+    ${LOGOS[n] ? `<img class="logo" src="${LOGOS[n]}" alt="" loading="lazy">` : `<span class="ball" aria-hidden="true">${esc(n.replace(/^(Corendon|Çaykur|TÜMOSAN|İstanbul) /, "")[0])}</span>`}
+    <h3>${esc(n)}</h3><span class="city">${esc(c)}</span>
+    ${TABLE[n] ? `<div class="pts"><span class="rank">${ordinal(TABLE[n].pos)}</span><b>${TABLE[n].pts}</b> pts<small>P${TABLE[n].p} · W${TABLE[n].w} D${TABLE[n].d} L${TABLE[n].l}</small></div>` : ""}
+    ${t === "big" ? '<span class="chip red">Big Four</span>' : t === "new" ? '<span class="chip turq">Promoted 2026</span>' : ""}
+    <span class="more">See the players →</span></button>`).join("");
+  $("#clubList").querySelectorAll(".club").forEach(b => b.onclick = () => openSquad(b.dataset.club));
+}
+const POS = [["GK", "Goalkeepers"], ["DF", "Defenders"], ["MF", "Midfielders"], ["FW", "Forwards"]];
+function openSquad(club) {
+  const sq = SQUADS[club], dlg = $("#squadDialog"), city = CLUBS.find(c => c[0] === club)[1];
+  const players = sq ? sq.players : [];
+  dlg.innerHTML = `<div class="squad-head">${LOGOS[club] ? `<img class="logo" src="${LOGOS[club]}" alt="${esc(club)} logo">` : ""}<div style="flex:1;min-width:0"><h3>${esc(club)}</h3><p>${esc(city)}${TABLE[club] ? ` · ${ordinal(TABLE[club].pos)} in the league, ${TABLE[club].pts} points` : ""} · ${players.length} players</p></div>
+    <button id="squadClose" aria-label="Close">×</button></div>
+    <div class="squad-body">${players.length ? POS.map(([k, label]) => {
+      const list = players.filter(p => p.pos === k);
+      return list.length ? `<div><h4>${label}</h4><ul>${list.map(p =>
+        `<li><span class="no">${esc(p.no)}</span><span>${esc(p.name)}</span><span class="nat">${esc(p.nat)}</span></li>`).join("")}</ul></div>` : "";
+    }).join("") : "<p>The squad list for this club isn't available yet.</p>"}
+    <p class="squad-foot">First-team squad as listed on Wikipedia on ${sq ? esc(sq.updated) : ""}. Squads change during transfer windows. Letters show each player's national team.</p></div>`;
+  $("#squadClose").onclick = () => dlg.close();
+  dlg.onclick = e => { if (e.target === dlg) dlg.close(); };
+  if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+}
+$("#tableNote").textContent = `Clubs are listed in league order. Points as of ${TABLE_DATE}: 3 for a win, 1 for a draw.`;
+renderClubs();
+
+/* Language */
+const PHRASES = [
+  ["Merhaba", "mer · ha · ba", "Hello"],
+  ["Günaydın", "gü · nay · dın", "Good morning"],
+  ["Nasılsınız?", "na · sıl · sı · nız", "How are you?"],
+  ["Teşekkür ederim", "te · şek · kür  e · de · rim", "Thank you"],
+  ["Lütfen", "lüt · fen", "Please"],
+  ["Evet / Hayır", "e · vet  /  ha · yır", "Yes / No"],
+  ["Hoş geldiniz", "hoş  gel · di · niz", "Welcome"],
+  ["Afiyet olsun", "a · fi · yet  ol · sun", "Enjoy your meal"],
+  ["Güle güle", "gü · le  gü · le", "Goodbye (said by the one staying)"],
+];
+const speaker = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>';
+$("#phraseList").innerHTML = PHRASES.map(([t, s, e], i) =>
+  `<div class="phrase"><span class="tr" lang="tr">${esc(t)}</span><span class="say" lang="tr" style="white-space: pre-wrap">${esc(s)}</span><span class="en">${esc(e)}</span>
+   <button id="say-${i}" aria-label="Hear “${esc(t)}”">${speaker}</button></div>`).join("");
+let clip = null;
+$("#phraseList").querySelectorAll("button").forEach((b, i) => b.onclick = () => {
+  if (clip) { clip.pause(); clip.currentTime = 0; }
+  clip = new Audio(`audio/${i}.mp4`);
+  clip.play().catch(() => {
+    $("#speechNote").textContent = "The recording couldn't play here. Read each phrase syllable by syllable instead.";
+  });
+});
+
+/* Quiz */
+const BANK = [
+  ["What is the capital of Türkiye?", ["Ankara", "London", "Paris", "Cairo"], 0, "Ankara has been the capital since 1923."],
+  ["Which is Türkiye's largest city?", ["Istanbul", "Rome", "Madrid", "Athens"], 0, "Istanbul has more than 15 million people."],
+  ["Istanbul sits on two continents. Which two?", ["Europe and Asia", "Africa and Asia", "Europe and South America", "North America and Asia"], 0, "The Bosphorus strait runs between the European and Asian sides."],
+  ["What colours are on the Turkish flag?", ["Red and white", "Blue and yellow", "Green and white", "Black and gold"], 0, "The flag is red with a white crescent moon and star."],
+  ["What shapes are on the Turkish flag?", ["A crescent moon and a star", "A maple leaf", "An eagle", "A sun"], 0, "The white crescent and star sit on a red background."],
+  ["What language do most people in Türkiye speak?", ["Turkish", "Spanish", "French", "Japanese"], 0, "Turkish is the official language."],
+  ["What money is used in Türkiye?", ["Turkish lira", "US dollar", "Japanese yen", "British pound"], 0, "Its symbol is ₺."],
+  ["What does “Merhaba” mean?", ["Hello", "Goodbye", "Thank you", "Sorry"], 0, "Merhaba is the everyday Turkish hello."],
+  ["What does “Teşekkür ederim” mean?", ["Thank you", "Good night", "Hello", "Excuse me"], 0, "It means thank you. A shorter, casual form is “sağ ol”."],
+  ["On which day is Türkiye's Republic Day?", ["29 October", "4 July", "1 January", "25 December"], 0, "The Republic was proclaimed on 29 October 1923."],
+  ["Who founded the Republic of Türkiye?", ["Mustafa Kemal Atatürk", "Napoleon", "Julius Caesar", "George Washington"], 0, "Atatürk was the Republic's first president."],
+  ["Where can you see fairy chimneys and hot-air balloons?", ["Cappadocia", "Venice", "The Alps", "The Sahara"], 0, "Cappadocia is in Central Anatolia."],
+  ["Pamukkale means “cotton castle”. What colour are its terraces?", ["White", "Red", "Green", "Black"], 0, "The white terraces are made of travertine, a kind of limestone."],
+  ["The Blue Mosque is named after blue what inside?", ["Tiles", "Curtains", "Lights", "Carpets"], 0, "More than 20,000 blue İznik tiles decorate the inside."],
+  ["What is baklava?", ["A sweet pastry", "A fish", "A soup", "A drink"], 0, "Thin layers of dough with nuts and syrup."],
+  ["What is ayran made from?", ["Yogurt", "Orange juice", "Chocolate", "Coffee"], 0, "Yogurt, cold water and a pinch of salt."],
+  ["What is Turkish tea usually served in?", ["Tulip-shaped glasses", "Large mugs", "Paper cups", "Soup bowls"], 0, "The small glass shows off the tea's red colour."],
+  ["What covers a simit bread ring?", ["Sesame seeds", "Chocolate", "Sugar", "Cheese"], 0, "Simit is dipped in grape molasses and rolled in sesame seeds."],
+  ["What is Turkish delight called in Turkish?", ["Lokum", "Pizza", "Sushi", "Taco"], 0, "Lokum comes in flavours like rose, lemon and pistachio."],
+  ["Which holiday figure was inspired by a man who lived in Türkiye?", ["Santa Claus", "The Easter Bunny", "The Tooth Fairy", "Jack Frost"], 0, "Saint Nicholas was bishop of Myra, today's Demre in Antalya."],
+  ["Hakan Şükür scored the fastest World Cup goal ever. In which sport?", ["Football (soccer)", "Tennis", "Basketball", "Golf"], 0, "He scored after just 10.8 seconds at the 2002 World Cup."],
+  ["Which famous football club does Arda Güler play for?", ["Real Madrid", "LA Lakers", "New York Yankees", "Chicago Bulls"], 0, "He joined Real Madrid in 2023."],
+  ["Hidayet Türkoğlu played in the NBA. Which sport is that?", ["Basketball", "Baseball", "Ice hockey", "Rugby"], 0, "He played 15 NBA seasons."],
+  ["Mete Gazoz won Olympic gold in which sport?", ["Archery", "Swimming", "Boxing", "Skiing"], 0, "He won at the Tokyo 2020 Games."],
+  ["Which sea is on Türkiye's north coast?", ["Black Sea", "Red Sea", "Caribbean Sea", "North Sea"], 0, "The Black Sea coast is green and rainy."],
+  ["At Ölüdeniz, people float down to the beach using what?", ["Paragliders", "Rockets", "Helicopters", "Balloons on strings"], 0, "They take off from Babadağ mountain high above the lagoon."],
+  ["Which animals lay their eggs on Patara Beach?", ["Sea turtles", "Penguins", "Crocodiles", "Ostriches"], 0, "Loggerhead sea turtles nest there every summer."],
+  ["Türkiye grows most of the world's what?", ["Hazelnuts", "Bananas", "Pineapples", "Coconuts"], 0, "About two-thirds of the world's hazelnuts grow on the Black Sea coast."],
+  ["Which flower reached Europe from Istanbul?", ["The tulip", "The cactus flower", "The lotus", "The orchid"], 0, "Ottoman gardeners grew tulips long before the Dutch."],
+  ["Which colour is named after Türkiye?", ["Turquoise", "Orange", "Violet", "Magenta"], 0, "“Turquoise” comes from the French for “Turkish stone”."],
+  ["What was Mimar Sinan's job?", ["Architect", "Footballer", "Chef", "Astronaut"], 0, "He designed more than 300 buildings, including the Süleymaniye Mosque."],
+  ["What is Dr. Oz's job?", ["Doctor", "Pilot", "Singer", "Painter"], 0, "Mehmet Oz is a heart surgeon and TV host."],
+  ["Van cats are famous for what?", ["Eyes of two different colours", "Having no tail", "Being bright green", "Barking like dogs"], 0, "Many Van cats have one blue eye and one amber eye, and they like to swim."],
+];
+const ROUND = 9;
+let QUIZ = [], queue = [];
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+function newRound() {
+  // Draw unseen questions first; refill the queue only when it runs out, avoiding the round just played.
+  if (queue.length < ROUND) {
+    const last = new Set(QUIZ.map(q => q.src));
+    queue = queue.concat(shuffle(BANK.map((_, i) => i).filter(i => !queue.includes(i) && !last.has(i))));
+  }
+  QUIZ = queue.splice(0, ROUND).map(i => {
+    const [q, opts, ans, why] = BANK[i];
+    const order = shuffle(opts.map((_, k) => k));
+    return Object.assign([q, order.map(k => opts[k]), order.indexOf(ans), why], { src: i });
+  });
+  quiz.i = 0; quiz.results = []; quiz.picked = null;
+}
+const quiz = { i: 0, results: [], picked: null };
+newRound();
+function renderQuiz() {
+  const box = $("#quizBox");
+  const bar = `<div class="progress" aria-hidden="true">${QUIZ.map((_, k) =>
+    `<i class="${quiz.results[k] === true ? "ok" : quiz.results[k] === false ? "no" : k === quiz.i ? "now" : ""}"></i>`).join("")}</div>`;
+  const score = quiz.results.filter(Boolean).length;
+  if (quiz.i >= QUIZ.length) {
+    const msg = score === QUIZ.length ? "Mükemmel! Perfect score." : score >= 6 ? "Çok iyi! Very good." : "İyi deneme. Good try. The answers are all on this page.";
+    box.innerHTML = `${bar}<p class="q">You scored ${score} out of ${QUIZ.length}.</p><p class="why">${msg} The next round has new questions.</p>
+      <div class="row"><span></span><button class="btn primary" id="quizRestart">Play a new round</button></div>`;
+    $("#quizRestart").onclick = () => { newRound(); renderQuiz(); $("#quizBox").scrollIntoView({ block: "nearest" }); };
+    return;
+  }
+  const [q, opts, ans, why] = QUIZ[quiz.i];
+  box.innerHTML = `${bar}
+    <p class="score">Question ${quiz.i + 1} of ${QUIZ.length} · ${score} correct</p>
+    <p class="q">${esc(q)}</p>
+    <div class="opts">${opts.map((o, k) => {
+      let cls = "";
+      if (quiz.picked !== null) cls = k === ans ? "right" : k === quiz.picked ? "wrong" : "";
+      return `<button id="opt-${k}" class="${cls}" ${quiz.picked !== null ? "disabled" : ""}>${esc(o)}</button>`;
+    }).join("")}</div>
+    ${quiz.picked !== null ? `<p class="why"><strong>${quiz.picked === ans ? "Doğru! Correct." : "Not quite."}</strong> ${esc(why)}</p>
+      <div class="row"><span></span><button class="btn primary" id="quizNext">${quiz.i === QUIZ.length - 1 ? "See my score" : "Next question"}</button></div>` : ""}`;
+  box.querySelectorAll(".opts button").forEach((b, k) => b.onclick = () => {
+    quiz.picked = k; quiz.results[quiz.i] = k === ans; renderQuiz(); $("#quizNext").focus();
+  });
+  const next = $("#quizNext");
+  if (next) next.onclick = () => { quiz.i++; quiz.picked = null; renderQuiz(); };
+}
+renderQuiz();
+
+/* Sideways scrollers */
+function scroller(list, noun) {
+  const bar = document.createElement("div"); bar.className = "scroll-bar";
+  const before = list.previousElementSibling;
+  if (before && before.classList.contains("filter")) { list.before(bar); bar.append(before); } else list.before(bar);
+  bar.insertAdjacentHTML("beforeend", `<div class="scroll-btns"><button id="${list.id}-prev" aria-label="Scroll ${noun} left">←</button><button id="${list.id}-next" aria-label="Scroll ${noun} right">→</button></div>`);
+  const count = document.createElement("p"); count.className = "scroll-count"; list.after(count);
+  const prev = bar.querySelector("button:first-of-type"), next = bar.querySelector("button:last-of-type");
+  const step = () => ((list.firstElementChild?.offsetWidth || 260) + 16) * 2;
+  const sync = () => {
+    prev.disabled = list.scrollLeft < 4;
+    next.disabled = list.scrollLeft + list.clientWidth >= list.scrollWidth - 4;
+    count.textContent = `${list.children.length} ${noun} · swipe or use the arrows to see more`;
+  };
+  prev.onclick = () => list.scrollBy({ left: -step() });
+  next.onclick = () => list.scrollBy({ left: step() });
+  list.addEventListener("scroll", sync, { passive: true });
+  addEventListener("resize", sync);
+  new MutationObserver(() => { list.scrollLeft = 0; sync(); }).observe(list, { childList: true });
+  sync();
+}
+[["timeline", "events"], ["placeList", "places"], ["foodList", "dishes and drinks"], ["factList", "facts"],
+ ["clubList", "clubs"], ["phraseList", "phrases"]].forEach(([id, noun]) => scroller(document.getElementById(id), noun));
+
+/* Share */
+$("#copyLink").onclick = () => {
+  const b = $("#copyLink"), done = t => { b.textContent = t; setTimeout(() => b.textContent = "Copy link", 2000); };
+  const pick = () => { const r = document.createRange(); r.selectNodeContents($("#shareLink")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); done("Selected, press Ctrl+C"); };
+  try { navigator.clipboard.writeText($("#shareLink").textContent).then(() => done("Copied"), pick); } catch (e) { pick(); }
+};
+</script>
+
+</body>
+</html>
