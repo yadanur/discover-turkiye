@@ -194,6 +194,16 @@ svg.has-pick .rg.on path { filter: brightness(1.1) saturate(1.15); }
 .dish .n { font-family: var(--display); font-size: 1.45rem; }
 .dish .n i { font-family: var(--body); font-style: normal; font-size: 0.85rem; color: var(--muted); margin-left: 6px; }
 .dish p { color: var(--muted); font-size: 0.97rem; }
+.dish .txt { flex: 1; grid-template-rows: auto 1fr auto; }
+.order-btn { justify-self: start; margin-top: 8px; background: var(--flag); color: var(--on-flag); border-color: var(--flag); }
+.squad-body .order-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 10px; }
+.squad-body .order-list li { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: baseline; }
+.order-list b { font-size: 1.05rem; min-width: 0; }
+.order-list .dist { font-family: var(--mono); font-size: 0.85rem; color: var(--flag); white-space: nowrap; }
+.order-list .meta { grid-column: 1 / -1; font-size: 0.85rem; color: var(--muted); }
+.order-list .acts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 6px; font-size: 0.9rem; font-weight: 600; }
+.order-status { font-size: 0.95rem; }
+.order-note { font-size: 0.8rem; color: var(--muted); }
 
 /* phrases */
 .phrases { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
@@ -736,7 +746,9 @@ $("#photoCredits").innerHTML += " Food: " + FOOD.map(([n], i) => {
 }).join(" · ") + ".";
 $("#foodList").innerHTML = FOOD.map(([n, e, p], i) =>
   `<div class="dish"><img src="food/${FOOD_PHOTOS[i]}.jpg" alt="${esc(n)}, ${esc(e)}" loading="lazy">
-   <div class="txt"><div class="n">${esc(n)}<i>${esc(e)}</i></div><p>${esc(p)}</p></div></div>`).join("");
+   <div class="txt"><div class="n">${esc(n)}<i>${esc(e)}</i></div><p>${esc(p)}</p>
+   <button class="btn order-btn" id="order-${i}" data-dish="${i}">Find place to order</button></div></div>`).join("");
+$("#foodList").querySelectorAll(".order-btn").forEach(b => b.onclick = () => findPlaces(+b.dataset.dish));
 
 /* Famous people */
 const PEOPLE = [
@@ -996,6 +1008,83 @@ $("#copyLink").onclick = () => {
   const pick = () => { const r = document.createRange(); r.selectNodeContents($("#shareLink")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); done("Selected, press Ctrl+C"); };
   try { navigator.clipboard.writeText($("#shareLink").textContent).then(() => done("Copied"), pick); } catch (e) { pick(); }
 };
+
+/* Find place to order: browser location + OpenStreetMap places via Photon (photon.komoot.io) */
+const ORDER = [ // [Google Maps search words, Photon keywords]
+  ["kebab restaurant", ["kebab", "kebap", "doner", "turkish"]],
+  ["baklava", ["baklava", "turkish bakery", "turkish"]],
+  ["simit Turkish bakery", ["simit", "turkish bakery", "turkish"]],
+  ["Turkish breakfast menemen", ["turkish breakfast", "menemen", "turkish"]],
+  ["mantı Turkish restaurant", ["manti", "turkish"]],
+  ["lahmacun", ["lahmacun", "pide", "turkish"]],
+  ["Turkish tea house", ["turkish tea", "turkish cafe", "turkish"]],
+  ["Turkish coffee", ["turkish coffee", "turkish cafe", "turkish"]],
+  ["Turkish delight lokum", ["turkish delight", "lokum", "turkish"]],
+  ["kebab restaurant ayran", ["kebab", "doner", "turkish"]],
+];
+const PLACE_TAGS = ["amenity:restaurant", "amenity:fast_food", "amenity:cafe", "shop:bakery", "shop:pastry", "shop:confectionery"].map(t => "&osm_tag=" + t).join("");
+const useMiles = /^en-(US|GB|LR|MM)$/i.test(navigator.language || "");
+const fmtDist = m => useMiles ? (m < 305 ? `${Math.round(m * 3.28084 / 10) * 10} ft` : `${(m / 1609.34).toFixed(1)} mi`)
+                         : (m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`);
+function metres(a, b, c, d) {
+  const R = 6371000, r = x => x * Math.PI / 180, dl = r(c - a), dn = r(d - b);
+  return 2 * R * Math.asin(Math.sqrt(Math.sin(dl / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(dn / 2) ** 2));
+}
+async function searchPlaces(lat, lon, words) {
+  // Only a rounded position (about 1 km) leaves the browser; the box limits results to roughly 25 km around it.
+  const la = lat.toFixed(2), lo = lon.toFixed(2), dy = 0.22, dx = 0.22 / Math.cos(lat * Math.PI / 180);
+  const box = [lon - dx, lat - dy, lon + dx, lat + dy].map(v => v.toFixed(2)).join(",");
+  const lists = await Promise.all(words.map(async w => {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 15000);
+    try {
+      const r = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(w)}&lat=${la}&lon=${lo}&bbox=${box}&limit=15${PLACE_TAGS}`, { signal: ctl.signal });
+      return r.ok ? (await r.json()).features : [];
+    } catch (e) { return null; } finally { clearTimeout(t); }
+  }));
+  if (lists.every(l => l === null)) throw new Error("search unavailable");
+  return lists.flat().filter(Boolean);
+}
+function orderDialog(i, inner) {
+  let dlg = $("#orderDialog");
+  if (!dlg) { dlg = document.createElement("dialog"); dlg.className = "squad"; dlg.id = "orderDialog"; document.body.append(dlg); dlg.onclick = e => { if (e.target === dlg) dlg.close(); }; }
+  const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ORDER[i][0] + " near me")}`;
+  dlg.innerHTML = `<div class="squad-head"><div style="flex:1;min-width:0"><h3>${esc(FOOD[i][0])} near you</h3><p>Places to eat or order ${esc(FOOD[i][1])}</p></div>
+    <button id="orderClose" aria-label="Close">×</button></div>
+    <div class="squad-body">${inner}
+    <p class="order-note">Results come from OpenStreetMap and may miss some places. Only your approximate area (about 1 km) is sent to the map search, and nothing is saved.
+    <a href="${maps}" target="_blank" rel="noopener">Search Google Maps instead</a></p></div>`;
+  $("#orderClose").onclick = () => dlg.close();
+  if (!dlg.open) dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
+}
+function findPlaces(i) {
+  orderDialog(i, `<p class="order-status">Finding your location… Your browser may ask for permission.</p>`);
+  if (!navigator.geolocation) return orderDialog(i, `<p class="order-status">This browser can't share your location. Use the Google Maps link below instead.</p>`);
+  navigator.geolocation.getCurrentPosition(async pos => {
+    const { latitude: lat, longitude: lon } = pos.coords;
+    orderDialog(i, `<p class="order-status">Searching for places near you…</p>`);
+    try {
+      const seen = new Set(), places = (await searchPlaces(lat, lon, ORDER[i][1])).map(f => {
+        const [lo, la] = f.geometry.coordinates, t = f.properties;
+        return { t, la, lo, m: metres(lat, lon, la, lo) };
+      }).filter(p => p.t.name && !seen.has(p.t.osm_id) && seen.add(p.t.osm_id))
+        .sort((a, b) => a.m - b.m).slice(0, 12);
+      if (!places.length) return orderDialog(i, `<p class="order-status">No matching places were found nearby. Try the Google Maps search below.</p>`);
+      orderDialog(i, `<p class="order-status">${places.length} closest places for ${esc(FOOD[i][0])}:</p><ul class="order-list">${places.map(p => {
+        const kind = (p.t.osm_value || "").replace(/_/g, " ");
+        const addr = [[p.t.housenumber, p.t.street].filter(Boolean).join(" "), p.t.city].filter(Boolean).join(", ");
+        const look = encodeURIComponent([p.t.name, p.t.street, p.t.city].filter(Boolean).join(" "));
+        return `<li><b>${esc(p.t.name)}</b><span class="dist">${fmtDist(p.m)}</span>
+          <span class="meta">${esc([kind, addr].filter(Boolean).join(" · "))}</span>
+          <span class="acts"><a href="https://www.google.com/maps/dir/?api=1&destination=${p.la},${p.lo}" target="_blank" rel="noopener">Directions</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=${look}" target="_blank" rel="noopener">Menu, phone &amp; ordering</a></span></li>`;
+      }).join("")}</ul>`);
+    } catch (e) {
+      orderDialog(i, `<p class="order-status">The restaurant search isn't answering right now. Try again in a minute, or use the Google Maps search below.</p>`);
+    }
+  }, err => {
+    orderDialog(i, `<p class="order-status">${err.code === 1 ? "Location access was turned off, so we can't look nearby." : "Your location couldn't be found."} You can still search on Google Maps below.</p>`);
+  }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+}
 </script>
 
 </body>
