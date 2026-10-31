@@ -360,12 +360,12 @@ footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--mu
     <div class="links">
       <a href="#food">Food</a>
       <a href="#places">Places</a>
+      <a href="#people">People</a>
       <a href="#regions">Regions</a>
       <a href="#history">History</a>
       <a href="#facts">Fun facts</a>
       <a href="#football">Football</a>
       <a href="#language">Language</a>
-      <a href="#people">People</a>
       <a href="#quiz">Quiz</a>
     </div>
   </div>
@@ -414,6 +414,22 @@ footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--mu
       </div>
       <div class="filter" id="placeFilter" role="group" aria-label="Filter places"></div>
       <div class="places hscroll" tabindex="0" id="placeList"></div>
+    </div>
+  </section>
+
+  <section class="block" id="people">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Famous people</p>
+        <h2>Leaders, artists, stars and champions</h2>
+        <p class="lede">People from Türkiye's past and present whose work is known around the world. They are listed from oldest to youngest. Pick a group to narrow the list.</p>
+      </div>
+      <div class="people-bar">
+        <div class="filter" id="peopleFilter" role="group" aria-label="Filter people"></div>
+        <div class="scroll-btns"><button id="peoplePrev" aria-label="Scroll left">←</button><button id="peopleNext" aria-label="Scroll right">→</button></div>
+      </div>
+      <div class="people" id="peopleList" tabindex="0" aria-label="Famous people, scroll sideways"></div>
+      <p class="people-count" id="peopleCount"></p>
     </div>
   </section>
 
@@ -484,22 +500,6 @@ footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--mu
       </div>
       <div class="phrases hscroll" tabindex="0" id="phraseList"></div>
       <p class="note" id="speechNote">Tap the speaker to hear each phrase spoken in Turkish.</p>
-    </div>
-  </section>
-
-  <section class="block" id="people">
-    <div class="wrap">
-      <div class="head">
-        <p class="eyebrow">Famous people</p>
-        <h2>Leaders, artists, stars and champions</h2>
-        <p class="lede">People from Türkiye's past and present whose work is known around the world. They are listed from oldest to youngest. Pick a group to narrow the list.</p>
-      </div>
-      <div class="people-bar">
-        <div class="filter" id="peopleFilter" role="group" aria-label="Filter people"></div>
-        <div class="scroll-btns"><button id="peoplePrev" aria-label="Scroll left">←</button><button id="peopleNext" aria-label="Scroll right">→</button></div>
-      </div>
-      <div class="people" id="peopleList" tabindex="0" aria-label="Famous people, scroll sideways"></div>
-      <p class="people-count" id="peopleCount"></p>
     </div>
   </section>
 
