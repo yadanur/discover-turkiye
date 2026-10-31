@@ -172,7 +172,8 @@ svg.has-pick .rg.on path { filter: brightness(1.1) saturate(1.15); }
 .place .photo { display: block; width: 100%; max-width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: var(--tint); }
 .credits { margin-top: 10px; font-size: 0.78rem; line-height: 1.5; }
 .credits a { color: inherit; }
-.place .body { padding: 16px 18px 20px; display: grid; gap: 8px; }
+.place .body { padding: 16px 18px 20px; display: grid; gap: 8px; flex: 1; grid-template-rows: auto auto 1fr auto; }
+.place-video { justify-self: stretch; margin-top: 6px; }
 .place .meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .chip { font-family: var(--mono); font-size: 0.68rem; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--cobalt-soft); color: var(--cobalt); }
 .chip.red { background: var(--iznik-soft); color: var(--iznik); }
@@ -711,6 +712,22 @@ function tileBg(varName, i) {
       conic-gradient(from 45deg at 50% 50%, ${c} 0 25%, transparent 0 50%, ${c} 0 75%, transparent 0);
     background-size: ${a}px ${a}px, ${a}px ${a}px; opacity: 1;`;
 }
+const PLACE_VIDEOS = { // [YouTube id, channel, title]
+  "Hagia Sophia": ["rqa0eXnDey4", "TRT World", "Hagia Sophia: Through the ages"],
+  "Blue Mosque": ["ocyyxHkCvm8", "Rick Steves' Europe", "Istanbul: The Blue Mosque"],
+  "Cappadocia": ["EwP9okkW8n0", "Go Türkiye", "Cappadocia - Only in Türkiye"],
+  "Pamukkale": ["IN-Gg8RVa14", "Go Türkiye", "Pamukkale - Only in Türkiye"],
+  "Ephesus": ["xFoCEtmFRaM", "Go Türkiye", "Ephesus - Only in Türkiye"],
+  "Göbekli Tepe": ["Lkzw-fM9U2w", "Go Türkiye", "Göbeklitepe"],
+  "Mount Nemrut": ["wcMc0nFn0QU", "Go Türkiye", "Mount Nemrut"],
+  "Sumela Monastery": ["MMS0s4d-EHc", "Go Türkiye", "Sümela Monastery - Only in Türkiye"],
+  "Grand Bazaar": ["EvhhaKjXDq8", "Rick Steves' Europe", "Istanbul: Grand Bazaar"],
+  "Lake Van": ["N0_Saz5aKeQ", "Aslan Özcan", "Akdamar Island, Lake Van, from the air"],
+  "Ölüdeniz": ["b0ukooCo2_U", "One Man Wolf Pack", "Blue Lagoon from Above: Ölüdeniz"],
+  "Kaputaş Beach": ["PxWksJWuHtU", "Cinematic Roam", "Kaputaş Beach, Kalkan: drone film"],
+  "Patara Beach": ["uX3T83ozDTg", "Go Türkiye", "A day in Patara"],
+  "Butterfly Valley": ["m42O-UcLSdE", "Go Türkiye", "Butterfly Valley - Only in Türkiye"],
+};
 let placeKind = "All";
 function renderPlaces() {
   const kinds = ["All", ...new Set(PLACES.map(p => p.k))];
@@ -726,9 +743,14 @@ function renderPlaces() {
       <div class="body">
         <div class="meta"><span class="chip ${chip}">${p.k}</span><span class="where">${esc(p.w)}</span></div>
         <h3>${esc(p.n)}</h3><p>${esc(p.p)}</p>
+        ${PLACE_VIDEOS[p.n] ? `<button class="btn video-btn place-video" id="place-video-${PLACES.indexOf(p)}" data-place="${esc(p.n)}">▶ Watch the video</button>` : ""}
       </div></article>`;
   }).join("");
   $("#placeList").querySelectorAll(".tile").forEach(t => t.style.opacity = ".28");
+  $("#placeList").querySelectorAll(".place-video").forEach(b => b.onclick = () => {
+    const [id, channel, title] = PLACE_VIDEOS[b.dataset.place];
+    openVideo(id, channel, title, b.dataset.place);
+  });
 }
 renderPlaces();
 
@@ -1007,7 +1029,7 @@ function scroller(list, noun) {
   if (before && before.classList.contains("filter")) { list.before(bar); bar.append(before); } else list.before(bar);
   bar.insertAdjacentHTML("beforeend", `<div class="scroll-btns"><button id="${list.id}-prev" aria-label="Scroll ${noun} left">←</button><button id="${list.id}-next" aria-label="Scroll ${noun} right">→</button></div>`);
   const count = document.createElement("p"); count.className = "scroll-count"; list.after(count);
-  const prev = bar.querySelector("button:first-of-type"), next = bar.querySelector("button:last-of-type");
+  const prev = bar.querySelector(".scroll-btns > button:first-child"), next = bar.querySelector(".scroll-btns > button:last-child");
   const step = () => ((list.firstElementChild?.offsetWidth || 260) + 16) * 2;
   const sync = () => {
     prev.disabled = list.scrollLeft < 4;
@@ -1218,14 +1240,18 @@ const VIDEOS = [
 // The Claude viewer runs the page in a frame that can't embed other sites, so there the panel links out to YouTube instead.
 const CAN_EMBED = window.self === window.top;
 function videoDialog(i) {
-  const [id, channel, title] = VIDEOS[i], watch = `https://www.youtube.com/watch?v=${id}`;
+  const [id, channel, title] = VIDEOS[i];
+  openVideo(id, channel, title, `How to make ${FOOD[i][0]}`);
+}
+function openVideo(id, channel, title, heading) {
+  const watch = `https://www.youtube.com/watch?v=${id}`;
   let dlg = $("#videoDialog");
   if (!dlg) {
     dlg = document.createElement("dialog"); dlg.className = "squad video-dlg"; dlg.id = "videoDialog"; document.body.append(dlg);
     dlg.onclick = e => { if (e.target === dlg) dlg.close(); };
     dlg.addEventListener("close", () => { dlg.innerHTML = ""; }); // stops playback
   }
-  dlg.innerHTML = `<div class="squad-head"><div style="flex:1;min-width:0"><h3>How to make ${esc(FOOD[i][0])}</h3><p>${esc(title)}</p></div>
+  dlg.innerHTML = `<div class="squad-head"><div style="flex:1;min-width:0"><h3>${esc(heading)}</h3><p>${esc(title)}</p></div>
     <button id="videoClose" aria-label="Close">×</button></div>
     <div class="squad-body">
       <div class="video-frame">${CAN_EMBED
