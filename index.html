@@ -288,7 +288,8 @@ dialog.squad.video-dlg { width: min(960px, calc(100vw - 32px)); }
 .timeline.hscroll li::after { left: 0; top: -8px; }
 .timeline.hscroll time { text-align: left; }
 .person { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: grid; grid-template-columns: auto 1fr; gap: 12px 14px; align-content: start; }
-.person .mono { width: 52px; height: 52px; border-radius: 50%; background: var(--flag); color: var(--on-flag); display: grid; place-items: center; font-family: var(--display); font-size: 1.3rem; }
+.person .face { padding: 0; object-fit: cover; object-position: 50% 18%; border: 3px solid var(--flag); max-width: none; }
+.person .mono { width: 64px; height: 64px; border-radius: 50%; background: var(--flag); color: var(--on-flag); display: grid; place-items: center; font-family: var(--display); font-size: 1.3rem; }
 .person h3 { font-size: 1.3rem; }
 .person .yrs { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
 .person .chip { justify-self: start; grid-column: 1 / -1; }
@@ -533,6 +534,7 @@ footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--mu
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const PORTRAITS = {"Mevlânâ Rumi":{"src":"people/0.jpg","file":"مولانا_اثر_حسین_بهزاد_(cropped).jpg","by":"Hossein Behzad","lic":"Public domain"},"Piri Reis":{"src":"people/1.jpg","file":"Piri_reis.jpg","by":"Karamanli86","lic":"CC BY-SA 4.0"},"Mimar Sinan":{"src":"people/2.jpg","file":"Mimar_Sinan_1544.jpg","by":"Brane Blokar","lic":"CC BY-SA 4.0"},"Mustafa Kemal Atatürk":{"src":"people/3.jpg","file":"Ataturk1930s.jpg","by":"unknown author","lic":"Public domain"},"Halide Edib Adıvar":{"src":"people/4.jpg","file":"Halide_adivar.jpg","by":"unknown author","lic":"Public domain"},"Sabiha Gökçen":{"src":"people/5.jpg","file":"Sabiha_gokcen3.jpg","by":"unknown author","lic":"Public domain"},"Türkan Şoray":{"src":"people/7.jpg","file":"Turkan_Soray_1310395.jpg","by":"Nevit Dilmen (talk)","lic":"CC BY-SA 3.0"},"Aziz Sancar":{"src":"people/8.jpg","file":"Aziz_Sancar_0060.jpg","by":"Holger Motzkau","lic":"CC BY-SA 3.0"},"Orhan Pamuk":{"src":"people/9.jpg","file":"Orhan_Pamuk_2009_Shankbone.jpg","by":"David Shankbone","lic":"CC BY 3.0"},"Recep Tayyip Erdoğan":{"src":"people/10.jpg","file":"Turkish_President_Recep_Tayyip_Erdoğan_in_January_2024_(cropped).jpg","by":"Rory Arnold","lic":"CC BY 2.0"},"Mehmet Oz (Dr. Oz)":{"src":"people/11.jpg","file":"CMS_Admin_Dr_Mehmet_Oz.png","by":"United States Centers for Medicare and Medicaid","lic":"Public domain"},"Halit Ergenç":{"src":"people/13.jpg","file":"Halit_Ergenç.jpg","by":"Halit_Ergenç_024.jpg: http://picasaweb.google.com/yakarspor derivative work: Mat","lic":"CC BY-SA 3.0"},"Hidayet Türkoğlu":{"src":"people/14.jpg","file":"Hidayet_Türkoğlu_20250218_(1).jpg","by":"Zafer","lic":"CC BY 4.0"},"Mete Gazoz":{"src":"people/15.jpg","file":"Mete_Gazoz_(51830013773).jpg","by":"Türkiye Milli Olimpiyat Komitesi","lic":"CC BY-SA 2.0"},"Zehra Güneş":{"src":"people/16.jpg","file":"Zehra_Güneş_18_VakıfBank_SK_WV_TWVL_20260416_(5)_(cropped).jpg","by":"Zafer","lic":"CC BY 4.0"},"Arda Güler":{"src":"people/17.jpg","file":"Arda_Güler_2025.jpg","by":"LawEnthusiast","lic":"CC BY-SA 4.0"}};
 
 /* Republic Day badge (29 October) */
 (() => {
@@ -703,6 +705,8 @@ const PHOTOS = {
 };
 $("#photoCredits").innerHTML = "Photos from Wikimedia Commons: Bosphorus by <a href=\"https://commons.wikimedia.org/wiki/File:Istanbul_Ortak%C3%B6y_(54514468726).jpg\">Jorge Franganillo</a> (CC BY 2.0) · " + Object.entries(PHOTOS).map(([n, p]) =>
   `${esc(n)} by ${p.file ? `<a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(p.file)}">${esc(p.by)}</a>` : esc(p.by)} (${esc(p.lic)})`).join(" · ") + ".";
+$("#photoCredits").innerHTML += " Portraits: " + Object.entries(PORTRAITS).map(([n, p]) =>
+  `${esc(n)} by <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(p.file)}">${esc(p.by)}</a> (${esc(p.lic)})`).join(" · ") + ".";
 const KIND_STYLE = { Ancient: ["red", "--iznik"], Nature: ["turq", "--turq"], Seaside: ["turq", "--turq"], Sacred: ["", "--cobalt"], City: ["", "--cobalt"] };
 function tileBg(varName, i) {
   const c = `var(${varName})`, a = 22 + (i % 3) * 6;
@@ -827,7 +831,7 @@ function renderPeople() {
   $("#peopleFilter").querySelectorAll("button").forEach((b, i) => b.onclick = () => { peopleGroup = groups[i]; renderPeople(); });
   const born = y => +y.match(/\d{4}/)[0];
   $("#peopleList").innerHTML = PEOPLE.slice().sort((a, b) => born(a[1]) - born(b[1])).filter(([, , r]) => peopleGroup === "All" || groupOf(r) === peopleGroup).map(([n, y, r, p]) => `<article class="person">
-  <div class="mono" aria-hidden="true">${initials(n)}</div>
+  ${PORTRAITS[n] ? `<img class="mono face" src="${PORTRAITS[n].src}" alt="${esc(n)}" loading="lazy">` : `<div class="mono" aria-hidden="true">${initials(n)}</div>`}
   <div><h3>${esc(n)}</h3><p class="yrs">${esc(y)}</p></div>
   <span class="chip red">${esc(r)}</span>
   <p>${esc(p)}</p></article>`).join("");
