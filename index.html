@@ -296,10 +296,6 @@ dialog.squad.video-dlg { width: min(960px, calc(100vw - 32px)); }
 .person p { grid-column: 1 / -1; font-size: 0.97rem; }
 
 /* football */
-.league-stats { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-bottom: 24px; }
-.league-stats div { display: grid; }
-.league-stats b { font-family: var(--display); font-weight: 400; font-size: 2rem; line-height: 1.1; color: var(--flag); font-variant-numeric: tabular-nums; }
-.league-stats span { font-family: var(--mono); font-size: 0.72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .clubs { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
 .club { font: inherit; color: inherit; text-align: left; cursor: pointer; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: center; }
 .club .ball { grid-row: 1 / span 2; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-size: 1rem; background: var(--cobalt-soft); color: var(--flag); }
@@ -474,17 +470,8 @@ footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--mu
       <div class="head">
         <p class="eyebrow">Futbol · Trendyol Süper Lig 2026–27</p>
         <h2>The Süper Lig clubs</h2>
-        <p class="lede">Football is Türkiye's favourite sport. Eighteen clubs play in the top league this season. Each team plays every other team twice, and the bottom three go down to the 1. Lig.</p>
-      </div>
-      <div class="league-stats">
-        <div><b>18</b><span>Clubs</span></div>
-        <div><b>34</b><span>Matches each</span></div>
-        <div><b>6</b><span>From Istanbul</span></div>
-        <div><b>3</b><span>Newly promoted</span></div>
-        <div><b>14 Aug – 23 May</b><span>Season</span></div>
       </div>
       <p class="table-note" id="tableNote"></p>
-      <div class="filter" id="clubFilter" role="group" aria-label="Filter clubs"></div>
       <div class="clubs hscroll" tabindex="0" id="clubList"></div>
       <dialog class="squad" id="squadDialog" aria-label="Club squad"></dialog>
       <p class="sources">Tap a club to see its players. Club logos belong to their clubs and are shown here to identify each team. Promoted for 2026–27: Erzurumspor, Amed SFK and Çorum FK. Relegated: Antalyaspor, Kayserispor and Fatih Karagümrük.</p>
@@ -883,12 +870,8 @@ const CLUBS = [
   ["Erzurumspor", "Erzurum", "new"], ["Amed SFK", "Diyarbakır", "new"], ["Çorum FK", "Çorum", "new"],
 ];
 const ordinal = n => n + ([, "st", "nd", "rd"][n % 100 > 10 && n % 100 < 14 ? 0 : n % 10] || "th");
-let clubView = "All clubs";
 function renderClubs() {
-  const views = ["All clubs", "Istanbul", "Rest of Türkiye", "Newly promoted"];
-  $("#clubFilter").innerHTML = views.map((v, i) => `<button id="club-filter-${i}" aria-pressed="${v === clubView}">${esc(v)}</button>`).join("");
-  $("#clubFilter").querySelectorAll("button").forEach((b, i) => b.onclick = () => { clubView = views[i]; renderClubs(); });
-  const show = CLUBS.slice().sort((a, b) => (TABLE[a[0]]?.pos ?? 99) - (TABLE[b[0]]?.pos ?? 99)).filter(([, c, t]) => clubView === "All clubs" || (clubView === "Istanbul" ? c === "Istanbul" : clubView === "Newly promoted" ? t === "new" : c !== "Istanbul"));
+  const show = CLUBS.slice().sort((a, b) => (TABLE[a[0]]?.pos ?? 99) - (TABLE[b[0]]?.pos ?? 99));
   $("#clubList").innerHTML = show.map(([n, c, t]) => `<button class="club ${t}" id="club-${CLUBS.findIndex(x => x[0] === n)}" data-club="${esc(n)}">
     ${LOGOS[n] ? `<img class="logo" src="${LOGOS[n]}" alt="" loading="lazy">` : `<span class="ball" aria-hidden="true">${esc(n.replace(/^(Corendon|Çaykur|TÜMOSAN|İstanbul) /, "")[0])}</span>`}
     <h3>${esc(n)}</h3><span class="city">${esc(c)}</span>
