@@ -195,7 +195,19 @@ svg.has-pick .rg.on path { filter: brightness(1.1) saturate(1.15); }
 .dish .n i { font-family: var(--body); font-style: normal; font-size: 0.85rem; color: var(--muted); margin-left: 6px; }
 .dish p { color: var(--muted); font-size: 0.97rem; }
 .dish .txt { flex: 1; grid-template-rows: auto 1fr auto; }
-.order-btn { justify-self: start; margin-top: 8px; background: var(--flag); color: var(--on-flag); border-color: var(--flag); }
+.dish-btns { display: grid; gap: 8px; margin-top: 8px; }
+.diy-btn { background: var(--surface); color: var(--flag); border-color: var(--flag); }
+.diy-btn:hover { background: var(--iznik-soft); }
+.recipe-meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.92rem; }
+.recipe-meta b { font-family: var(--mono); font-size: 0.72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--flag); margin-right: 6px; }
+.squad-body.recipe .ing h5 { margin: 10px 0 4px; font-size: 0.95rem; }
+.squad-body.recipe .ing ul { display: block; list-style: disc; padding-left: 1.2em; }
+.squad-body.recipe .ing li { display: list-item; border: 0; padding: 2px 0; }
+.squad-body.recipe .steps { margin: 0; padding-left: 1.4em; display: grid; gap: 8px; }
+.squad-body.recipe .steps li { padding-left: 4px; }
+.squad-body.recipe .steps li::marker { color: var(--flag); font-weight: 700; }
+.recipe-tip { background: var(--tint); border-radius: 6px; padding: 10px 14px; font-size: 0.95rem; }
+.order-btn { justify-self: stretch; margin-top: 0; background: var(--flag); color: var(--on-flag); border-color: var(--flag); }
 .squad-body .order-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 10px; }
 .squad-body .order-list li { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: baseline; }
 .order-list b { font-size: 1.05rem; min-width: 0; }
@@ -747,8 +759,10 @@ $("#photoCredits").innerHTML += " Food: " + FOOD.map(([n], i) => {
 $("#foodList").innerHTML = FOOD.map(([n, e, p], i) =>
   `<div class="dish"><img src="food/${FOOD_PHOTOS[i]}.jpg" alt="${esc(n)}, ${esc(e)}" loading="lazy">
    <div class="txt"><div class="n">${esc(n)}<i>${esc(e)}</i></div><p>${esc(p)}</p>
-   <button class="btn order-btn" id="order-${i}" data-dish="${i}">Find place to order</button></div></div>`).join("");
+   <div class="dish-btns"><button class="btn order-btn" id="order-${i}" data-dish="${i}">Find place to order</button>
+   <button class="btn diy-btn" id="diy-${i}" data-dish="${i}">Do it yourself!</button></div></div></div>`).join("");
 $("#foodList").querySelectorAll(".order-btn").forEach(b => b.onclick = () => findPlaces(+b.dataset.dish));
+$("#foodList").querySelectorAll(".diy-btn").forEach(b => b.onclick = () => recipeDialog(+b.dataset.dish));
 
 /* Famous people */
 const PEOPLE = [
@@ -1084,6 +1098,100 @@ function findPlaces(i) {
   }, err => {
     orderDialog(i, `<p class="order-status">${err.code === 1 ? "Location access was turned off, so we can't look nearby." : "Your location couldn't be found."} You can still search on Google Maps below.</p>`);
   }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+}
+
+/* Do it yourself! recipes, in the same order as FOOD */
+const RECIPES = [
+  { title: "Adana-style kebap", serves: "4 people", time: "30 min + 1 hour chilling",
+    groups: [
+      ["Meat", ["500 g (1.1 lb) ground lamb, or half lamb and half beef (about 20% fat)", "1 red bell pepper, very finely chopped", "1 small onion, grated and squeezed dry", "2 cloves garlic, crushed", "1 tbsp chopped parsley"]],
+      ["Spices", ["1 tbsp red pepper flakes (pul biber)", "1 tsp salt", "1 tsp ground cumin", "½ tsp black pepper"]],
+      ["To serve", ["4 flatbreads (lavaş or pita)", "1 red onion, sliced and mixed with 1 tsp sumac", "Grilled tomatoes and green peppers"]],
+    ],
+    steps: ["Put the pepper, onion, garlic, parsley and spices in a large bowl and mix.", "Add the meat and knead with your hands for about 5 minutes, until the mixture is sticky and holds together.", "Cover and chill in the fridge for 1 hour, so it is easier to shape.", "Wet your hands and press the meat onto wide flat skewers in long, flat logs about 2 cm (¾ in) thick. Without skewers, shape long logs.", "Grill over high heat or under the oven grill for 4–5 minutes per side, until browned and cooked through (71 °C / 160 °F inside).", "Serve on flatbread with the sumac onions and grilled vegetables. Ayran is the classic drink with it."],
+    tip: "Ask an adult to help with the grill and hot skewers." },
+  { title: "Pistachio baklava", serves: "About 30 pieces (23 × 33 cm / 9 × 13 in pan)", time: "1½ hours + 4 hours resting",
+    groups: [
+      ["Syrup", ["300 g (1½ cups) sugar", "240 ml (1 cup) water", "1 tbsp lemon juice"]],
+      ["Pastry", ["450 g (1 lb) phyllo (yufka) sheets, thawed", "225 g (1 cup) unsalted butter, melted", "300 g (2½ cups) shelled pistachios or walnuts, finely chopped", "2 tbsp sugar"]],
+    ],
+    steps: ["Make the syrup first: boil the sugar and water for 10 minutes, stir in the lemon juice and let it cool completely.", "Heat the oven to 175 °C (350 °F) and brush the pan with butter.", "Lay in half of the phyllo sheets one at a time, brushing each sheet with butter. Keep the rest covered with a damp towel so it doesn't dry out.", "Mix the nuts with 2 tbsp sugar and spread them evenly over the pastry.", "Layer the remaining sheets on top, brushing each one with butter, and butter the top well.", "With a sharp knife, cut all the way through into diamonds or squares before baking.", "Bake for 45–50 minutes, until deep golden and crisp.", "Pour the cold syrup slowly over the hot baklava as soon as it comes out of the oven.", "Leave it uncovered for at least 4 hours, or overnight, so the syrup soaks in."],
+    tip: "Cold syrup on hot baklava is the secret. That keeps it crisp instead of soggy." },
+  { title: "Simit (sesame bread rings)", serves: "8 rings", time: "2½ hours (including rising)",
+    groups: [
+      ["Dough", ["500 g (4 cups) bread flour", "7 g (2¼ tsp) instant yeast", "1 tsp sugar", "1½ tsp salt", "300 ml (1¼ cups) warm water", "2 tbsp olive oil"]],
+      ["Coating", ["120 ml (½ cup) grape molasses (pekmez) or honey", "120 ml (½ cup) water", "150 g (1 cup) sesame seeds, lightly toasted"]],
+    ],
+    steps: ["Mix the flour, yeast, sugar and salt. Add the water and oil and knead for 10 minutes until smooth.", "Cover and let the dough rise in a warm place for about 1 hour, until doubled.", "Divide into 16 pieces and roll each into a rope about 50 cm (20 in) long.", "Twist two ropes together, then join the ends to make a ring. You will have 8 rings.", "Mix the molasses with the water. Dip each ring in it, then press it into the sesame seeds on both sides.", "Put the rings on a lined baking tray and let them rest for 15 minutes while the oven heats to 220 °C (425 °F).", "Bake for 15–20 minutes, until deep golden brown.", "Eat warm with tea, cheese and olives for a Turkish breakfast."],
+    tip: "Toasting the sesame seeds in a dry pan first gives simit its nutty smell." },
+  { title: "Menemen", serves: "2 people", time: "20 minutes",
+    groups: [
+      ["Ingredients", ["2 tbsp olive oil or butter", "2 long green peppers (or 1 green bell pepper), chopped", "1 small onion, chopped (optional)", "3 ripe tomatoes, grated or finely chopped (or a 400 g / 14 oz can of chopped tomatoes)", "4 eggs", "½ tsp salt", "½ tsp red pepper flakes (pul biber)", "Black pepper", "50 g (⅓ cup) crumbled feta (optional)"]],
+    ],
+    steps: ["Heat the oil in a frying pan over medium heat. Cook the peppers (and onion, if using) for about 5 minutes until soft.", "Add the tomatoes and salt. Cook for 8–10 minutes, stirring now and then, until most of the juice has cooked away.", "Crack the eggs into the pan. Stir gently and slowly, so the eggs set in soft pieces. Take the pan off the heat while they are still a little runny.", "Sprinkle with pepper flakes, black pepper and feta if you like.", "Serve straight from the pan with fresh bread for dipping."],
+    tip: "Turks argue about onions in menemen. Try it both ways and decide for yourself!" },
+  { title: "Mantı (Turkish dumplings)", serves: "4 people", time: "1½ hours",
+    groups: [
+      ["Dough", ["300 g (2½ cups) plain flour", "1 egg", "120 ml (½ cup) water", "½ tsp salt"]],
+      ["Filling", ["250 g (9 oz) ground beef or lamb", "1 small onion, grated", "½ tsp salt", "½ tsp black pepper", "1 tbsp chopped parsley"]],
+      ["Garlic yogurt", ["500 g (2 cups) plain yogurt", "2 cloves garlic, crushed", "A pinch of salt"]],
+      ["Butter sauce", ["3 tbsp butter", "1 tbsp tomato paste", "1 tsp red pepper flakes (pul biber)", "Dried mint and sumac, to finish"]],
+    ],
+    steps: ["Mix the dough ingredients and knead for 5 minutes until smooth. Cover and rest for 30 minutes.", "Mix all the filling ingredients in a bowl.", "Roll the dough out very thin, about 1–2 mm, and cut it into 3 cm (1¼ in) squares.", "Put a chickpea-sized bit of filling in the middle of each square. Bring the four corners up and pinch them together.", "Boil the mantı in a large pot of salted water for 10–12 minutes, until the dough is tender.", "Meanwhile, mix the yogurt, garlic and salt. In a small pan, melt the butter and stir in the tomato paste and pepper flakes for 1 minute.", "Drain the mantı, spoon the garlic yogurt over, then drizzle the red butter on top. Finish with dried mint and sumac."],
+    tip: "In Kayseri they say a good cook's mantı are so small that 40 fit on one spoon." },
+  { title: "Lahmacun", serves: "6 pieces", time: "1½ hours (including rising)",
+    groups: [
+      ["Dough", ["300 g (2½ cups) plain flour", "1 tsp instant yeast", "1 tsp salt", "½ tsp sugar", "180 ml (¾ cup) warm water", "1 tbsp olive oil"]],
+      ["Topping", ["200 g (7 oz) ground lamb or beef", "1 small onion, 1 tomato, ½ red bell pepper and a handful of parsley, all very finely chopped", "1 clove garlic, crushed", "1 tbsp tomato paste", "1 tsp red pepper flakes (pul biber)", "1 tsp salt", "½ tsp ground cumin"]],
+      ["To serve", ["Lemon wedges", "Parsley and sliced onion with sumac"]],
+    ],
+    steps: ["Mix the dough ingredients, knead for 8 minutes, cover and let it rise for 1 hour.", "Mix all the topping ingredients together really well. It should be like a thick paste.", "Heat the oven as hot as it goes, 250 °C (480 °F) or more, with a baking tray inside.", "Divide the dough into 6 balls and roll each one very thin, about 25 cm (10 in) across.", "Spread a thin layer of topping right to the edges.", "Slide onto the hot tray and bake for 6–8 minutes, until the edges are crisp.", "Squeeze lemon on top, add parsley and onion, then roll it up and eat."],
+    tip: "Lahmacun should be thin and a little floppy, not thick like pizza." },
+  { title: "Turkish tea (çay)", serves: "4–6 glasses", time: "20 minutes",
+    groups: [
+      ["Ingredients", ["4 tbsp loose Turkish black tea (for example Rize tea)", "About 1.5 litres (6 cups) water", "Sugar cubes, to serve (optional)"]],
+      ["Equipment", ["A çaydanlık (double teapot), or a small teapot sitting on top of a kettle", "Tulip-shaped tea glasses"]],
+    ],
+    steps: ["Fill the bottom kettle with water and bring it to the boil.", "Put the tea leaves in the small top pot.", "Pour about 2 cups of the boiling water over the tea leaves, then refill the bottom kettle with water.", "Set the top pot on the kettle and turn the heat to low. Let the tea brew in the steam for 10–15 minutes.", "To serve, fill each glass about one third to half full with the strong tea from the top pot.", "Top up with hot water from the bottom kettle. Less water makes dark tea (koyu), more makes light tea (açık).", "Serve with sugar cubes on the side. Turks never add milk."],
+    tip: "Hold the glass by the rim. The tulip shape keeps your fingers away from the hot part." },
+  { title: "Turkish coffee (Türk kahvesi)", serves: "1 small cup", time: "5 minutes",
+    groups: [
+      ["Ingredients (per cup)", ["1 heaped tsp (about 7 g) very finely ground Turkish coffee", "70 ml (⅓ cup) cold water, about one coffee cup", "Sugar to taste: none (sade), 1 tsp (orta) or 2 tsp (şekerli)"]],
+      ["Equipment", ["A cezve (small long-handled pot)", "A small coffee cup"]],
+    ],
+    steps: ["Put the cold water, coffee and sugar into the cezve.", "Stir well until the coffee is mixed in, then stop stirring.", "Heat slowly on low heat. Watch it closely.", "After 3–4 minutes, foam will start to rise. Spoon a little foam into the cup.", "Put the cezve back on the heat for a few seconds until the foam rises again, then take it off just before it boils over.", "Pour the coffee slowly into the cup.", "Wait a minute for the grounds to settle. Serve with a glass of water and a piece of lokum. Don't drink the grounds at the bottom."],
+    tip: "Choose the sugar before you start. You can't stir it in afterwards." },
+  { title: "Turkish delight (lokum)", serves: "About 40 cubes (20 cm / 8 in square pan)", time: "1½ hours + overnight setting",
+    groups: [
+      ["Syrup", ["600 g (3 cups) sugar", "240 ml (1 cup) water", "1 tbsp lemon juice"]],
+      ["Starch mixture", ["120 g (1 cup) cornstarch", "1 tsp cream of tartar", "720 ml (3 cups) water"]],
+      ["Flavour", ["1–2 tbsp rose water (or orange-blossom water)", "A few drops of red food colouring (optional)", "A handful of chopped pistachios (optional)"]],
+      ["Coating", ["30 g (¼ cup) powdered sugar", "30 g (¼ cup) cornstarch"]],
+    ],
+    steps: ["Line the pan with oiled baking paper.", "Boil the sugar, water and lemon juice until it reaches 115 °C (240 °F) on a sugar thermometer. Then turn off the heat.", "In a large pot, whisk the cornstarch, cream of tartar and water over medium heat until it becomes a thick, gluey paste.", "Very slowly whisk the hot syrup into the paste, a little at a time.", "Turn the heat to low and cook for 60–75 minutes, stirring often, until the mixture is thick and pale golden and pulls away from the sides.", "Stir in the rose water, colouring and pistachios.", "Pour into the pan, smooth the top and leave it uncovered overnight to set.", "Mix the powdered sugar and cornstarch. Cut the lokum into cubes and roll each one in the mixture."],
+    tip: "Hot sugar syrup can burn badly. An adult should handle the boiling syrup." },
+  { title: "Ayran", serves: "2 glasses", time: "5 minutes",
+    groups: [
+      ["Ingredients", ["250 g (1 cup) plain whole-milk yogurt", "250 ml (1 cup) cold water", "½ tsp salt", "Ice cubes", "A few mint leaves (optional)"]],
+    ],
+    steps: ["Put the yogurt and salt in a jug and whisk until smooth.", "Slowly pour in the cold water while whisking hard, or blend everything for 30 seconds.", "Keep whisking until there is a thick layer of foam on top.", "Pour into glasses with ice and add mint if you like. Drink it cold with kebap or lahmacun."],
+    tip: "The foam is the best part, so don't skip the whisking." },
+];
+function recipeDialog(i) {
+  const r = RECIPES[i];
+  let dlg = $("#recipeDialog");
+  if (!dlg) { dlg = document.createElement("dialog"); dlg.className = "squad"; dlg.id = "recipeDialog"; document.body.append(dlg); dlg.onclick = e => { if (e.target === dlg) dlg.close(); }; }
+  dlg.innerHTML = `<div class="squad-head"><div style="flex:1;min-width:0"><h3>${esc(r.title)}</h3><p>Do it yourself!</p></div>
+    <button id="recipeClose" aria-label="Close">×</button></div>
+    <div class="squad-body recipe">
+      <div class="recipe-meta"><span><b>Makes</b> ${esc(r.serves)}</span><span><b>Time</b> ${esc(r.time)}</span></div>
+      <div><h4>Ingredients</h4>${r.groups.map(([g, items]) => `<div class="ing"><h5>${esc(g)}</h5><ul>${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div>
+      <div><h4>How to make it</h4><ol class="steps">${r.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div>
+      ${r.tip ? `<p class="recipe-tip"><b>Tip:</b> ${esc(r.tip)}</p>` : ""}
+    </div>`;
+  $("#recipeClose").onclick = () => dlg.close();
+  dlg.scrollTop = 0;
+  if (!dlg.open) dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
 }
 </script>
 
