@@ -101,13 +101,15 @@ nav.top .links a:hover { color: var(--cobalt); background: var(--cobalt-soft); }
 section.block:nth-child(even) { background: var(--tint); }
 .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 62% 62%; }
-.hero .shade { position: absolute; inset: 0; background:
-  linear-gradient(90deg, var(--shade-deep) 0%, var(--shade-mid) 38%, var(--shade-none) 62%); }
+.hero .shade { position: absolute; inset: 0; background: linear-gradient(to top left, var(--shade-deep) 0%, var(--shade-mid) 32%, var(--shade-none) 58%); }
 .hero h1, .hero .tag, .hero .eyebrow { text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35); }
 .hero .credit { position: absolute; top: 12px; right: max(16px, env(safe-area-inset-right, 0px)); font-size: 0.75rem; color: var(--on-flag); opacity: .85; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5); }
-@media (max-width: 700px) { .hero .shade { background: linear-gradient(0deg, var(--shade-deep) 0%, var(--shade-mid) 55%, var(--shade-none) 100%); } }
-.hero .wrap { position: relative; padding-block: clamp(110px, 16vw, 220px) clamp(120px, 14vw, 200px); display: grid; gap: 22px; }
-.hero h1 { font-size: clamp(4rem, 15vw, 10rem); line-height: 0.9; color: var(--on-flag); letter-spacing: -0.01em; }
+@media (max-width: 700px) { .hero .shade { background: linear-gradient(0deg, var(--shade-deep) 0%, var(--shade-mid) 45%, var(--shade-none) 80%); } }
+.hero .wrap { position: relative; padding-block: 20px clamp(24px, 4vw, 48px); min-height: clamp(380px, 50vw, 640px); display: flex; flex-direction: column; gap: 14px; }
+.hero .badge { align-self: flex-start; }
+.hero h1 { margin-top: auto; }
+.hero h1, .hero .tag { align-self: flex-end; text-align: right; }
+.hero h1 { font-size: clamp(2rem, 7.5vw, 5rem); line-height: 0.9; color: var(--on-flag); letter-spacing: -0.01em; }
 .hero .tag { font-size: clamp(1.15rem, 2.4vw, 1.45rem); max-width: 34ch; }
 .hero .tag em { font-style: italic; }
 .badge {
@@ -379,7 +381,6 @@ footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--mu
   <p class="credit">Ortaköy and the Bosphorus, Istanbul</p>
   <div class="wrap">
     <span class="badge" id="republic" hidden></span>
-    <p class="eyebrow">Republic of Türkiye · Türkiye Cumhuriyeti</p>
     <h1>Türk<span>i</span>ye</h1>
     <p class="tag">One country on two continents, where Europe meets Asia across the Bosphorus and <em>turquoise</em> takes its name.</p>
   </div>
