@@ -347,6 +347,8 @@ dialog.squad[open]::backdrop { animation: fade-in .2s ease-out; }
 .share code { font-family: var(--mono); font-size: 0.85rem; background: var(--tint); padding: 8px 12px; border-radius: 6px; word-break: break-all; user-select: all; }
 @media (max-width: 560px) { .share { grid-template-columns: 1fr; justify-items: start; } }
 
+.footer-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+#refsBody a { color: var(--flag); }
 footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--muted); font-size: 0.88rem; }
 
 @media (max-width: 820px) {
@@ -523,8 +525,11 @@ footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--mu
 </main>
 
 <footer>
-  <div class="wrap">Facts from TÜİK (Turkish Statistical Institute), UNESCO and the Republic of Türkiye. Figures are rounded.
-    <p class="credits" id="photoCredits"></p></div>
+  <div class="wrap footer-row"><span>Discover Türkiye</span><button class="btn" id="refsBtn">References</button></div>
+  <dialog class="squad" id="refsDialog" aria-label="References">
+    <div class="squad-head"><div style="flex:1;min-width:0"><h3>References</h3><p>Sources, photo credits and data</p></div><button id="refsClose" aria-label="Close">×</button></div>
+    <div class="squad-body recipe" id="refsBody"></div>
+  </dialog>
 </footer>
 
 <script>
@@ -712,10 +717,11 @@ const PHOTOS = {
   "Butterfly Valley": { key: "butterfly-valley", alt: "Cliffs of Butterfly Valley above a hidden beach", by: "Claus P. Heibel", lic: "CC BY 2.0", file: "Kelebekler_Vadisi_(1).jpg" },
   "Lake Van": { key: "lake-van", alt: "Church on Akdamar Island in Lake Van", by: "Bjørn Christian Tørrissen", lic: "CC BY-SA 3.0", file: "Akdamar_Island_From_Near_Gevas.JPG" },
 };
-$("#photoCredits").innerHTML = "Photos from Wikimedia Commons: Bosphorus by <a href=\"https://commons.wikimedia.org/wiki/File:Istanbul_Ortak%C3%B6y_(54514468726).jpg\">Jorge Franganillo</a> (CC BY 2.0) · " + Object.entries(PHOTOS).map(([n, p]) =>
-  `${esc(n)} by ${p.file ? `<a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(p.file)}">${esc(p.by)}</a>` : esc(p.by)} (${esc(p.lic)})`).join(" · ") + ".";
-$("#photoCredits").innerHTML += " Portraits: " + Object.entries(PORTRAITS).map(([n, p]) =>
-  `${esc(n)} by <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(p.file)}">${esc(p.by)}</a> (${esc(p.lic)})`).join(" · ") + ".";
+const REFS = {};
+const commons = (file, by) => `<a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file)}" target="_blank" rel="noopener">${esc(by)}</a>`;
+REFS["Photos: opening photo and places"] = [`Opening photo (Ortaköy and the Bosphorus) by ${commons("Istanbul_Ortaköy_(54514468726).jpg", "Jorge Franganillo")} (CC BY 2.0)`,
+  ...Object.entries(PHOTOS).map(([n, p]) => `${esc(n)} by ${p.file ? commons(p.file, p.by) : esc(p.by)} (${esc(p.lic)})`)];
+REFS["Photos: famous people"] = Object.entries(PORTRAITS).map(([n, p]) => `${esc(n)} by ${commons(p.file, p.by)} (${esc(p.lic)})`);
 const KIND_STYLE = { Ancient: ["red", "--iznik"], Nature: ["turq", "--turq"], Seaside: ["turq", "--turq"], Sacred: ["", "--cobalt"], City: ["", "--cobalt"] };
 function tileBg(varName, i) {
   const c = `var(${varName})`, a = 22 + (i % 3) * 6;
@@ -793,10 +799,7 @@ const FOOD_CREDITS = [
   ["TurkishDelightDisplay.jpg", "Quick fix", "CC BY-SA 2.0"],
   ["Fresh_ayran.jpg", "Mavigogun", "CC BY-SA 3.0"],
 ];
-$("#photoCredits").innerHTML += " Food: " + FOOD.map(([n], i) => {
-  const [file, by, lic] = FOOD_CREDITS[i];
-  return `${esc(n)} by <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file)}">${esc(by)}</a> (${lic})`;
-}).join(" · ") + ".";
+REFS["Photos: food"] = FOOD.map(([n], i) => { const [file, by, lic] = FOOD_CREDITS[i]; return `${esc(n)} by ${commons(file, by)} (${esc(lic)})`; });
 $("#foodList").innerHTML = FOOD.map(([n, e, p], i) =>
   `<div class="dish"><img src="food/${FOOD_PHOTOS[i]}.jpg" alt="${esc(n)}, ${esc(e)}" loading="lazy">
    <div class="txt"><div class="n">${esc(n)}<i>${esc(e)}</i></div><p>${esc(p)}</p>
@@ -1367,6 +1370,35 @@ $("#timeline").addEventListener("click", e => { const c = e.target.closest("li")
 for (const id of ["peopleList", "timeline"]) $("#" + id).addEventListener("keydown", e => {
   const c = e.target.closest(".person, li"); if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); c.click(); }
 });
+
+/* References panel */
+const watch = id => `https://www.youtube.com/watch?v=${id}`;
+const yt = ([id, channel, title]) => `<a href="${watch(id)}" target="_blank" rel="noopener">${esc(title)}</a>, ${esc(channel)} (YouTube)`;
+const REF_SECTIONS = {
+  "Facts and figures": [
+    "Population, area and provinces: TÜİK (Turkish Statistical Institute), figures rounded",
+    "World Heritage information: UNESCO",
+    "History, people and place descriptions: written for this page from general reference sources",
+  ],
+  "Football": [
+    `Clubs, league table and points (as of ${esc(TABLE_DATE)}): <a href="https://en.wikipedia.org/wiki/2026%E2%80%9327_S%C3%BCper_Lig" target="_blank" rel="noopener">2026–27 Süper Lig</a>, Wikipedia, citing the Turkish Football Federation`,
+    "Squads: each club's English Wikipedia page, October 2026",
+    "Club logos: Wikipedia. Logos are trademarks of their clubs and are shown only to identify each team",
+  ],
+  ...REFS,
+  "Videos: food": VIDEOS.map(yt),
+  "Videos: places": Object.values(PLACE_VIDEOS).map(yt),
+  "Map, search and audio": [
+    `Province boundaries: <a href="https://github.com/cihadturhan/tr-geojson" target="_blank" rel="noopener">tr-geojson</a>, simplified and grouped into the 7 regions`,
+    `Nearby restaurant search: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>, via the Photon search service`,
+    "Turkish phrase recordings: generated with the macOS Turkish voice (Yelda)",
+  ],
+};
+$("#refsBody").innerHTML = Object.entries(REF_SECTIONS).map(([h, items]) =>
+  `<div><h4>${esc(h)}</h4><div class="ing"><ul>${items.map(x => `<li>${x}</li>`).join("")}</ul></div></div>`).join("");
+$("#refsBtn").onclick = () => { const d = $("#refsDialog"); d.scrollTop = 0; d.showModal ? d.showModal() : d.setAttribute("open", ""); };
+$("#refsClose").onclick = () => $("#refsDialog").close();
+$("#refsDialog").onclick = e => { if (e.target === e.currentTarget) e.currentTarget.close(); };
 </script>
 
 </body>
