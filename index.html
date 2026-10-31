@@ -297,6 +297,11 @@ dialog.squad.video-dlg { width: min(960px, calc(100vw - 32px)); }
 .person h3 { font-size: 1.3rem; }
 .person .yrs { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
 .person .chip { justify-self: start; grid-column: 1 / -1; }
+.more-link { display: inline-block; margin-top: 8px; font-size: 0.85rem; font-weight: 700; color: var(--flag); }
+.person .more-link { grid-column: 1 / -1; margin-top: 0; }
+.person, .timeline li[role="button"] { cursor: pointer; transition: border-color .15s, background .15s; }
+.person:hover, .person:focus-visible { border-color: var(--flag); }
+.timeline li[role="button"]:hover h3, .timeline li[role="button"]:focus-visible h3 { color: var(--flag); }
 .person p { grid-column: 1 / -1; font-size: 0.97rem; }
 
 /* football */
@@ -671,8 +676,8 @@ const HISTORY = [
   ["1952", "Joins NATO", "Türkiye becomes a member of the North Atlantic alliance."],
   ["2022", "“Türkiye” at the UN", "The United Nations adopts Türkiye as the country's official name in English."],
 ];
-$("#timeline").innerHTML = HISTORY.map(([d, t, p, key]) =>
-  `<li class="${key ? "key" : ""}"><time>${esc(d)}</time><div><h3>${esc(t)}</h3><p>${esc(p)}</p></div></li>`).join("");
+$("#timeline").innerHTML = HISTORY.map(([d, t, p, key], i) =>
+  `<li class="${key ? "key" : ""}" data-i="${i}" tabindex="0" role="button" aria-label="Read more about ${esc(t)}"><time>${esc(d)}</time><div><h3>${esc(t)}</h3><p>${esc(p)}</p><span class="more-link">Read more →</span></div></li>`).join("");
 
 /* Places */
 const PLACES = [
@@ -834,11 +839,11 @@ function renderPeople() {
     `<button id="people-filter-${i}" aria-pressed="${g === peopleGroup}">${esc(g)}</button>`).join("");
   $("#peopleFilter").querySelectorAll("button").forEach((b, i) => b.onclick = () => { peopleGroup = groups[i]; renderPeople(); });
   const born = y => +y.match(/\d{4}/)[0];
-  $("#peopleList").innerHTML = PEOPLE.slice().sort((a, b) => born(a[1]) - born(b[1])).filter(([, , r]) => peopleGroup === "All" || groupOf(r) === peopleGroup).map(([n, y, r, p]) => `<article class="person">
+  $("#peopleList").innerHTML = PEOPLE.slice().sort((a, b) => born(a[1]) - born(b[1])).filter(([, , r]) => peopleGroup === "All" || groupOf(r) === peopleGroup).map(([n, y, r, p]) => `<article class="person" data-name="${esc(n)}" tabindex="0" role="button" aria-label="Read more about ${esc(n)}">
   ${PORTRAITS[n] ? `<img class="mono face" src="${PORTRAITS[n].src}" alt="${esc(n)}" loading="lazy">` : `<div class="mono" aria-hidden="true">${initials(n)}</div>`}
   <div><h3>${esc(n)}</h3><p class="yrs">${esc(y)}</p></div>
   <span class="chip red">${esc(r)}</span>
-  <p>${esc(p)}</p></article>`).join("");
+  <p>${esc(p)}</p><span class="more-link">Read more →</span></article>`).join("");
 }
 renderPeople();
 (() => {
@@ -1266,6 +1271,102 @@ function openVideo(id, channel, title, heading) {
   $("#videoClose").onclick = () => dlg.close();
   if (!dlg.open) dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
 }
+
+/* Read-more panels for famous people and history events */
+const PEOPLE_MORE = {
+  "Mevlânâ Rumi": ["Rumi was born in 1207 in Balkh, in today's Afghanistan. His family fled the Mongol invasions and settled in Konya, the capital of the Seljuk Turks. There he became a respected teacher. In 1244 he met the wandering mystic Shams of Tabriz, and the friendship turned him into a poet.",
+    ["His great work, the Masnavi, has about 25,000 verses written in Persian.", "His followers founded the Mevlevi order, famous for the whirling dervishes.", "Every December, Konya holds the Şeb-i Arus ceremony to remember him.", "His tomb in Konya, with its green-tiled dome, is now the Mevlâna Museum."]],
+  "Piri Reis": ["Piri Reis was born around 1465 in Gelibolu (Gallipoli). As a young man he sailed with his uncle, the famous sea captain Kemal Reis, and later became an Ottoman admiral.",
+    ["He drew his world map in 1513 on gazelle-skin parchment, using about 20 older maps as sources.", "One of those sources was a map by Christopher Columbus, which is now lost.", "The map was rediscovered in 1929 in Topkapı Palace, Istanbul.", "His Kitab-ı Bahriye (Book of the Sea) is a detailed sailing guide to the Mediterranean."]],
+  "Mimar Sinan": ["Sinan was born around 1490 near Kayseri and joined the Janissaries, the sultan's elite soldiers. As a military engineer he built bridges and boats for the army. In 1538 Süleyman the Magnificent made him chief architect, a job he held for about 50 years under three sultans.",
+    ["He designed more than 300 buildings: mosques, schools, baths, bridges and kitchens for the poor.", "He called the Şehzade Mosque his apprentice work and the Süleymaniye Mosque his journeyman work.", "He called the Selimiye Mosque in Edirne his masterpiece. It is now a UNESCO World Heritage Site.", "He is buried in a simple tomb next to the Süleymaniye Mosque."]],
+  "Mustafa Kemal Atatürk": ["Mustafa Kemal was born in 1881 in Thessaloniki. He became famous as a commander at Gallipoli in 1915. He then led the War of Independence from 1919 to 1922 and founded the Republic of Türkiye in 1923. He was its first president until his death on 10 November 1938.",
+    ["He introduced the Latin-based Turkish alphabet in 1928 and taught it himself across the country.", "Women won the right to vote and stand for parliament in 1934.", "In 1934 every family took a surname. Parliament gave him the name Atatürk, \"Father of the Turks\".", "Each 10 November at 9:05, the time of his death, Türkiye stops for a minute of silence."]],
+  "Halide Edib Adıvar": ["Halide Edib was born in Istanbul in 1884. She was one of the first Turkish women to graduate from the American College for Girls in Istanbul.",
+    ["In 1919 she gave a famous speech to a huge crowd in Sultanahmet against the occupation of Istanbul.", "She joined the national army in the War of Independence and served as a sergeant.", "Her novel The Shirt of Flame (Ateşten Gömlek) tells the story of that war.", "She later taught English literature at Istanbul University and served in parliament."]],
+  "Sabiha Gökçen": ["Sabiha Gökçen was born in 1913 and was adopted by Atatürk as a girl. She trained as a pilot at the Türkkuşu flying school in Ankara.",
+    ["In 1936 she became Türkiye's first woman military pilot.", "She flew about 8,000 hours in her career, many of them in military aircraft.", "She later trained new pilots and flew around the Balkans on goodwill tours.", "Istanbul's Sabiha Gökçen International Airport, opened in 2001, is named after her."]],
+  "Kemal Sunal": ["Kemal Sunal was born in Istanbul in 1944. With his innocent smile and comic timing, he became the most beloved comedy actor in Turkish film history.",
+    ["He played İnek Şaban, the lazy student, in the school comedy Hababam Sınıfı (1975) and its sequels.", "He starred in more than 80 films, many still shown on TV every holiday.", "His characters were often poor but honest people who outwit the powerful.", "He died in 2000 at age 55. His films are still watched by every generation."]],
+  "Türkan Şoray": ["Türkan Şoray was born in Istanbul in 1945. She started acting at just 15 and became the biggest female star of Yeşilçam, the golden age of Turkish cinema in the 1960s and 70s.",
+    ["She has acted in more than 200 films.", "She was famous for the \"Türkan Şoray rules\", a list of scenes she refused to film.", "She also directed films, such as Dönüş (1972).", "Fans call her the \"Sultana\" of Turkish cinema."]],
+  "Aziz Sancar": ["Aziz Sancar was born in 1946 in Savur, Mardin, one of eight children in a farming family. He trained as a doctor in Istanbul, then moved to the United States to study DNA.",
+    ["He won the 2015 Nobel Prize in Chemistry with Tomas Lindahl and Paul Modrich.", "His work showed how cells repair DNA damaged by sunlight and chemicals.", "He is a professor at the University of North Carolina at Chapel Hill.", "He gave his Nobel medal to Anıtkabir, Atatürk's mausoleum in Ankara."]],
+  "Orhan Pamuk": ["Orhan Pamuk was born in Istanbul in 1952. He studied architecture and journalism before becoming a full-time writer.",
+    ["In 2006 he became the first Turkish writer to win the Nobel Prize in Literature.", "His best-known novels include My Name Is Red and Snow.", "Istanbul: Memories and the City is a memoir of growing up in the city.", "He built a real Museum of Innocence in Istanbul to go with his novel of the same name."]],
+  "Recep Tayyip Erdoğan": ["Recep Tayyip Erdoğan was born in Istanbul in 1954 and grew up in the Kasımpaşa district. As a young man he played semi-professional football.",
+    ["He was mayor of Istanbul from 1994 to 1998.", "In 2001 he co-founded the AK Party (Justice and Development Party).", "He was prime minister from 2003 to 2014.", "In 2014 he became the first president elected directly by the people, and he was re-elected in 2018 and 2023."]],
+  "Mehmet Oz (Dr. Oz)": ["Mehmet Oz was born in 1960 in Cleveland, Ohio, to parents who had moved from Türkiye. He studied at Harvard and the University of Pennsylvania and became a heart surgeon in New York.",
+    ["He performed thousands of heart operations and helped develop new heart devices.", "He became famous on The Oprah Winfrey Show, then hosted The Dr. Oz Show from 2009 to 2022.", "He speaks Turkish and often visits Türkiye.", "Since 2025 he has led the U.S. Centers for Medicare & Medicaid Services."]],
+  "Naim Süleymanoğlu": ["Naim Süleymanoğlu was born in 1967 in Bulgaria to a Turkish family. He came to Türkiye in 1986 and competed for his new country. He was only 1.47 m (4 ft 10 in) tall.",
+    ["He won Olympic gold in 1988, 1992 and 1996, the first weightlifter to win three golds in a row.", "At the 1988 Olympics he lifted 190 kg, more than three times his own body weight.", "He set dozens of world records.", "His nickname was \"Pocket Hercules\". He died in 2017."]],
+  "Halit Ergenç": ["Halit Ergenç was born in Istanbul in 1970. He trained in music and theatre at Mimar Sinan Fine Arts University before becoming a TV and stage actor.",
+    ["He became a star with the drama Binbir Gece (One Thousand and One Nights).", "He played Sultan Süleyman in Muhteşem Yüzyıl (Magnificent Century), 2011–2014.", "Magnificent Century was shown in dozens of countries and made Turkish TV series popular worldwide.", "He has also acted in musicals and films."]],
+  "Hidayet Türkoğlu": ["Hidayet \"Hedo\" Türkoğlu was born in Istanbul in 1979. A tall forward who could pass like a point guard, he was picked by the Sacramento Kings in the 2000 NBA draft.",
+    ["He played 15 NBA seasons for teams including the Kings, Spurs, Magic, Raptors, Suns and Clippers.", "He won the NBA Most Improved Player award in 2008.", "He helped the Orlando Magic reach the 2009 NBA Finals.", "He led Türkiye to the silver medal at the 2010 Basketball World Championship in Istanbul."]],
+  "Mete Gazoz": ["Mete Gazoz was born in Istanbul in 1999 and started archery as a child, following his father. He shoots the recurve bow, the type used at the Olympics.",
+    ["He won the men's individual gold at the Tokyo 2020 Olympics, held in 2021.", "It was Türkiye's first ever Olympic medal in archery.", "He has also won medals at world and European championships.", "Archery has a long history in Türkiye. Ottoman archers set distance records with their bows."]],
+  "Zehra Güneş": ["Zehra Güneş was born in Istanbul in 1999. At 1.97 m (6 ft 6 in) tall, she plays middle blocker for VakıfBank and the national team.",
+    ["The women's national team is nicknamed \"Filenin Sultanları\", the Sultans of the Net.", "In 2023 the team won both the European Championship and the Volleyball Nations League.", "The team finished fourth at the Paris 2024 Olympics.", "She is one of the most popular athletes in Türkiye."]],
+  "Arda Güler": ["Arda Güler was born in Ankara in 2005. He started at Gençlerbirliği's youth academy and then joined Fenerbahçe, where he made his professional debut at 16.",
+    ["In 2023 he signed for Real Madrid, one of the world's biggest clubs.", "At Euro 2024 he scored a famous long-range goal against Georgia in his first tournament match.", "He wears the number 8 shirt for Türkiye.", "Fans see him as the future leader of the national team."]],
+};
+const HISTORY_MORE = {
+  "Göbekli Tepe": ["On a hill near Şanlıurfa, people who still lived by hunting and gathering built huge stone circles about 11,600 years ago. That was before farming, pottery or writing existed.",
+    ["Its T-shaped stone pillars stand up to 5.5 m (18 ft) tall.", "The pillars are carved with foxes, boars, snakes, scorpions and vultures.", "It is about 6,000 years older than Stonehenge.", "Excavations began in 1995. It became a UNESCO World Heritage Site in 2018."]],
+  "Çatalhöyük": ["Çatalhöyük, on the Konya plain, was one of the world's first towns. Several thousand people lived there for about 1,500 years.",
+    ["The mud-brick houses were packed together with no streets between them.", "People walked across the rooftops and climbed down ladders into their homes.", "The walls were decorated with paintings of hunting scenes and animals.", "It became a UNESCO World Heritage Site in 2012."]],
+  "The Hittite Empire": ["The Hittites built a powerful empire in central Anatolia. Their capital was Hattusa, near today's Çorum.",
+    ["Hittite is the oldest written Indo-European language we know.", "Around 1259 BCE they signed the Treaty of Kadesh with Egypt, the oldest peace treaty that survives.", "A copy of the treaty hangs at the United Nations headquarters in New York.", "Hattusa's ruins, with the Lion Gate, are a UNESCO World Heritage Site."]],
+  "First coins": ["The kingdom of Lydia, with its capital at Sardis near today's Manisa, was rich in electrum, a natural mix of gold and silver found in its rivers.",
+    ["The Lydians stamped lumps of electrum with a lion's head to show their value.", "These are among the earliest coins in the world.", "Their famous King Croesus later made the first coins of pure gold and pure silver.", "People still say \"as rich as Croesus\" today."]],
+  "Constantinople": ["In 330 CE the Roman emperor Constantine rebuilt the old Greek town of Byzantium as \"New Rome\". It became known as Constantinople.",
+    ["It was the capital of the Eastern Roman (Byzantine) Empire for more than 1,100 years.", "Its great land walls protected it from attack for centuries.", "Emperor Justinian built Hagia Sophia there in 537.", "It sat on the trade routes between Europe and Asia, which made it rich."]],
+  "Battle of Manzikert": ["On 26 August 1071, near Malazgirt in today's Muş province, the Seljuk sultan Alp Arslan defeated the Byzantine army.",
+    ["The Byzantine emperor Romanos IV was captured, then released by the sultan.", "After the battle, Turkish tribes began settling across Anatolia.", "The Seljuk Sultanate of Rum later made Konya its capital.", "26 August is still remembered as the Turks' opening of Anatolia."]],
+  "Ottoman beginnings": ["Around 1299, a leader named Osman ruled a small principality near Söğüt in north-west Anatolia. His descendants built one of the largest empires in history.",
+    ["The empire was named after him: Osmanlı, or Ottoman.", "Bursa became the first capital in 1326, then Edirne, then Istanbul.", "The empire lasted more than 600 years, until 1922.", "36 sultans ruled it, all from Osman's family."]],
+  "Conquest of Istanbul": ["On 29 May 1453, after a 53-day siege, Sultan Mehmed II captured Constantinople. He was only 21 years old.",
+    ["He used giant cannons to break the city's famous walls.", "His soldiers dragged ships over a hill on greased logs into the Golden Horn.", "The conquest ended the Byzantine Empire.", "Mehmed became known as \"Fatih\", the Conqueror, and the city became the Ottoman capital."]],
+  "Süleyman the Magnificent": ["Süleyman I ruled for 46 years, longer than any other Ottoman sultan. Europeans called him \"the Magnificent\". Turks call him \"Kanuni\", the Lawgiver, for his legal reforms.",
+    ["His empire stretched from Hungary to Yemen and from Algeria to Iraq.", "His army besieged Vienna in 1529.", "His chief architect, Mimar Sinan, built the Süleymaniye Mosque for him.", "He also wrote poetry under the name Muhibbi."]],
+  "Gallipoli": ["In 1915 Britain, France and soldiers from Australia and New Zealand (ANZACs) tried to capture the Dardanelles strait and reach Istanbul. After eight months of fighting, they withdrew.",
+    ["Both sides suffered hundreds of thousands of casualties.", "A young commander, Mustafa Kemal, became a national hero there.", "Türkiye marks the naval victory every 18 March.", "Australia and New Zealand remember their soldiers every 25 April, ANZAC Day."]],
+  "The Republic is proclaimed": ["After winning the War of Independence (1919–1922), the Grand National Assembly in Ankara proclaimed the Republic of Türkiye on 29 October 1923.",
+    ["Mustafa Kemal (Atatürk) was elected the first president that same day.", "Ankara had become the capital two weeks earlier, on 13 October.", "The Treaty of Lausanne in July 1923 set the new country's borders.", "29 October is celebrated every year as Republic Day, a national holiday."]],
+  "New alphabet": ["On 1 November 1928, Türkiye switched from the Arabic script to a new Latin-based alphabet with 29 letters, made to fit Turkish sounds.",
+    ["Atatürk travelled the country with a blackboard and taught the letters himself.", "People called him the \"Başöğretmen\", the Head Teacher.", "Night schools called the Nation's Schools taught millions of adults to read.", "Turkish has been written exactly as it sounds ever since."]],
+  "Women's suffrage": ["Turkish women won the right to vote in local elections in 1930, and in national elections on 5 December 1934.",
+    ["In the 1935 election, 18 women were elected to parliament.", "This was earlier than in France (1944), Italy (1946) or Switzerland (1971).", "Türkiye's first female judge and first female pilot also date from this period.", "5 December is marked as Women's Rights Day in Türkiye."]],
+  "Joins NATO": ["Türkiye joined the North Atlantic Treaty Organization on 18 February 1952, together with Greece.",
+    ["Turkish soldiers had fought alongside the United Nations in the Korean War (1950–1953).", "Türkiye guards NATO's south-eastern edge, including the straits to the Black Sea.", "It has one of the largest armies in NATO.", "NATO's Allied Land Command is based in İzmir."]],
+  "“Türkiye” at the UN": ["In June 2022 the United Nations agreed to use \"Türkiye\" as the country's official name in English and other languages, at the government's request.",
+    ["Turks have always called their country Türkiye.", "The government launched a \"Hello Türkiye\" campaign in late 2021.", "The change avoids confusion with the English word \"turkey\", the bird.", "Many international organisations and companies now use \"Türkiye\" too."]],
+};
+function infoDialog(title, sub, img, about, facts) {
+  let dlg = $("#infoDialog");
+  if (!dlg) { dlg = document.createElement("dialog"); dlg.className = "squad"; dlg.id = "infoDialog"; document.body.append(dlg); dlg.onclick = e => { if (e.target === dlg) dlg.close(); }; }
+  dlg.innerHTML = `<div class="squad-head">${img ? `<img class="logo" src="${img}" alt="" style="object-fit:cover;padding:0">` : ""}<div style="flex:1;min-width:0"><h3>${esc(title)}</h3><p>${esc(sub)}</p></div>
+    <button id="infoClose" aria-label="Close">×</button></div>
+    <div class="squad-body recipe"><p>${esc(about)}</p>
+      <div><h4>Key facts</h4><div class="ing"><ul>${facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul></div></div></div>`;
+  $("#infoClose").onclick = () => dlg.close();
+  dlg.scrollTop = 0;
+  if (!dlg.open) dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
+}
+function openPerson(name) {
+  const p = PEOPLE.find(x => x[0] === name), m = PEOPLE_MORE[name];
+  if (p && m) infoDialog(p[0], `${p[2]} · ${p[1]}`, PORTRAITS[name]?.src, m[0], m[1]);
+}
+function openEvent(i) {
+  const [d, t] = HISTORY[i], m = HISTORY_MORE[t];
+  if (m) infoDialog(t, d, null, m[0], m[1]);
+}
+$("#peopleList").addEventListener("click", e => { const c = e.target.closest(".person"); if (c) openPerson(c.dataset.name); });
+$("#timeline").addEventListener("click", e => { const c = e.target.closest("li"); if (c) openEvent(+c.dataset.i); });
+for (const id of ["peopleList", "timeline"]) $("#" + id).addEventListener("keydown", e => {
+  const c = e.target.closest(".person, li"); if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); c.click(); }
+});
 </script>
 
 </body>
