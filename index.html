@@ -196,6 +196,14 @@ svg.has-pick .rg.on path { filter: brightness(1.1) saturate(1.15); }
 .dish p { color: var(--muted); font-size: 0.97rem; }
 .dish .txt { flex: 1; grid-template-rows: auto 1fr auto; }
 .dish-btns { display: grid; gap: 8px; margin-top: 8px; }
+.video-btn { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.video-btn:hover { opacity: .9; }
+dialog.squad.video-dlg { width: min(960px, calc(100vw - 32px)); }
+.video-frame { position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; background: #000000; border-radius: 6px; overflow: hidden; }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-out { display: grid; place-items: center; gap: 10px; text-align: center; padding: 20px; color: #FFFFFF; height: 100%; }
+.video-out a { color: #FFFFFF; font-weight: 700; font-size: 1.05rem; background: var(--flag); padding: 10px 18px; border-radius: 999px; text-decoration: none; }
+.video-credit { font-size: 0.88rem; color: var(--muted); }
 .diy-btn { background: var(--surface); color: var(--flag); border-color: var(--flag); }
 .diy-btn:hover { background: var(--iznik-soft); }
 .recipe-meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.92rem; }
@@ -758,9 +766,11 @@ $("#foodList").innerHTML = FOOD.map(([n, e, p], i) =>
   `<div class="dish"><img src="food/${FOOD_PHOTOS[i]}.jpg" alt="${esc(n)}, ${esc(e)}" loading="lazy">
    <div class="txt"><div class="n">${esc(n)}<i>${esc(e)}</i></div><p>${esc(p)}</p>
    <div class="dish-btns"><button class="btn order-btn" id="order-${i}" data-dish="${i}">Find place to order</button>
+   <button class="btn video-btn" id="video-${i}" data-dish="${i}">▶ Watch the video</button>
    <button class="btn diy-btn" id="diy-${i}" data-dish="${i}">Do it yourself!</button></div></div></div>`).join("");
 $("#foodList").querySelectorAll(".order-btn").forEach(b => b.onclick = () => findPlaces(+b.dataset.dish));
 $("#foodList").querySelectorAll(".diy-btn").forEach(b => b.onclick = () => recipeDialog(+b.dataset.dish));
+$("#foodList").querySelectorAll(".video-btn").forEach(b => b.onclick = () => videoDialog(+b.dataset.dish));
 
 /* Famous people */
 const PEOPLE = [
@@ -1189,6 +1199,41 @@ function recipeDialog(i) {
     </div>`;
   $("#recipeClose").onclick = () => dlg.close();
   dlg.scrollTop = 0;
+  if (!dlg.open) dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
+}
+
+/* Watch the video: YouTube how-to videos, in the same order as FOOD */
+const VIDEOS = [
+  ["Ej3B4g_PxsQ", "Hungry Man Kitchen", "How Authentic Adana Kebab is Made"],
+  ["vrnH5UCMqLY", "Refika's Kitchen", "Famous Turkish Baklava"],
+  ["X96CR6ZPCg8", "Refika's Kitchen", "How to Make Simit at Home"],
+  ["xnfbBGPGVW4", "Food Wishes", "Menemen (Turkish Scrambled Eggs)"],
+  ["4iX5esCecnQ", "Refika's Kitchen", "Homemade Turkish Mantı with Garlic Yoghurt and Chili Butter"],
+  ["Dd6yVqHdfxY", "Refika's Kitchen", "How to Make Crunchy Lahmacun at Home"],
+  ["fU7gUSuhIPA", "Çaykur", "How to brew Turkish tea"],
+  ["K_-TyRAVZdw", "Kurukahveci Mehmet Efendi", "How to Prepare Turkish Coffee Using a Cezve"],
+  ["wY12zhbSNF4", "Refika's Kitchen", "Make Turkish Delight at Home"],
+  ["8hwSdK8Hm1I", "Refika's Kitchen", "Ayran Recipe: Classic and 6 Twists"],
+];
+// The Claude viewer runs the page in a frame that can't embed other sites, so there the panel links out to YouTube instead.
+const CAN_EMBED = window.self === window.top;
+function videoDialog(i) {
+  const [id, channel, title] = VIDEOS[i], watch = `https://www.youtube.com/watch?v=${id}`;
+  let dlg = $("#videoDialog");
+  if (!dlg) {
+    dlg = document.createElement("dialog"); dlg.className = "squad video-dlg"; dlg.id = "videoDialog"; document.body.append(dlg);
+    dlg.onclick = e => { if (e.target === dlg) dlg.close(); };
+    dlg.addEventListener("close", () => { dlg.innerHTML = ""; }); // stops playback
+  }
+  dlg.innerHTML = `<div class="squad-head"><div style="flex:1;min-width:0"><h3>How to make ${esc(FOOD[i][0])}</h3><p>${esc(title)}</p></div>
+    <button id="videoClose" aria-label="Close">×</button></div>
+    <div class="squad-body">
+      <div class="video-frame">${CAN_EMBED
+        ? `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${esc(title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`
+        : `<div class="video-out"><p>Videos can't play inside this preview.</p><a href="${watch}" target="_blank" rel="noopener">▶ Watch on YouTube</a></div>`}</div>
+      <p class="video-credit">Video by ${esc(channel)} on YouTube. <a href="${watch}" target="_blank" rel="noopener">Open on YouTube</a></p>
+    </div>`;
+  $("#videoClose").onclick = () => dlg.close();
   if (!dlg.open) dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
 }
 </script>
